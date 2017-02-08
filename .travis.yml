@@ -4,8 +4,9 @@ services:
   - docker
 
 script:
-  - export DOCKER_VERSION=$(echo "$TRAVIS_COMMIT" | cut -c 1-6)
+  - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
   - dotnet restore
   - dotnet publish src/Letmein.Web -c Release
   - dotnet publish src/Letmein.Cleanup -c Release
-  - cd src/Letmein.Web && docker build -t anotherchris/letmein:$DOCKER_VERSION
+  - cd src/Letmein.Web
+  - docker build -t anotherchris/letmein:$DOCKER_TAG
