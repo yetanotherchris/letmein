@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +9,9 @@ namespace Letmein.Web
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
+	        Cleanup.Start();
+
+			var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
