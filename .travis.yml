@@ -11,4 +11,6 @@ script:
   - dotnet publish src/Letmein.Web -c Release
   - dotnet publish src/Letmein.Cleanup -c Release
   - cd src/Letmein.Web
-  - docker build -t "anotherchris/letmein:$DOCKER_TAG"
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker build -t "anotherchris/letmein:$DOCKER_TAG" .
+  - docker push
