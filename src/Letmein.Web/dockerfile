@@ -1,6 +1,8 @@
 FROM microsoft/dotnet:1.1.0-sdk-projectjson
 MAINTAINER Chris Small
 
+ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+
 RUN mkdir /app
 COPY ./bin/Release/netcoreapp1.1/publish /app
 WORKDIR /app
