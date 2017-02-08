@@ -43,36 +43,33 @@ namespace Letmein.Web
 				double.TryParse(config["POLLER_WAIT_TIME"], out pollWaitTime);
 			}
 			_defaultWaitTime = TimeSpan.FromSeconds(pollWaitTime);
-			_logger.LogInformation("By default I will wait {0} between polls", _defaultWaitTime);
 		}
 
-		public static void Start()
+		public void StartBackgroundCleanup()
 		{
+			// Begin
+			_logger.LogInformation("Starting Cleanup service.");
+			_logger.LogInformation("By default I will wait {0} between polls", _defaultWaitTime);
+
 			Task.Run(() =>
 			{
-				var cleanup = new Cleanup();
-				cleanup.Poll();
-			});
-		}
+				var repository = new TextRepository(_connectionString);
 
-		public void Poll()
-		{
-			var repository = new TextRepository(_connectionString);
-
-			while (true)
-			{
-				DateTime now = DateTime.UtcNow;
-				IEnumerable<EncryptedItem> items = repository.GetExpiredItems(now);
-
-				foreach (EncryptedItem item in items)
+				while (true)
 				{
-					repository.Delete(item);
-					_logger.LogInformation("Deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
-				}
+					DateTime now = DateTime.UtcNow;
+					IEnumerable<EncryptedItem> items = repository.GetExpiredItems(now);
 
-				_logger.LogInformation("Waiting {0} seconds", _defaultWaitTime.TotalSeconds);
-				Thread.Sleep(_defaultWaitTime);
-			}
+					foreach (EncryptedItem item in items)
+					{
+						repository.Delete(item);
+						_logger.LogInformation("Deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
+					}
+
+					_logger.LogInformation("Waiting {0} seconds", _defaultWaitTime.TotalSeconds);
+					Thread.Sleep(_defaultWaitTime);
+				}
+			});
 		}
 	}
 }

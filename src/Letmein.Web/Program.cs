@@ -9,7 +9,8 @@ namespace Letmein.Web
     {
         public static void Main(string[] args)
         {
-	        Cleanup.Start();
+	        var cleanup = new Cleanup();
+	        cleanup.StartBackgroundCleanup();
 
 			var host = new WebHostBuilder()
                 .UseKestrel()
