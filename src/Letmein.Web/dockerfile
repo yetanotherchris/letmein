@@ -1,0 +1,8 @@
+FROM microsoft/dotnet:1.1.0-sdk-projectjson
+MAINTAINER Chris Small
+
+RUN mkdir /app
+COPY ./bin/Release/netcoreapp1.1/publish /app
+WORKDIR /app
+
+ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]

@@ -1,0 +1,29 @@
+{
+	"iisSettings": {
+		"windowsAuthentication": false,
+		"anonymousAuthentication": true,
+		"iisExpress": {
+			"applicationUrl": "http://localhost:57567/",
+			"sslPort": 0
+		}
+	},
+	"profiles": {
+		"IIS Express": {
+			"commandName": "IISExpress",
+			"launchBrowser": true,
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein"
+			}
+		},
+		"Kestrel": {
+			"commandName": "Project",
+			"launchBrowser": true,
+			"launchUrl": "http://localhost:5000",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein"
+			}
+		}
+	}
+}

@@ -1,0 +1,32 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+	<div class="col-md-12 greycontainer">
+		<textarea name="text" id="text-input" rows="10"></textarea>
+		<input name="password" id="password-text" class="password" type="password" placeholder="password" />
+
+		<form method="post" action="/Store" id="encrypt-form">
+			<input type="hidden" id="cipherJson" name="cipherJson" />
+			<input type="submit" id="submit-button" class="btn btn-success" value="Encrypt" />
+		</form>
+	</div>
+</div>
+
+@section scripts
+{
+	<script>
+		$(document).ready(function () {
+			$("#encrypt-form").submit(function () {
+				var text = $("#text-input").val();
+				var password = $("#password-text").val();
+
+				var json = window.sjcl.encrypt(password, text);
+				$("#cipherJson").val(json);
+
+				return true;
+			});
+		});
+	</script>
+}

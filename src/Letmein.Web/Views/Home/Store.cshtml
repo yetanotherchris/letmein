@@ -1,0 +1,10 @@
+﻿@model EncryptedItemViewModel
+@{
+    ViewData["Title"] = "Done";
+}
+
+<h2>Your text was encrypted</h2>
+<h5>You can access it using the url below. It will expire in 1 hour.</h5>
+<p>
+	<a href="/@Model.FriendlyId">http://@ViewData["BaseUrl"]/@Model.FriendlyId</a>
+</p>

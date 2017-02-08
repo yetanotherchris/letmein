@@ -1,0 +1,44 @@
+﻿@model EncryptedItemViewModel
+@{
+	ViewData["Title"] = "Load";
+}
+
+@if (Model == null)
+{
+	<p>
+		@ViewData.ModelState.First().Value
+	</p>
+}
+else
+{
+	<form id="decrypt-form">
+		<input type="hidden" id="cipherJson" value="@Model.CipherJson" />
+		<input type="password" id="password-text" value="" />
+		<button id="decrypt-button" class="btn btn-success">Decrypt</button>
+		<textarea id="cipher-textarea" rows="15" cols="15" readonly></textarea>
+	</form>
+
+	@section scripts
+	{
+		<script>
+			$(document).ready(function () {
+				$("#decrypt-form").submit(function () {
+					return false;
+				});
+
+				$("#decrypt-button").click(function () {
+					var cipherJson = $("#cipherJson").val();
+					var password = $("#password-text").val();
+
+					try {
+						var text = window.sjcl.decrypt(password, cipherJson);
+						$("#cipher-textarea").val(text);
+					}
+					catch (err) {
+						alert("decryption failed");
+					}
+				});
+			});
+		</script>
+	}
+}
