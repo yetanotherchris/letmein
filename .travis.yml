@@ -11,6 +11,5 @@ script:
   - dotnet publish src/Letmein.Web -c Release
   - cd src/Letmein.Web
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t "anotherchris/letmein:$DOCKER_TAG" .
-  - docker tag "anotherchris/letmein:$DOCKER_TAG" "anotherchris/letmein:latest"
+  - docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
   - docker push "anotherchris/letmein:$DOCKER_TAG"
