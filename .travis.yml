@@ -1,3 +1,4 @@
+# https://docs.travis-ci.com/user/environment-variables/
 language: csharp
 dotnet: 1.0.0-preview2-1-003177
 services:
@@ -5,8 +6,9 @@ services:
 
 script:
   - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
+  - echo $DOCKER_TAG
   - dotnet restore
   - dotnet publish src/Letmein.Web -c Release
   - dotnet publish src/Letmein.Cleanup -c Release
   - cd src/Letmein.Web
-  - docker build -t anotherchris/letmein:$DOCKER_TAG
+  - docker build -t "anotherchris/letmein:$DOCKER_TAG"
