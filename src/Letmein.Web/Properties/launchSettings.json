@@ -22,7 +22,9 @@
 			"launchUrl": "http://localhost:5000",
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
-				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein"
+				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein",
+				"HEADER_TEXT": "letmein.io",
+				"FOOTER_TEXT": "Written by <a href=\"http://www.twitter.com/yetanotherchris\">@yetanotherchris</a> in C#."
 			}
 		}
 	}
