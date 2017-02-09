@@ -1,6 +1,11 @@
 # https://docs.travis-ci.com/user/environment-variables/
 language: csharp
 dotnet: 1.0.0-preview2-1-003177
+
+branches:
+  only:
+  - master
+
 services:
   - docker
 
