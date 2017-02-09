@@ -3,13 +3,20 @@
 }
 
 <div class="row">
-	<div class="col-md-12 greycontainer">
-		<textarea name="text" id="text-input" rows="10"></textarea>
-		<input name="password" id="password-text" class="password" type="password" placeholder="password" />
+	<div class="col-md-12 encrypt-containers">
 
 		<form method="post" action="/Store" id="encrypt-form">
 			<input type="hidden" id="cipherJson" name="cipherJson" />
-			<input type="submit" id="submit-button" class="btn btn-success" value="Encrypt" />
+			<textarea name="text" id="text-input" rows="10"></textarea>
+			
+			<div class="row">
+				<div class="col-md-10">
+					<input name="password" id="password-input" class="password" type="password" placeholder="Enter a password" />
+				</div>
+				<div class="col-md-2">
+					<input type="submit" id="submit-button" class="btn btn-success" value="Encrypt" />
+				</div>
+			</div>
 		</form>
 	</div>
 </div>
@@ -18,10 +25,17 @@
 {
 	<script>
 		$(document).ready(function () {
+			$("#text-input").focus();
+
 			$("#encrypt-form").submit(function () {
 				var text = $("#text-input").val();
-				var password = $("#password-text").val();
+				var password = $("#password-input").val();
 
+				// Clear so they're not POST'd
+				$("#text-input").val("");
+				$("#password-input").val("");
+
+				// Encrypt
 				var json = window.sjcl.encrypt(password, text);
 				$("#cipherJson").val(json);
 

@@ -8,29 +8,42 @@ h1, p {
 	font-family: 'Rubik', sans-serif;
 }
 
-h1 { 
-  font-size: 48pt; 
-  margin-bottom: 50px;
+h1 {
+	font-size: 48pt;
 }
 
-.greycontainer { 
-  border: 3px solid #f7f7f9;
-  padding: 20px; 
-  border-radius: 2px; 
+header {
+	padding: 20px 0px;
 }
 
-textarea { 
-  border: 1px solid #000;
-  background-color: #EFEFEF;
-  padding: 5px; 
-  border-radius: 1px;
-  width: 100%; 
+.encrypt-containers {
+	border: 3px solid #CCC;
+	padding: 20px;
+	border-radius: 2px;
 }
 
-.password { 
-  padding: 5px; 
-  border-radius: 1px;
-  width: 300px; 
-  border: 1px solid #AAA;
-  font-family: 'Rubik', sans-serif; 
+textarea {
+	border: 1px solid #CCC;
+	background-color: #EFEFEF;
+	padding: 5px;
+	border-radius: 1px;
+	width: 100%;
+}
+
+.password {
+	padding: 5px;
+	border-radius: 1px;
+	border: 1px solid #CCC;
+	font-family: 'Rubik', sans-serif;
+	font-size: 18pt;
+	width: 100%;
+	margin-top: 15px;
+}
+
+#submit-button {
+	padding: 10px;
+	font-family: 'Rubik', sans-serif;
+	font-size: 12pt;
+	width: 100%;
+	margin-top: 15px;
 }

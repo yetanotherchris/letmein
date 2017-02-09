@@ -23,8 +23,10 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
 				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein",
-				"HEADER_TEXT": "letmein.io",
-				"FOOTER_TEXT": "Written by <a href=\"http://www.twitter.com/yetanotherchris\">@yetanotherchris</a> in C#."
+				"PAGE_TITLE": "letmein.io",
+				"HEADER_TEXT": "title here",
+				"HEADER_SUBTEXT": "subtext here",
+				"FOOTER_TEXT": "footer here"
 			}
 		}
 	}

@@ -3,29 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>letmein.io</title>
+	<title><configtext key="PAGE_TITLE" /></title>
 	
 	<link rel="stylesheet" prefetch href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="~/css/main.css" rel="stylesheet" />
 
 	<script src="~/js/jquery-3.1.1.min.js"></script>
 	<script src="~/js/sjcl.js"></script>
-	<script src="~/js/encryption.js"></script>
 </head>
 <body>
 <div class="container">
-	<header class="row" style="padding: 20px;">
+	<header class="row">
 		<div class="col-md-2">
 			<img src="/images/favicon.png" height="128" width="128">
 		</div>
 		<div class="col-md-10">
 			<h1><configtext key="HEADER_TEXT" /></h1>
-			<p>encrypted notes that self-destruct</p>
+			<p><configtext key="HEADER_SUBTEXT" /></p>
 		</div>
 	</header>
 	@RenderBody()
 	
-	<footer>
+	<footer class="row">
 		<p><configtext key="FOOTER_TEXT" /></p>
 	</footer>
 </div>
