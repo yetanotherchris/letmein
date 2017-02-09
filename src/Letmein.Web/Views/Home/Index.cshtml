@@ -4,14 +4,18 @@
 
 <div class="row">
 	<div class="col-md-12 encrypt-containers">
+		
+		<p>
+			Enter the text you want to encrypt, and create a password to encrypt it with.	
+		</p>
 
 		<form method="post" action="/Store" id="encrypt-form">
 			<input type="hidden" id="cipherJson" name="cipherJson" />
-			<textarea name="text" id="text-input" rows="10"></textarea>
+			<textarea name="text" id="text-input" rows="10" placeholder="Enter your text to encrypt"></textarea>
 			
 			<div class="row">
 				<div class="col-md-10">
-					<input name="password" id="password-input" class="password" type="password" placeholder="Enter a password" />
+					<input name="password" id="password-input" class="password" type="password" placeholder="Create a password" />
 				</div>
 				<div class="col-md-2">
 					<input type="submit" id="submit-button" class="btn btn-success" value="Encrypt" />
