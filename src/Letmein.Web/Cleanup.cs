@@ -49,8 +49,8 @@ namespace Letmein.Web
 		public void StartBackgroundCleanup()
 		{
 			// Begin
-			_logger.LogInformation("Cleanup service: starting...");
-			_logger.LogInformation("Cleanup service: by default I will sleep {0} seconds between checks.", _defaultWaitTime);
+			_logger.LogInformation("Starting...");
+			_logger.LogInformation("By default I will sleep {0} seconds between checks.", _defaultWaitTime);
 
 			Task.Run(() =>
 			{
@@ -61,15 +61,15 @@ namespace Letmein.Web
 					DateTime now = DateTime.UtcNow;
 					IEnumerable<EncryptedItem> items = repository.GetExpiredItems(now);
 
-					_logger.LogInformation("Cleanup service: {0} expired items found", items.Count());
+					_logger.LogInformation("{0} expired items found", items.Count());
 
 					foreach (EncryptedItem item in items)
 					{
 						repository.Delete(item);
-						_logger.LogInformation("Cleanup service: deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
+						_logger.LogInformation("Deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
 					}
 
-					_logger.LogInformation("Cleanup service: sleeping for {0} seconds", _defaultWaitTime.TotalSeconds);
+					_logger.LogInformation("Sleeping for {0} seconds", _defaultWaitTime.TotalSeconds);
 					Thread.Sleep(_defaultWaitTime);
 				}
 			});
