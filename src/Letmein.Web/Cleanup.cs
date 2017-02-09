@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Letmein.Core;
@@ -25,7 +26,7 @@ namespace Letmein.Web
 			// Setup Sirilog
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()
-				.WriteTo.LiterateConsole()
+				.WriteTo.LiterateConsole(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Cleanup Service] {Message}{NewLine}{Exception}")
 				.CreateLogger();
 
 			// Configure MS Logging
@@ -48,8 +49,8 @@ namespace Letmein.Web
 		public void StartBackgroundCleanup()
 		{
 			// Begin
-			_logger.LogInformation("Starting Cleanup service.");
-			_logger.LogInformation("By default I will wait {0} between polls", _defaultWaitTime);
+			_logger.LogInformation("Cleanup service: starting...");
+			_logger.LogInformation("Cleanup service: by default I will sleep {0} seconds between checks.", _defaultWaitTime);
 
 			Task.Run(() =>
 			{
@@ -60,13 +61,15 @@ namespace Letmein.Web
 					DateTime now = DateTime.UtcNow;
 					IEnumerable<EncryptedItem> items = repository.GetExpiredItems(now);
 
+					_logger.LogInformation("Cleanup service: {0} expired items found", items.Count());
+
 					foreach (EncryptedItem item in items)
 					{
 						repository.Delete(item);
-						_logger.LogInformation("Deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
+						_logger.LogInformation("Cleanup service: deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
 					}
 
-					_logger.LogInformation("Waiting {0} seconds", _defaultWaitTime.TotalSeconds);
+					_logger.LogInformation("Cleanup service: sleeping for {0} seconds", _defaultWaitTime.TotalSeconds);
 					Thread.Sleep(_defaultWaitTime);
 				}
 			});

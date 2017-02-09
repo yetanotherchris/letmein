@@ -28,7 +28,7 @@ namespace Letmein.Web
 			// Setup Sirilog
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()
-				.WriteTo.LiterateConsole()
+				.WriteTo.LiterateConsole(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Website] {Message}{NewLine}{Exception}")
 				.CreateLogger();
 		}
 
