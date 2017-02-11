@@ -16,6 +16,8 @@ namespace Letmein.Web
 {
 	public class Startup
 	{
+		public IConfigurationRoot Configuration { get; }
+
 		public Startup(IHostingEnvironment env)
 		{
 			var builder = new ConfigurationBuilder()
@@ -32,8 +34,6 @@ namespace Letmein.Web
 				.CreateLogger();
 		}
 
-		public IConfigurationRoot Configuration { get; }
-
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
@@ -43,6 +43,7 @@ namespace Letmein.Web
 			services.AddMvc();
 			services.AddLogging();
 
+			services.AddSingleton<IConfigurationRoot>(sp => Configuration);
 			services.AddScoped<SymmetricAlgorithm>(sp => Aes.Create());
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();

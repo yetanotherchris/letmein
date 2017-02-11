@@ -2,6 +2,7 @@
 using Letmein.Core.Services;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Letmein.Web.Controllers
 {
