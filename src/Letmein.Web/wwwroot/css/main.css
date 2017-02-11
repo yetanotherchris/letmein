@@ -1,7 +1,7 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Rubik');
 
-footer {
-	margin-top: 50px;
+header {
+	padding: 20px 0px;
 }
 
 h1, p {
@@ -10,16 +10,6 @@ h1, p {
 
 h1 {
 	font-size: 48pt;
-}
-
-header {
-	padding: 20px 0px;
-}
-
-.encrypt-containers {
-	border: 3px solid #CCC;
-	padding: 20px;
-	border-radius: 2px;
 }
 
 textarea {
@@ -40,10 +30,27 @@ textarea {
 	margin-top: 15px;
 }
 
-#submit-button {
+#encrypt-button, #decrypt-button {
 	padding: 10px;
 	font-family: 'Rubik', sans-serif;
 	font-size: 12pt;
 	width: 100%;
 	margin-top: 15px;
+}
+
+#shorturl {
+	padding: 5px;
+	font-family: 'Rubik', sans-serif;
+	font-size: 14pt;
+	background-color: #EEE;
+	margin: 10px 0px;
+}
+
+footer {
+	margin-top: 50px;
+}
+
+footer > div > p {
+	padding-top: 10px;
+	border-top: 1px solid #EEE;
 }

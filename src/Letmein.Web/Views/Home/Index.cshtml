@@ -3,22 +3,21 @@
 }
 
 <div class="row">
-	<div class="col-md-12 encrypt-containers">
-		
+	<div class="col-md-12">
 		<p>
 			Enter the text you want to encrypt, and create a password to encrypt it with.	
 		</p>
 
 		<form method="post" action="/Store" id="encrypt-form">
 			<input type="hidden" id="cipherJson" name="cipherJson" />
-			<textarea name="text" id="text-input" rows="10" placeholder="Enter your text to encrypt"></textarea>
+			<textarea name="text" id="text-textarea" rows="10" placeholder="Enter some text to encrypt"></textarea>
 			
 			<div class="row">
 				<div class="col-md-10">
 					<input name="password" id="password-input" class="password" type="password" placeholder="Create a password" />
 				</div>
 				<div class="col-md-2">
-					<input type="submit" id="submit-button" class="btn btn-success" value="Encrypt" />
+					<input type="submit" id="encrypt-button" class="btn btn-success" value="Encrypt" />
 				</div>
 			</div>
 		</form>
@@ -29,14 +28,14 @@
 {
 	<script>
 		$(document).ready(function () {
-			$("#text-input").focus();
+			$("#text-textarea").focus();
 
 			$("#encrypt-form").submit(function () {
-				var text = $("#text-input").val();
+				var text = $("#text-textarea").val();
 				var password = $("#password-input").val();
 
 				// Clear so they're not POST'd
-				$("#text-input").val("");
+				$("#text-textarea").val("");
 				$("#password-input").val("");
 
 				// Encrypt
