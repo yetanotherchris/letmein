@@ -54,7 +54,8 @@ namespace Letmein.Web.Controllers
 			var model = new EncryptedItemViewModel()
 			{
 				FriendlyId = encryptedItem.FriendlyId,
-				CipherJson = encryptedItem.CipherJson
+				CipherJson = encryptedItem.CipherJson,
+				ExpiryDate = encryptedItem.ExpiresOn
 			};
 
 			return View(model);

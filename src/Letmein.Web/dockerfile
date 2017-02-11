@@ -4,8 +4,8 @@ MAINTAINER Chris Small
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 ENV PAGE_TITLE="letmein.io"
 ENV HEADER_TEXT="letmein.io"
-ENV HEADER_SUBTEXT="encrypted notes"
-ENV FOOTER_TEXT="Written by <a href=\"http://www.twitter.com/yetanotherchris\">@yetanotherchris</a> in C#."
+ENV HEADER_SUBTEXT="note encryption service"
+ENV FOOTER_TEXT="(C) 2017 letmein.io. <a href="/FAQs">FAQs</a> | Created by <a href="http://www.twitter.com/yetanotherchris">@yetanotherchris</a>."
 
 RUN mkdir /app
 COPY ./bin/Release/netcoreapp1.1/publish /app

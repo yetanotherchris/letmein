@@ -27,12 +27,20 @@ else
 				<input type="button" id="decrypt-button" class="btn btn-success" value="Decrypt" />
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div id="expiry-date" class="label label-info pull-left"></div>
+			</div>
+		</div>
 	</form>
 
 	@section scripts
 	{
 		<script>
 			$(document).ready(function () {
+				$("#password-input").focus();
+
 				$("#decrypt-form").submit(function () {
 					return false;
 				});
@@ -44,9 +52,43 @@ else
 					try {
 						var text = window.sjcl.decrypt(password, cipherJson);
 						$("#cipher-textarea").val(text);
+
+						$("#expiry-date").show();
+						$("#expiry-date")
+						  .countdown("@Model.ExpiryDate.ToString("yyyy-MM-dd")", function (event) {
+  							$(this).text(
+							  event.strftime('Expires in %D days %H hours %M mins %S secs')
+							);
+						  });
+
+						$.toast({
+							heading: "Success",
+							text: "Your note was decrypted.",
+							icon: "success",
+							showHideTransition: "fade",
+							allowToastClose: true,
+							hideAfter: 2000,
+							stack: 5,
+							position: "top-center",
+							textAlign: "left",
+							loader: false
+						});
 					}
 					catch (err) {
-						alert("decryption failed");
+						$.toast({
+							heading: "Failure",
+							text: "Unable to decrypt the note.",
+							icon: "error",
+							showHideTransition: "fade",
+							allowToastClose: true,
+							hideAfter: 2000,
+							stack: 5,
+							position: "top-center",
+							textAlign: "left",
+							loader: false
+						});
+
+						console.log(err);
 					}
 				});
 			});

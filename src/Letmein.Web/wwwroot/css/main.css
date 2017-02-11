@@ -46,6 +46,10 @@ textarea {
 	margin: 10px 0px;
 }
 
+#expiry-date {
+	margin-top: 10px;
+}
+
 footer {
 	margin-top: 50px;
 }
