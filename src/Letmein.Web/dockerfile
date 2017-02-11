@@ -5,7 +5,7 @@ ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 ENV PAGE_TITLE="letmein.io"
 ENV HEADER_TEXT="letmein.io"
 ENV HEADER_SUBTEXT="note encryption service"
-ENV FOOTER_TEXT="<p style="text-align:center"><a href="https://github.com/yetanotherchris/letmein">Github source</a>&nbsp;|&nbsp;<a href="/FAQs">FAQs</a></p>"
+ENV FOOTER_TEXT="<a href="https://github.com/yetanotherchris/letmein">Github source</a>&nbsp;|&nbsp;<a href="/FAQs">FAQs</a>"
 
 RUN mkdir /app
 COPY ./bin/Release/netcoreapp1.1/publish /app
