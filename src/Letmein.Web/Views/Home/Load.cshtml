@@ -55,7 +55,7 @@ else
 
 						$("#expiry-date").show();
 						$("#expiry-date")
-						  .countdown("@Model.ExpiryDate.ToString("yyyy-MM-dd")", function (event) {
+						  .countdown("@Model.ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss")", function (event) {
   							$(this).text(
 							  event.strftime('Expires in %D days %H hours %M mins %S secs')
 							);
