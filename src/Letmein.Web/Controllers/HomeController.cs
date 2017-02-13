@@ -1,18 +1,22 @@
-﻿using Letmein.Core;
+﻿using System;
+using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 
 namespace Letmein.Web.Controllers
 {
 	public class HomeController : Controller
 	{
 		private readonly ITextEncryptionService _service;
+		private readonly IConfiguration _configuration;
 
-		public HomeController(ITextEncryptionService service)
+		public HomeController(ITextEncryptionService service, IConfiguration configuration)
 		{
 			_service = service;
+			_configuration = configuration;
 		}
 
 		public IActionResult Index()
@@ -33,6 +37,7 @@ namespace Letmein.Web.Controllers
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
 
 			ViewData["BaseUrl"] = this.Request.Host;
+			ViewData["ExpiresInHours"] = TimeSpan.FromMinutes(_configuration.ExpirePastesAfter).TotalHours.ToString();
 
 			return View(model);
 		}
