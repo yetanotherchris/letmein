@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Repositories.Postgres;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 
 namespace Letmein.Web
 {
@@ -17,13 +17,9 @@ namespace Letmein.Web
 		private readonly string _connectionString;
 		private TimeSpan _defaultWaitTime;
 
-		public Cleanup()
+		public Cleanup(IConfiguration configuration)
 		{
-			// Expected env variables:
-			// - POSTGRES_CONNECTIONSTRING
-			// - POLLER_WAIT_TIME (in seconds, optional, defaults to 30)
-
-			// Setup Sirilog
+			// Sirilog for nicer looking console logs
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()
 				.WriteTo.LiterateConsole(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Cleanup Service] {Message}{NewLine}{Exception}")
@@ -33,17 +29,9 @@ namespace Letmein.Web
 			ILoggerFactory loggingFactory = new LoggerFactory().AddSerilog();
 			_logger = loggingFactory.CreateLogger<Cleanup>();
 
-			// Read environmental variables
-			IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
-			var config = configurationBuilder.Build();
-			_connectionString = config["POSTGRES_CONNECTIONSTRING"];
-
-			double pollWaitTime = 30d;
-			if (!string.IsNullOrEmpty(config["POLLER_WAIT_TIME"]))
-			{
-				double.TryParse(config["POLLER_WAIT_TIME"], out pollWaitTime);
-			}
-			_defaultWaitTime = TimeSpan.FromSeconds(pollWaitTime);
+			// Config
+			_connectionString = configuration.PostgresConnectionString;
+			_defaultWaitTime = TimeSpan.FromSeconds(configuration.CleanupSleepTime);
 		}
 
 		public void StartBackgroundCleanup()

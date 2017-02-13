@@ -16,23 +16,26 @@ namespace Letmein.Tests.Unit.Core.Services
 		private Mock<IUniqueIdGenerator> _uniqueIdGeneratorMock;
 		private TextRepositoryMock _repository;
 		private TextEncryptionService _encryptionService;
+		private ConfigurationStub _configuration;
 
 		[SetUp]
 		public void Setup()
 		{
 			ILoggerFactory loggingFactory = new LoggerFactory().AddSerilog();
 
+			_configuration = new ConfigurationStub();
 			_uniqueIdGeneratorMock = new Mock<IUniqueIdGenerator>();
 			_repository = new TextRepositoryMock();
-			_encryptionService = new TextEncryptionService(_uniqueIdGeneratorMock.Object, _repository, loggingFactory);
+			_encryptionService = new TextEncryptionService(_uniqueIdGeneratorMock.Object, _repository, loggingFactory, _configuration);
 		}
 
 		[Test]
-		public void StoredEncryptedJson_should_persist_to_repository_and_set_expiry_to_12_hours()
+		public void StoredEncryptedJson_should_persist_to_repository_and_set_expiry()
 		{
 			// Arrange
 			string friendlyId = "my FriendlyId";
 			string json = "{ encrypted json }";
+			_configuration.ExpirePastesAfter = 60 * 12;
 
 			// Act
 			string newUrl = _encryptionService.StoredEncryptedJson(json, friendlyId);
@@ -45,7 +48,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			Assert.That(actualSavedItem.FriendlyId, Is.EqualTo(friendlyId));
 			Assert.That(actualSavedItem.CipherJson, Is.EqualTo(json));
 			Assert.That(actualSavedItem.CreatedOn, Is.GreaterThanOrEqualTo(DateTime.Today));
-			Assert.That(actualSavedItem.ExpiresOn, Is.EqualTo(actualSavedItem.CreatedOn.AddHours(12)));
+			Assert.That(actualSavedItem.ExpiresOn, Is.EqualTo(actualSavedItem.CreatedOn.AddSeconds(_configuration.ExpirePastesAfter)));
 		}
 
 		[Test]

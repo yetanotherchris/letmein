@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Letmein.Core.Configuration;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Letmein.Web
 {
@@ -9,9 +11,15 @@ namespace Letmein.Web
     {
         public static void Main(string[] args)
         {
-	        var cleanup = new Cleanup();
+			// Cleanup service
+			IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
+			var configurationRoot = configurationBuilder.Build();
+			var configuration = new DefaultConfiguration(configurationRoot);
+
+			var cleanup = new Cleanup(configuration);
 	        cleanup.StartBackgroundCleanup();
 
+			// Website
 			var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())

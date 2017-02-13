@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Repositories;
 using Letmein.Core.Repositories.Postgres;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using StructureMap;
+using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 
 namespace Letmein.Web
 {
@@ -37,17 +39,20 @@ namespace Letmein.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			string connectionString = Configuration["POSTGRES_CONNECTIONSTRING"];
-
 			// Add framework services.
 			services.AddMvc();
 			services.AddLogging();
 
 			services.AddSingleton<IConfigurationRoot>(sp => Configuration);
+			services.AddSingleton<IConfiguration>(sp => new DefaultConfiguration(Configuration));
 			services.AddScoped<SymmetricAlgorithm>(sp => Aes.Create());
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
-			services.AddScoped<ITextRepository>(sp => new TextRepository(connectionString));
+			services.AddScoped<ITextRepository>(sp =>
+			{
+				var config = sp.GetService<IConfiguration>();
+				return new TextRepository(config.PostgresConnectionString);
+			});
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
 		}
 
