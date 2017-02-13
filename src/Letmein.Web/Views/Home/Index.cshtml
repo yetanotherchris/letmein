@@ -38,6 +38,16 @@
 			$("#text-textarea").focus();
 
 			$("#encrypt-form").submit(function () {
+				if ($("#text-textarea").val() === "") {
+					showError("Please enter some text.");
+					return false;
+				}
+
+				if ($("#password-input").val().length < 5) {
+					showError("Please enter a password 4 or more character long.");
+					return false;
+				}
+
 				var text = $("#text-textarea").val();
 				var password = $("#password-input").val();
 
@@ -52,5 +62,20 @@
 				return true;
 			});
 		});
+
+		function showError(text) {
+			$.toast({
+				heading: "Error",
+				text: text,
+				icon: "error",
+				showHideTransition: "fade",
+				allowToastClose: true,
+				hideAfter: 2000,
+				stack: 5,
+				position: "top-center",
+				textAlign: "left",
+				loader: false
+			});
+		}
 	</script>
 }
