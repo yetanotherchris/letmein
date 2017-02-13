@@ -12,6 +12,11 @@ h1 {
 	font-size: 48pt;
 }
 
+#header-subtext {
+	margin-top: -20px;
+	color: #9d9e9c;
+}
+
 textarea {
 	border: 1px solid #CCC;
 	background-color: #EFEFEF;
