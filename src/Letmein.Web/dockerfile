@@ -2,6 +2,9 @@ FROM microsoft/dotnet:1.1.0-sdk-projectjson
 MAINTAINER Chris Small
 
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+ENV POSTGRES_CONNECTIONSTRING=""
+ENV CLEANUP_SLEEPTIME="30"
+ENV EXPIRE_PASTES_AFTER="43200"
 ENV PAGE_TITLE="letmein.io"
 ENV HEADER_TEXT="letmein.io"
 ENV HEADER_SUBTEXT="note encryption service"
