@@ -1,17 +1,26 @@
 FROM microsoft/dotnet:1.1.0-sdk-projectjson
 MAINTAINER Chris Small
 
-ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
-ENV POSTGRES_CONNECTIONSTRING=""
-ENV CLEANUP_SLEEPTIME="30"
-ENV EXPIRE_PASTES_AFTER="43200"
-ENV PAGE_TITLE="letmein.io"
-ENV HEADER_TEXT="letmein.io"
-ENV HEADER_SUBTEXT="note encryption service"
-ENV FOOTER_TEXT="<a href="https://github.com/yetanotherchris/letmein">Github source</a>&nbsp;|&nbsp;<a href="/FAQs">FAQs</a>"
-
 RUN mkdir /app
 COPY ./bin/Release/netcoreapp1.1/publish /app
 WORKDIR /app
 
 ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]
+
+# Required by .NET core
+ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+
+# Postgres database connection string
+ENV POSTGRES_CONNECTIONSTRING=""
+
+# Minutes that pastes expire after
+ENV EXPIRE_PASTES_AFTER="43200"
+
+# Number of seconds to sleep inbetween checking for expired pastes
+ENV CLEANUP_SLEEPTIME="30"
+
+# Various UI customisations
+ENV PAGE_TITLE="letmein.io"
+ENV HEADER_TEXT="letmein.io"
+ENV HEADER_SUBTEXT="note encryption service"
+ENV FOOTER_TEXT="<a href="https://github.com/yetanotherchris/letmein">Github source</a>&nbsp;|&nbsp;<a href="/FAQs">FAQs</a>"

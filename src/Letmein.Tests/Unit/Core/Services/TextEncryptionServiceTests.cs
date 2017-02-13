@@ -48,7 +48,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			Assert.That(actualSavedItem.FriendlyId, Is.EqualTo(friendlyId));
 			Assert.That(actualSavedItem.CipherJson, Is.EqualTo(json));
 			Assert.That(actualSavedItem.CreatedOn, Is.GreaterThanOrEqualTo(DateTime.Today));
-			Assert.That(actualSavedItem.ExpiresOn, Is.EqualTo(actualSavedItem.CreatedOn.AddSeconds(_configuration.ExpirePastesAfter)));
+			Assert.That(actualSavedItem.ExpiresOn, Is.EqualTo(actualSavedItem.CreatedOn.AddMinutes(_configuration.ExpirePastesAfter)));
 		}
 
 		[Test]

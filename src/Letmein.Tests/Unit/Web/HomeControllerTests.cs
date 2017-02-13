@@ -1,5 +1,7 @@
-﻿using Letmein.Core;
+﻿using System;
+using Letmein.Core;
 using Letmein.Core.Services;
+using Letmein.Tests.Unit.MocksAndStubs;
 using Letmein.Web.Controllers;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +17,7 @@ namespace Letmein.Tests.Unit.Web
 	{
 		private HomeController _controller;
 		private Mock<ITextEncryptionService> _encryptionService;
+		private ConfigurationStub _configuration;
 
 		[SetUp]
 		public void Setup()
@@ -23,8 +26,9 @@ namespace Letmein.Tests.Unit.Web
 			var request = new DefaultHttpRequest(httpcontext);
 			request.Host = new HostString("localhost");
 
+			_configuration = new ConfigurationStub();
 			_encryptionService = new Mock<ITextEncryptionService>();
-			_controller = new HomeController(_encryptionService.Object);
+			_controller = new HomeController(_encryptionService.Object, _configuration);
 			_controller.ControllerContext = new ControllerContext();
 			_controller.ControllerContext.HttpContext = httpcontext;
 		}
@@ -43,6 +47,9 @@ namespace Letmein.Tests.Unit.Web
 		public void Store_should_Store_and_return_model_with_new_friendlyid()
 		{
 			// Arrange
+			_configuration.ExpirePastesAfter = 90;
+			string expectedExpiresHours = TimeSpan.FromMinutes(_configuration.ExpirePastesAfter).TotalHours.ToString();
+			Console.WriteLine(expectedExpiresHours);
 			string json = "{json}";
 			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "")).Returns("the-friendlyid");
 
@@ -55,6 +62,8 @@ namespace Letmein.Tests.Unit.Web
 			EncryptedItemViewModel model = result.Model as EncryptedItemViewModel;
 			Assert.That(model, Is.Not.Null);
 			Assert.That(model.FriendlyId, Is.EqualTo("the-friendlyid"));
+			Assert.That(_controller.ViewData["BaseUrl"].ToString(), Is.EqualTo("localhost"));
+			Assert.That(_controller.ViewData["ExpiresInHours"].ToString(), Is.EqualTo(expectedExpiresHours));
 		}
 
 		[Test]

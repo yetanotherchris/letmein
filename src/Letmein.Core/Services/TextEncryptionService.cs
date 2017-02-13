@@ -39,7 +39,7 @@ namespace Letmein.Core.Services
 					FriendlyId = friendlyId,
 					AlgorithmName = "STANFORDV1",
 					CreatedOn = createdate,
-					ExpiresOn = createdate.AddSeconds(_configuration.ExpirePastesAfter),
+					ExpiresOn = createdate.AddMinutes(_configuration.ExpirePastesAfter),
 					CipherJson = json,
 				};
 
