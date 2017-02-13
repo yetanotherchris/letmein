@@ -5,9 +5,12 @@
 
 @if (Model == null)
 {
-	<p>
-		@ViewData.ModelState.First().Value
-	</p>
+	foreach (var errors in ViewData.ModelState.Values.Where(x => x.Errors.Count > 0))
+	{
+		<p>
+			@errors.Errors.FirstOrDefault().ErrorMessage
+		</p>
+	}
 }
 else
 {
@@ -55,8 +58,11 @@ else
 
 						$("#expiry-date").show();
 						$("#expiry-date")
-						  .countdown("@Model.ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss")", function (event) {
-  							$(this).text(
+							.on("finish.countdown", function () {
+								document.location.reload();
+							})
+							.countdown("@Model.ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss")", function (event) {
+						  	$(this).text(
 							  event.strftime('Expires in %D days %H hours %M mins %S secs')
 							);
 						  });

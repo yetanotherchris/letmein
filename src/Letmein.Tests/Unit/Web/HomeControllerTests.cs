@@ -48,8 +48,6 @@ namespace Letmein.Tests.Unit.Web
 		{
 			// Arrange
 			_configuration.ExpirePastesAfter = 90;
-			string expectedExpiresHours = TimeSpan.FromMinutes(_configuration.ExpirePastesAfter).TotalHours.ToString();
-			Console.WriteLine(expectedExpiresHours);
 			string json = "{json}";
 			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "")).Returns("the-friendlyid");
 
@@ -63,7 +61,22 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(model, Is.Not.Null);
 			Assert.That(model.FriendlyId, Is.EqualTo("the-friendlyid"));
 			Assert.That(_controller.ViewData["BaseUrl"].ToString(), Is.EqualTo("localhost"));
-			Assert.That(_controller.ViewData["ExpiresInHours"].ToString(), Is.EqualTo(expectedExpiresHours));
+		}
+
+		[Test]
+		[TestCase(90, "1 hour(s) 30 minute(s)")]
+		[TestCase(58, "58 minutes")]
+		public void Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
+		{
+			// Arrange
+			_configuration.ExpirePastesAfter = minutes;
+
+			// Act
+			ViewResult result = _controller.Store("do you know jason?") as ViewResult;
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.That(_controller.ViewData["ExpiresIn"].ToString(), Is.EqualTo(expectedViewData));
 		}
 
 		[Test]
@@ -84,7 +97,8 @@ namespace Letmein.Tests.Unit.Web
 			var expectedItem = new EncryptedItem()
 			{
 				FriendlyId = "the-friendlyid",
-				CipherJson = "{json}"
+				CipherJson = "{json}",
+				ExpiresOn = DateTime.Today.AddDays(1)
 			};
 
 			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).Returns(expectedItem);
@@ -117,6 +131,30 @@ namespace Letmein.Tests.Unit.Web
 		{
 			// Arrange
 			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).Returns<EncryptedItem>(null);
+
+			// Act
+			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+
+			EncryptedItemViewModel model = result.Model as EncryptedItemViewModel;
+			Assert.That(model, Is.Null);
+			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+		}
+
+		[Test]
+		public void Load_should_set_modelstate_errors_and_return_null_model_when_item_is_expired()
+		{
+			// Arrange
+			var expectedItem = new EncryptedItem()
+			{
+				FriendlyId = "the-friendlyid",
+				CipherJson = "{json}",
+				ExpiresOn = DateTime.Today.AddYears(-1)
+			};
+
+			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).Returns(expectedItem);
 
 			// Act
 			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
