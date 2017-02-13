@@ -3,7 +3,6 @@ using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 
 namespace Letmein.Web.Controllers
@@ -37,7 +36,17 @@ namespace Letmein.Web.Controllers
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
 
 			ViewData["BaseUrl"] = this.Request.Host;
-			ViewData["ExpiresInHours"] = TimeSpan.FromMinutes(_configuration.ExpirePastesAfter).TotalHours.ToString();
+
+			TimeSpan expireTimeSpan = TimeSpan.FromMinutes(_configuration.ExpirePastesAfter);
+
+			if (expireTimeSpan.TotalHours < 1)
+			{
+				ViewData["ExpiresIn"] = expireTimeSpan.TotalMinutes + " minutes";
+			}
+			else
+			{
+				ViewData["ExpiresIn"] = expireTimeSpan.ToString("%h' hour(s) '%m' minute(s)'");
+			}
 
 			return View(model);
 		}
@@ -52,7 +61,13 @@ namespace Letmein.Web.Controllers
 			EncryptedItem encryptedItem = _service.LoadEncryptedJson(friendlyId);
 			if (encryptedItem == null)
 			{
-				ModelState.AddModelError("Failure", "The url is either invalid, or the password was incorrect.");
+				ModelState.AddModelError("Failure", "The url is invalid or the paste has expired.");
+				return View();
+			}
+
+			if (encryptedItem.ExpiresOn <= DateTime.UtcNow)
+			{
+				ModelState.AddModelError("Failure", "The paste has expired.");
 				return View();
 			}
 

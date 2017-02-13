@@ -2,16 +2,23 @@
 	ViewData["Title"] = "Home Page";
 }
 
+@foreach (var errors in ViewData.ModelState.Values.Where(x => x.Errors.Count > 0))
+{
+	<p>
+		@errors.Errors.FirstOrDefault().ErrorMessage
+	</p>
+}
+
 <div class="row">
 	<div class="col-md-12">
 		<p>
-			Enter the text you want to encrypt, and create a password to encrypt it with.	
+			Enter the text you want to encrypt, and create a password to encrypt it with.
 		</p>
 
 		<form method="post" action="/Store" id="encrypt-form">
 			<input type="hidden" id="cipherJson" name="cipherJson" />
 			<textarea name="text" id="text-textarea" rows="10" placeholder="Enter some text to encrypt"></textarea>
-			
+
 			<div class="row">
 				<div class="col-md-10">
 					<input name="password" id="password-input" class="password" type="password" placeholder="Create a password" />
