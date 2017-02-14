@@ -27,12 +27,13 @@ textarea {
 
 .password {
 	padding: 5px;
-	border-radius: 1px;
+	border-radius: 5px;
 	border: 1px solid #CCC;
 	font-family: 'Rubik', sans-serif;
-	font-size: 18pt;
+	font-size: 16pt;
 	width: 100%;
 	margin-top: 15px;
+	background-color: #EFEFEF;
 }
 
 #encrypt-button, #decrypt-button {
