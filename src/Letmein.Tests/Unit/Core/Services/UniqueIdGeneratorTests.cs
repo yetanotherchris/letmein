@@ -10,7 +10,12 @@ namespace Letmein.Tests.Unit.Core.Services
 	public class UniqueIdGeneratorTests
 	{
 		[Test]
-		public void should_generate_unqueids()
+		[TestCase(IdGenerationType.Short)]
+		[TestCase(IdGenerationType.Default)]
+		[TestCase(IdGenerationType.Prounceable)]
+		[TestCase(IdGenerationType.RandomWithProunceable)]
+		[TestCase(IdGenerationType.ShortPronounceable)]
+		public void should_generate_unqueids(IdGenerationType idGenerationType)
 		{
 			// Arrange
 			var generator = new UniqueIdGenerator();
@@ -19,7 +24,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			// Act + Assert
 			for (int i = 0; i < 5; i++)
 			{
-				string password = generator.Generate(IdGenerationType.Prounceable);
+				string password = generator.Generate(idGenerationType);
 				Console.WriteLine(password);
 
 				if (list.Contains(password))

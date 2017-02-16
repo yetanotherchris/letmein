@@ -15,18 +15,54 @@ namespace Letmein.Core.Services.UniqueId
 
 		public string Generate(IdGenerationType idGenerationType)
 		{
-			var passwordBuilder = new StringBuilder();
+			string password = "";
 
-			for (int i = 0; i < 4; i++)
+			switch (idGenerationType)
 			{
-				passwordBuilder.Append(GetUniqueChar());
+				case IdGenerationType.RandomWithProunceable:
+					password = GetRandomCharacters(4) + "_" + GetPronounceable();
+					break;
+
+				case IdGenerationType.Prounceable:
+					password = GetPronounceable();
+					break;
+
+				case IdGenerationType.ShortPronounceable:
+					password = GetShortPronounceable();
+					break;
+
+				case IdGenerationType.Short:
+					password = GetRandomCharacters(4);
+					break;
+
+				default:
+					throw new ArgumentOutOfRangeException(nameof(idGenerationType), idGenerationType, null);
 			}
-			passwordBuilder.Append("_");
 
+			return password;
+		}
+
+		private string GetShortPronounceable()
+		{
+			return _generator.GeneratePassword(5);
+		}
+
+		private string GetPronounceable()
+		{
 			int passwordLength = _random.Next(5, 9);
-			passwordBuilder.Append(_generator.GeneratePassword(passwordLength));
+			return _generator.GeneratePassword(passwordLength);
+		}
 
-			return passwordBuilder.ToString();
+		private string GetRandomCharacters(int length)
+		{
+			var builder = new StringBuilder();
+
+			for (int i = 0; i < length; i++)
+			{
+				builder.Append(GetUniqueChar());
+			}
+
+			return builder.ToString();
 		}
 
 		private char GetUniqueChar()
