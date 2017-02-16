@@ -1,5 +1,6 @@
 ﻿using System;
 using Letmein.Core;
+using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Services;
 using Letmein.Core.Services.UniqueId;
@@ -58,7 +59,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			string json = "{ encrypted json }";
 			string friendlyId = "";
 
-			_uniqueIdGeneratorMock.Setup(x => x.Generate()).Returns("my id");
+			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.Prounceable)).Returns("my id");
 
 			// Act
 			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Letmein.Core.Configuration;
 using Letmein.Core.Services.UniqueId;
 using NUnit.Framework;
 
@@ -18,7 +19,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			// Act + Assert
 			for (int i = 0; i < 5; i++)
 			{
-				string password = generator.Generate();
+				string password = generator.Generate(IdGenerationType.Prounceable);
 				Console.WriteLine(password);
 
 				if (list.Contains(password))
@@ -53,7 +54,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			int i = 0;
 			while (i < 100000)
 			{
-				string pwd = generator.Generate();
+				string pwd = generator.Generate(IdGenerationType.Prounceable);
 
 				if (list.Contains(pwd))
 				{
@@ -88,7 +89,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			TimeSpan total = DateTime.Now - now;
 			while (total.TotalSeconds < secondsToRun)
 			{
-				string pwd = generator.Generate();
+				string pwd = generator.Generate(IdGenerationType.Prounceable);
 
 				if (list.Contains(pwd))
 					break;

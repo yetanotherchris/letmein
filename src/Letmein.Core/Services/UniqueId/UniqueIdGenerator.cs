@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Letmein.Core.Configuration;
 using Letmein.Core.Services.UniqueId.PronounceablePassword;
 
 namespace Letmein.Core.Services.UniqueId
@@ -12,7 +13,7 @@ namespace Letmein.Core.Services.UniqueId
 		private static readonly string _alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
 		private static readonly int _alphabetLength = _alphabet.Length - 1;
 
-		public string Generate()
+		public string Generate(IdGenerationType idGenerationType)
 		{
 			var passwordBuilder = new StringBuilder();
 
