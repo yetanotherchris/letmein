@@ -10,7 +10,8 @@ namespace Letmein.Tests.Unit.Core.Services
 	public class UniqueIdGeneratorTests
 	{
 		[Test]
-		[TestCase(IdGenerationType.Short)]
+		[TestCase(IdGenerationType.ShortMixedCase)]
+		[TestCase(IdGenerationType.ShortCode)]
 		[TestCase(IdGenerationType.Default)]
 		[TestCase(IdGenerationType.Prounceable)]
 		[TestCase(IdGenerationType.RandomWithProunceable)]

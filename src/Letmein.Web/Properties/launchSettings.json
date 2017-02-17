@@ -27,7 +27,7 @@
         "PAGE_TITLE": "letmein.io",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "FOOTER_TEXT": "footer here",
-        "ID_TYPE": "short",
+        "ID_TYPE": "shortcode",
         "HEADER_SUBTEXT": "subtext here"
       }
     }

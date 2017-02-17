@@ -6,6 +6,7 @@
 		RandomWithProunceable = 1,
 		Prounceable = 2,
 		ShortPronounceable = 3,
-		Short = 4
+		ShortMixedCase = 4,
+		ShortCode = 5
 	}
 }

@@ -83,7 +83,8 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		[TestCase("random-with-pronounceable", IdGenerationType.RandomWithProunceable)]
 		[TestCase("pronounceabLE", IdGenerationType.Prounceable)]
 		[TestCase("short-PROnounceable", IdGenerationType.ShortPronounceable)]
-		[TestCase("short", IdGenerationType.Short)]
+		[TestCase("short-mixedcase", IdGenerationType.ShortMixedCase)]
+		[TestCase("shortcode", IdGenerationType.ShortCode)]
 		public void should_parse_idgenerationtype(string idType, IdGenerationType expectedGenerationType)
 		{
 			// Arrange

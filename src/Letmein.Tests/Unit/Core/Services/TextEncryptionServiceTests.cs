@@ -60,8 +60,8 @@ namespace Letmein.Tests.Unit.Core.Services
 			string json = "{ encrypted json }";
 			string friendlyId = "";
 			string expectedId = "short-id";
-			_configuration.IdGenerationType = IdGenerationType.Short;
-			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.Short)).Returns(expectedId);
+			_configuration.IdGenerationType = IdGenerationType.ShortCode;
+			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.ShortCode)).Returns(expectedId);
 
 			// Act
 			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId);

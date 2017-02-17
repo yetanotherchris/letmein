@@ -43,9 +43,13 @@ namespace Letmein.Core.Configuration
 			if (!string.IsNullOrEmpty(idTypeValue))
 			{
 				idTypeValue = idTypeValue.ToLower();
-				if (idTypeValue == "short")
+				if (idTypeValue == "short-mixedcase")
 				{
-					result = IdGenerationType.Short;
+					result = IdGenerationType.ShortMixedCase;
+				}
+				else if (idTypeValue == "shortcode")
+				{
+					result = IdGenerationType.ShortCode;
 				}
 				else if (idTypeValue == "pronounceable")
 				{

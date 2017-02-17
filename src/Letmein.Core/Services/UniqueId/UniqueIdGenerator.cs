@@ -12,6 +12,9 @@ namespace Letmein.Core.Services.UniqueId
 		private static readonly Random _random = new Random();
 		private static readonly string _alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
 		private static readonly int _alphabetLength = _alphabet.Length - 1;
+		private static readonly string _upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		private static readonly int _upperAlphabetLength = _upperAlphabet.Length - 1;
+
 
 		public string Generate(IdGenerationType idGenerationType)
 		{
@@ -31,8 +34,12 @@ namespace Letmein.Core.Services.UniqueId
 					password = GetShortPronounceable();
 					break;
 
-				case IdGenerationType.Short:
+				case IdGenerationType.ShortMixedCase:
 					password = GetRandomCharacters(4);
+					break;
+
+				case IdGenerationType.ShortCode:
+					password = GetShortCode();
 					break;
 
 				default:
@@ -69,6 +76,18 @@ namespace Letmein.Core.Services.UniqueId
 		{
 			int index = _random.Next(0, _alphabetLength);
 			return _alphabet[index];
+		}
+
+		private string GetShortCode()
+		{
+			// e.g.: U36R41
+			char char1 = _upperAlphabet[_random.Next(0, _upperAlphabetLength)];
+			char char2 = _upperAlphabet[_random.Next(0, _upperAlphabetLength)];
+
+			string first = DateTime.Now.ToString("ff");
+			string second = DateTime.Now.ToString("ss");
+
+			return string.Format("{0}{1}{2}{3}", char1, first, char2, second);
 		}
 	}
 }
