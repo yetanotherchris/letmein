@@ -1,5 +1,6 @@
 ﻿using System;
 using Letmein.Core;
+using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Services;
 using Letmein.Core.Services.UniqueId;
@@ -34,8 +35,9 @@ namespace Letmein.Tests.Unit.Core.Services
 		{
 			// Arrange
 			string friendlyId = "my FriendlyId";
-			string json = "{ encrypted json }";
 			_configuration.ExpirePastesAfter = 60 * 12;
+
+			string json = "{ encrypted json }";
 
 			// Act
 			string newUrl = _encryptionService.StoredEncryptedJson(json, friendlyId);
@@ -57,14 +59,15 @@ namespace Letmein.Tests.Unit.Core.Services
 			// Arrange
 			string json = "{ encrypted json }";
 			string friendlyId = "";
-
-			_uniqueIdGeneratorMock.Setup(x => x.Generate()).Returns("my id");
+			string expectedId = "short-id";
+			_configuration.IdGenerationType = IdGenerationType.ShortCode;
+			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.ShortCode)).Returns(expectedId);
 
 			// Act
 			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId);
 
 			// Assert
-			Assert.That(newId, Is.EqualTo("my id"));
+			Assert.That(newId, Is.EqualTo(expectedId));
 		}
 
 		[Test]

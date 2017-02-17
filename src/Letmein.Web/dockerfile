@@ -19,6 +19,10 @@ ENV EXPIRE_PASTES_AFTER="720"
 # Number of seconds to sleep inbetween checking for expired pastes
 ENV CLEANUP_SLEEPTIME="30"
 
+# Short url ID type. 
+# Possible values: default (random-with-pronounceable), pronounceable, short-pronounceable, short-mixedcase, shortcode
+ENV ID_TYPE="default"
+
 # Various UI customisations
 ENV PAGE_TITLE="letmein.io"
 ENV HEADER_TEXT="letmein.io"

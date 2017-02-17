@@ -8,10 +8,12 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 		public int CleanupSleepTime { get; set; }
 		public int ExpirePastesAfter { get; set; }
 		public ViewConfig ViewConfig { get; set; }
+		public IdGenerationType IdGenerationType { get; set; }
 
 		public ConfigurationStub()
 		{
 			ViewConfig = new ViewConfig();
 		}
+
 	}
 }

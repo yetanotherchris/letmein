@@ -29,7 +29,7 @@ namespace Letmein.Core.Services
 			{
 				if (string.IsNullOrEmpty(friendlyId))
 				{
-					friendlyId = _idGenerator.Generate();
+					friendlyId = _idGenerator.Generate(_configuration.IdGenerationType);
 				}
 
 				var createdate = DateTime.UtcNow;
