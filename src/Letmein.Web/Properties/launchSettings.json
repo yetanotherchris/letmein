@@ -1,36 +1,35 @@
 {
-	"iisSettings": {
-		"windowsAuthentication": false,
-		"anonymousAuthentication": true,
-		"iisExpress": {
-			"applicationUrl": "http://localhost:57567/",
-			"sslPort": 0
-		}
-	},
-	"profiles": {
-		"IIS Express": {
-			"commandName": "IISExpress",
-			"launchBrowser": true,
-			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development",
-				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein"
-			}
-		},
-		"Kestrel": {
-			"commandName": "Project",
-			"launchBrowser": true,
-			"launchUrl": "http://localhost:5000",
-			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Development",
-				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein",
-				"EXPIRE_PASTES_AFTER": 2,
-				"CLEANUP_SLEEPTIME": 20,
-				"ID_TYPE": "short"
-				"PAGE_TITLE": "letmein.io",
-				"HEADER_TEXT": "title here",
-				"HEADER_SUBTEXT": "subtext here",
-				"FOOTER_TEXT": "footer here"
-			}
-		}
-	}
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:57567/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Kestrel": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein",
+        "EXPIRE_PASTES_AFTER": "2",
+        "CLEANUP_SLEEPTIME": "20",
+        "HEADER_TEXT": "title here",
+        "PAGE_TITLE": "letmein.io",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "FOOTER_TEXT": "footer here",
+        "ID_TYPE": "short",
+        "HEADER_SUBTEXT": "subtext here"
+      }
+    }
+  }
 }

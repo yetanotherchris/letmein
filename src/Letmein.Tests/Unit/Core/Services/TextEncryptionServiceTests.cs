@@ -35,8 +35,9 @@ namespace Letmein.Tests.Unit.Core.Services
 		{
 			// Arrange
 			string friendlyId = "my FriendlyId";
-			string json = "{ encrypted json }";
 			_configuration.ExpirePastesAfter = 60 * 12;
+
+			string json = "{ encrypted json }";
 
 			// Act
 			string newUrl = _encryptionService.StoredEncryptedJson(json, friendlyId);
@@ -58,14 +59,15 @@ namespace Letmein.Tests.Unit.Core.Services
 			// Arrange
 			string json = "{ encrypted json }";
 			string friendlyId = "";
-
-			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.Prounceable)).Returns("my id");
+			string expectedId = "short-id";
+			_configuration.IdGenerationType = IdGenerationType.Short;
+			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.Short)).Returns(expectedId);
 
 			// Act
 			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId);
 
 			// Assert
-			Assert.That(newId, Is.EqualTo("my id"));
+			Assert.That(newId, Is.EqualTo(expectedId));
 		}
 
 		[Test]
