@@ -47,63 +47,7 @@ else
 	@section scripts
 	{
 		<script>
-			$(document).ready(function () {
-				$("#password-input").focus();
-
-				$("#decrypt-form").submit(function () {
-					return false;
-				});
-
-				$("#decrypt-button").click(function () {
-					var cipherJson = $("#cipherJson").val();
-					var password = $("#password-input").val();
-
-					try {
-						var text = window.sjcl.decrypt(password, cipherJson);
-						$("#cipher-textarea").val(text);
-
-						$("#expiry-date").show();
-						$("#expiry-date")
-							.on("finish.countdown", function () {
-								document.location.reload();
-							})
-							.countdown("@Model.ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss")", function (event) {
-								$(this).text(
-								  event.strftime('Expires in %D days %H hours %M mins %S secs')
-								);
-							});
-
-						$.toast({
-							heading: "Success",
-							text: "Your note was decrypted.",
-							icon: "success",
-							showHideTransition: "fade",
-							allowToastClose: true,
-							hideAfter: 2000,
-							stack: 5,
-							position: "top-center",
-							textAlign: "left",
-							loader: false
-						});
-					}
-					catch (err) {
-						$.toast({
-							heading: "Failure",
-							text: "Unable to decrypt the note.",
-							icon: "error",
-							showHideTransition: "fade",
-							allowToastClose: true,
-							hideAfter: 2000,
-							stack: 5,
-							position: "top-center",
-							textAlign: "left",
-							loader: false
-						});
-
-						console.log(err);
-					}
-				});
-			});
+			new LoadView(window, jQuery, "@Model.ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss")");
 		</script>
 	}
 }
