@@ -5,17 +5,24 @@ dotnet: 1.0.0-preview2-1-003177
 branches:
   only:
   - master
+  - babeljs
 
 services:
   - docker
 
+install:
+  - npm install uglify-js
+  - npm install babel-cli
+  - npm install babel-preset-env --save-dev
+
 script:
+  - build/prepare-wwwroot.sh
   - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
   - echo "Using $DOCKER_TAG for the Docker tag"
   - dotnet restore
   - dotnet publish src/Letmein.Web -c Release
   - cd src/Letmein.Web
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
-  - docker push "anotherchris/letmein:$DOCKER_TAG"
-  - docker push "anotherchris/letmein:latest"
+  - echo docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - echo docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
+  - echo docker push "anotherchris/letmein:$DOCKER_TAG"
+  - echo docker push "anotherchris/letmein:latest"
