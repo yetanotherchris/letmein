@@ -16,7 +16,7 @@ install:
   - npm install babel-preset-env
 
 script:
-  - ./build/prepare-wwwroot.sh
+  - ./travis/prepare-wwwroot.sh
   - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
   - echo "Using $DOCKER_TAG for the Docker tag"
   - dotnet restore
