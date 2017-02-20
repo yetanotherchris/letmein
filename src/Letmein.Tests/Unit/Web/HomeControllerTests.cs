@@ -166,5 +166,17 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(model, Is.Null);
 			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
 		}
+
+		[Test]
+		public void Delete_should_remove_item_given_correct_url()
+		{
+			// Arrange
+
+
+			// Act
+
+
+			// Assert
+		}
 	}
 }
