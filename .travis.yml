@@ -11,6 +11,9 @@ services:
   - docker
   - postgresql
 
+addons:
+  postgresql: "9.5"
+
 install:
   - npm install uglify-js
   - npm install babel-cli
