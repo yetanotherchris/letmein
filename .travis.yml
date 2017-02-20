@@ -25,6 +25,9 @@ script:
   - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
   - echo "Using $DOCKER_TAG for the Docker tag"
   - dotnet restore
+  - cd src/Letmein.Tests/
+  - dotnet test
+  - cd ../../
   - dotnet publish src/Letmein.Web -c Release
   - cd src/Letmein.Web
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
