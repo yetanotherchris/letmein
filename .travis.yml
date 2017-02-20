@@ -16,6 +16,9 @@ install:
   - npm install babel-cli
   - npm install babel-preset-env
 
+before_script:
+  - psql -c 'create database letmein;' -U postgres
+
 script:
   - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
