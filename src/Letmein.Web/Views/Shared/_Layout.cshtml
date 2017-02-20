@@ -8,7 +8,7 @@
 	<link href="~/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="~/css/main.css" rel="stylesheet" />
 	<link href="~/css/jquery.toast.css" rel="stylesheet" />
-	<script src="~/js/prod/letmein.min.js"></script>
+	<script src="~/js/prod/letmein.@(ViewData["Version"])min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -26,7 +26,7 @@
 		<footer class="row">
 			<div class="col-md-12">
 				<p style="text-align:center">
-					<configtext key="FOOTER_TEXT" />
+					v.@(ViewData["Version"]). <configtext key="FOOTER_TEXT" />
 				</p>
 			</div>
 		</footer>

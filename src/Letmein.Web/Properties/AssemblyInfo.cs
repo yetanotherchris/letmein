@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Letmein.Core")]
+[assembly: AssemblyProduct("Letmein.Web")]
 [assembly: AssemblyTrademark("")]
 [assembly: InternalsVisibleTo("Letmein.Tests")]
+
+// This version number is replaced in the CI build
+[assembly: AssemblyVersion("1.0.*")]

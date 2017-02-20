@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Reflection;
 using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
+using System.Diagnostics;
+using StructureMap.TypeRules;
 
 namespace Letmein.Web.Controllers
 {
@@ -16,6 +20,12 @@ namespace Letmein.Web.Controllers
 		{
 			_service = service;
 			_configuration = configuration;
+		}
+
+		public override void OnActionExecuted(ActionExecutedContext context)
+		{
+			base.OnActionExecuted(context);
+			ViewData["Version"] = typeof(HomeController).GetAssembly().GetName().Version;
 		}
 
 		public IActionResult Index()
