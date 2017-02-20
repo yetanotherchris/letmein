@@ -9,6 +9,7 @@ branches:
 
 services:
   - docker
+  - postgresql
 
 install:
   - npm install uglify-js
@@ -16,6 +17,7 @@ install:
   - npm install babel-preset-env
 
 script:
+  - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
   - chmod 777 ./travis/prepare-wwwroot.sh
   - ./travis/replace-version.sh

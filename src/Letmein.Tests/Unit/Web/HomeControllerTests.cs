@@ -168,15 +168,17 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Test]
-		public void Delete_should_remove_item_given_correct_url()
+		public void Delete_should_remove_item_given_correct_id()
 		{
 			// Arrange
-
+			_encryptionService.Setup(x => x.Delete("the-friendlyid")).Returns(true);
 
 			// Act
-
+			RedirectToActionResult result = _controller.Delete("the-friendlyid") as RedirectToActionResult;
 
 			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.ActionName, Is.EqualTo(nameof(HomeController.Index)));
 		}
 	}
 }

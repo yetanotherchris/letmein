@@ -95,5 +95,19 @@ namespace Letmein.Web.Controllers
 		{
 			return View();
 		}
+
+		public IActionResult Delete(string friendlyid)
+		{
+			if (string.IsNullOrEmpty(friendlyid))
+				return RedirectToAction(nameof(Index));
+
+			bool result = _service.Delete(friendlyid);
+			if (!result)
+			{
+				return RedirectToAction(nameof(Load), new { friendlyid = friendlyid });
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
 	}
 }

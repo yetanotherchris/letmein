@@ -16,9 +16,9 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 			EncryptedItems = new List<EncryptedItem>();
 		}
 
-		public EncryptedItem Load(string url)
+		public EncryptedItem Load(string friendlyId)
 		{
-			return EncryptedItems.FirstOrDefault(x => x.FriendlyId == url);
+			return EncryptedItems.FirstOrDefault(x => x.FriendlyId == friendlyId);
 		}
 
 		public void Save(EncryptedItem encryptedItem)
@@ -31,7 +31,7 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 			yield break;
 		}
 
-		public void Delete(EncryptedItem encryptedItem)
+		public void Delete(string friendlyId)
 		{
 		}
 	}

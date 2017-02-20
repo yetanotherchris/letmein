@@ -4,5 +4,6 @@
     {
 	    string StoredEncryptedJson(string json, string friendlyId);
 		EncryptedItem LoadEncryptedJson(string friendlyId);
+	    bool Delete(string friendlyId);
     }
 }

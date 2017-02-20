@@ -5,9 +5,9 @@ namespace Letmein.Core.Repositories
 {
     public interface ITextRepository
     {
-        EncryptedItem Load(string url);
+        EncryptedItem Load(string friendlyId);
         void Save(EncryptedItem encryptedItem);
 		IEnumerable<EncryptedItem> GetExpiredItems(DateTime beforeDate);
-	    void Delete(EncryptedItem encryptedItem);
+	    void Delete(string friendlyId);
     }
 }
