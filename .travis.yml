@@ -20,7 +20,7 @@ install:
   - npm install babel-preset-env
   - npm install gulp
   - npm install gulp-cli
-  - npm install gulp-babel
+  - npm install gulp-babel babel-preset-es2015
   - npm install gulp-uglify
   - npm install gulp-concat
   - npm install gulp-rename
@@ -30,13 +30,13 @@ before_script:
 
 script:
   - cd src/Letmein.Web/wwwroot
-  - gulp
+  - ./node_modules/.bin/gulp
   - cd ../../../
   - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
-  - chmod 777 ./travis/prepare-wwwroot.sh
+  - chmod 777 ./travis/clean-wwwroot.sh
   - ./travis/replace-version.sh
-  - ./travis/prepare-wwwroot.sh
+  - ./travis/clean-wwwroot.sh
   - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
   - echo "Using $DOCKER_TAG for the Docker tag"
   - dotnet restore
