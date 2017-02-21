@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Reflection;
 using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
-using System.Diagnostics;
 using StructureMap.TypeRules;
 
 namespace Letmein.Web.Controllers
@@ -91,11 +89,7 @@ namespace Letmein.Web.Controllers
 			return View(model);
 		}
 
-		public IActionResult Error()
-		{
-			return View();
-		}
-
+		[HttpPost]
 		public IActionResult Delete(string friendlyid)
 		{
 			if (string.IsNullOrEmpty(friendlyid))
@@ -107,7 +101,12 @@ namespace Letmein.Web.Controllers
 				return RedirectToAction(nameof(Load), new { friendlyid = friendlyid });
 			}
 
-			return RedirectToAction(nameof(Index));
+			return View("Deleted");
+		}
+
+		public IActionResult Error()
+		{
+			return View();
 		}
 	}
 }

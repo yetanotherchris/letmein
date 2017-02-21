@@ -1,5 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="js/letmein.js" />
+/// <reference path="js/libraries/bootbox.min.js" />
+/// <reference path="js/libraries/bootstrap.min.js" />
 /// <reference path="js/libraries/clipboard.min.js" />
 /// <reference path="js/libraries/jquery.countdown.min.js" />
 /// <reference path="js/libraries/jquery.toast.js" />

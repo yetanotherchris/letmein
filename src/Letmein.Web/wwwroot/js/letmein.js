@@ -27,7 +27,7 @@ class IndexView {
 				var text = $("#text-textarea").val();
 				var password = $("#password-input").val();
 
-				// Clear so they're not POST'd
+				// Clear so they"re not POST"d
 				$("#text-textarea").val("");
 				$("#password-input").val("");
 
@@ -87,6 +87,27 @@ class LoadView {
 
 			$("#decrypt-form").submit(() => {
 				return false;
+			});
+
+			$("#delete-button").click(() => {
+				bootbox.confirm({
+					message: "Are you sure you want to delete this paste?",
+					buttons: {
+						confirm: {
+							label: "Yes",
+							className: "btn-success"
+						},
+						cancel: {
+							label: "No",
+							className: "btn-danger"
+						}
+					},
+					callback: (result) => {
+						if (result) {
+							$("#delete-form").submit();
+						}
+					}
+				});
 			});
 
 			$("#decrypt-button").click(() => {

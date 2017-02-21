@@ -10,6 +10,7 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 	{
 		public List<EncryptedItem> EncryptedItems { get; set; }
 		public EncryptedItem SavedEncryptedItem { get; set; }
+		public bool DeleteThrows { get; set; }
 
 		public TextRepositoryMock()
 		{
@@ -33,6 +34,8 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 
 		public void Delete(string friendlyId)
 		{
+			if (DeleteThrows)
+				throw new Exception("Delete failed");
 		}
 	}
 }

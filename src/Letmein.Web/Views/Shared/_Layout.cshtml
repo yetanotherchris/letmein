@@ -8,7 +8,12 @@
 	<link href="~/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="~/css/main.css" rel="stylesheet" />
 	<link href="~/css/jquery.toast.css" rel="stylesheet" />
-	<script src="~/js/prod/letmein.@(ViewData["Version"])min.js"></script>
+	<environment names="Development">
+		<script src="~/js/prod/letmein.min.js"></script>	
+	</environment>
+	<environment names="Production" >
+		<script src="~/js/prod/letmein.@(ViewData["Version"])min.js"></script>
+	</environment>
 </head>
 <body>
 	<div class="container">

@@ -101,5 +101,47 @@ namespace Letmein.Tests.Unit.Core.Services
 			// Assert
 			Assert.That(actualEncryptedItem, Is.Null);
 		}
+
+		[Test]
+		public void Delete_should_remove_item_using_repository_and_return_true()
+		{
+			// Arrange
+			string friendlyId = "myid";
+			var expectedEncryptedItem = new EncryptedItem
+			{
+				FriendlyId = friendlyId,
+				CipherJson = ""
+			};
+
+			_repository.EncryptedItems.Add(expectedEncryptedItem);
+			
+			// Act
+			bool result = _encryptionService.Delete(friendlyId);
+
+			// Assert
+			Assert.That(result, Is.True);
+		}
+
+		[Test]
+		public void Delete_should_return_false_when_delete_fails()
+		{
+			// Arrange
+			_repository.DeleteThrows = true;
+
+			string friendlyId = "myid";
+			var expectedEncryptedItem = new EncryptedItem
+			{
+				FriendlyId = friendlyId,
+				CipherJson = ""
+			};
+
+			_repository.EncryptedItems.Add(expectedEncryptedItem);
+
+			// Act
+			bool result = _encryptionService.Delete("myid");
+
+			// Assert
+			Assert.That(result, Is.False);
+		}
 	}
 }

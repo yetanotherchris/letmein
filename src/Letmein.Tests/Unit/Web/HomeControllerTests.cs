@@ -168,13 +168,40 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Test]
-		public void Delete_should_remove_item_given_correct_id()
+		public void Delete_should_remove_item_and_redirect_to_index()
 		{
 			// Arrange
 			_encryptionService.Setup(x => x.Delete("the-friendlyid")).Returns(true);
 
 			// Act
+			ViewResult result = _controller.Delete("the-friendlyid") as ViewResult;
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.ViewName, Is.EqualTo("Deleted"));
+			_encryptionService.Verify(x => x.Delete("the-friendlyid"));
+		}
+
+		[Test]
+		public void Delete_should_redirect_to_load_page_when_service_fails()
+		{
+			// Arrange
+			_encryptionService.Setup(x => x.Delete("the-friendlyid")).Returns(false);
+
+			// Act
 			RedirectToActionResult result = _controller.Delete("the-friendlyid") as RedirectToActionResult;
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.ActionName, Is.EqualTo(nameof(HomeController.Load)));
+			Assert.That(result.RouteValues["friendlyId"], Is.EqualTo("the-friendlyid"));
+		}
+
+		[Test]
+		public void Delete_should_redirect_when_friendlyid_is_empty()
+		{
+			// Arrange + Act
+			RedirectToActionResult result = _controller.Delete("") as RedirectToActionResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
