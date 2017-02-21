@@ -1,5 +1,5 @@
 ﻿/// <autosync enabled="true" />
-/// <reference path="javascript.js" />
+/// <reference path="gulpfile.js" />
 /// <reference path="js/letmein.js" />
 /// <reference path="js/libraries/bootbox.min.js" />
 /// <reference path="js/libraries/bootstrap.min.js" />

@@ -23,7 +23,7 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
 				"POSTGRES_CONNECTIONSTRING": "host=localhost;database=letmein;password=letmein123;username=letmein",
-				"EXPIRE_PASTES_AFTER": 2,
+				"EXPIRE_PASTES_AFTER": 10,
 				"CLEANUP_SLEEPTIME": 20,
 				"PAGE_TITLE": "letmein.io",
 				"HEADER_TEXT": "title here",

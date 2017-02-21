@@ -19,10 +19,15 @@ h1 {
 
 textarea {
 	border: 1px solid #CCC;
-	background-color: #EFEFEF;
+	background-color: #000;
+	color: #00fd0a;
 	padding: 5px;
 	border-radius: 1px;
 	width: 100%;
+}
+
+#cipher-textarea {
+	display: none;
 }
 
 .password {

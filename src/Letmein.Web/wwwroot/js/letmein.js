@@ -135,7 +135,11 @@ class LoadView {
 						loader: false
 					});
 
+					$("#load-help").hide();
 					$("#delete-button").removeClass("hidden");
+					$("#cipher-textarea").fadeIn(500);
+					$("#password-input").hide();
+					$("#decrypt-button").hide();
 
 				} catch (err) {
 					$.toast({

@@ -16,9 +16,10 @@ else
 {
 	<div class="row">
 		<div class="col-md-10">
-			<p>
+			<p id="load-help">
 				Enter the password you created to decrypt the text.
 			</p>
+			<div id="expiry-date" class="label label-info pull-left"></div>
 		</div>
 		<div class="col-md-2">
 			<form method="post" action="/Delete" id="delete-form">
@@ -29,7 +30,7 @@ else
 	</div>
 	<form id="decrypt-form">
 		<input type="hidden" id="cipherJson" value="@Model.CipherJson" />
-		<textarea id="cipher-textarea" rows="10" placeholder="The decrypted text will appear here" readonly></textarea>
+		<textarea id="cipher-textarea" rows="15" placeholder="The decrypted text will appear here" readonly></textarea>
 
 		<div class="row">
 			<div class="col-md-10">
@@ -37,12 +38,6 @@ else
 			</div>
 			<div class="col-md-2">
 				<input type="button" id="decrypt-button" class="btn btn-success" value="Decrypt" />
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-4">
-				<div id="expiry-date" class="label label-info pull-left"></div>
 			</div>
 		</div>
 	</form>
