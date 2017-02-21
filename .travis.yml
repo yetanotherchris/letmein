@@ -18,8 +18,8 @@ install:
   - npm install babel-cli
   - npm install uglify-js
   - npm install babel-preset-env
-  - npm install gulp
-  - npm install gulp-cli
+  - npm install -g gulp
+  - npm install -g gulp-cli
   - npm install gulp-babel babel-preset-es2015
   - npm install gulp-uglify
   - npm install gulp-concat
@@ -30,7 +30,7 @@ before_script:
 
 script:
   - cd src/Letmein.Web/wwwroot
-  - ./node_modules/.bin/gulp
+  - gulp
   - cd ../../../
   - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
