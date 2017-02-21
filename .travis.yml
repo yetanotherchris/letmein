@@ -5,7 +5,6 @@ dotnet: 1.0.0-preview2-1-003177
 branches:
   only:
   - master
-  - deletebutton
 
 services:
   - docker
@@ -43,5 +42,5 @@ script:
   - cd src/Letmein.Web
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
-  - echo docker push "anotherchris/letmein:$DOCKER_TAG"
-  - echo docker push "anotherchris/letmein:latest"
+  - docker push "anotherchris/letmein:$DOCKER_TAG"
+  - docker push "anotherchris/letmein:latest"
