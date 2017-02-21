@@ -15,14 +15,23 @@ addons:
   postgresql: "9.5"
 
 install:
-  - npm install uglify-js
   - npm install babel-cli
+  - npm install uglify-js
   - npm install babel-preset-env
+  - npm install gulp
+  - npm install gulp-cli
+  - npm install gulp-babel
+  - npm install gulp-uglify
+  - npm install gulp-concat
+  - npm install gulp-rename
 
 before_script:
   - psql -c 'create database letmein;' -U postgres
 
 script:
+  - cd src/Letmein.Web/wwwroot
+  - gulp
+  - cd ../../../
   - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
   - chmod 777 ./travis/prepare-wwwroot.sh
