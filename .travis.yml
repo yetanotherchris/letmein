@@ -15,15 +15,9 @@ addons:
   postgresql: "9.5"
 
 install:
-  - npm install babel-cli
-  - npm install uglify-js
-  - npm install babel-preset-env
-  - npm install -g gulp
-  - npm install -g gulp-cli
-  - npm install gulp-babel babel-preset-es2015
-  - npm install gulp-uglify
-  - npm install gulp-concat
-  - npm install gulp-rename
+  - cd src/Letmein.Web/wwwroot
+  - npm install
+  - cd ../../../
 
 before_script:
   - psql -c 'create database letmein;' -U postgres
