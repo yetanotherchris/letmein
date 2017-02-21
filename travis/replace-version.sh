@@ -1,2 +1,2 @@
-sed 's|AssemblyVersion\("1\.0\.\*"\)|$DOCKER_TAG' src/Letmein.Web/Properties/AssemblyInfo.cs > src/Letmein.Web/Properties/AssemblyInfo.cs
-more src/Letmein.Web/Properties/AssemblyInfo.cs
+sed "s|AssemblyVersion(\"1.0.*\")|AssemblyVersion(\"$DOCKER_TAG\")|" src/Letmein.Web/Properties/AssemblyInfo.cs > src/Letmein.Web/Properties/AssemblyInfo.cs
+cat src/Letmein.Web/Properties/AssemblyInfo.cs

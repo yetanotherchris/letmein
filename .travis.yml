@@ -24,16 +24,16 @@ before_script:
   - psql -c 'create database letmein;' -U postgres
 
 script:
+  - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
+  - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
+  - echo "Using $DOCKER_TAG for the Docker tag"
   - cd src/Letmein.Web/wwwroot
   - ./node_modules/.bin/gulp
   - cd ../../../
-  - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
   - chmod 777 ./travis/clean-wwwroot.sh
   - ./travis/replace-version.sh
   - ./travis/clean-wwwroot.sh
-  - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
-  - echo "Using $DOCKER_TAG for the Docker tag"
   - dotnet restore
   - cd src/Letmein.Tests/
   - dotnet test
