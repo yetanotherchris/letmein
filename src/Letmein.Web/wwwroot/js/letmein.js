@@ -1,12 +1,4 @@
-﻿// npm install eslint --save-dev
-// ./node_modules/.bin/eslint js/letmein-babel.js
-
-// npm install --save-dev uglify-js
-// npm install --save-dev babel-cli
-// npm install babel-preset-env --save-dev
-// ./node_modules/.bin/babel js/letmein.js -o js/prod/letmein.js
-// ./node_modules/.bin/uglifyjs js/prod/letmein.js js/libraries/*.js > js/prod/letmein.min.js
-class IndexView {
+﻿class IndexView {
 
 	constructor($, window) {
 
@@ -142,6 +134,9 @@ class LoadView {
 						textAlign: "left",
 						loader: false
 					});
+
+					$("#delete-button").removeClass("hidden");
+
 				} catch (err) {
 					$.toast({
 						heading: "Failure",
