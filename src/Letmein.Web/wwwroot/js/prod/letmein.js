@@ -4,14 +4,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// npm install eslint --save-dev
-// ./node_modules/.bin/eslint js/letmein-babel.js
-
-// npm install --save-dev uglify-js
-// npm install --save-dev babel-cli
-// npm install babel-preset-env --save-dev
-// ./node_modules/.bin/babel js/letmein.js -o js/prod/letmein.js
-// ./node_modules/.bin/uglifyjs js/prod/letmein.js > js/prod/letmein.min.js
 var IndexView = function () {
 	function IndexView($, window) {
 		var _this = this;
@@ -35,7 +27,7 @@ var IndexView = function () {
 				var text = $("#text-textarea").val();
 				var password = $("#password-input").val();
 
-				// Clear so they're not POST'd
+				// Clear so they"re not POST"d
 				$("#text-textarea").val("");
 				$("#password-input").val("");
 
@@ -101,6 +93,27 @@ var LoadView = function LoadView(window, $, expiry) {
 			return false;
 		});
 
+		$("#delete-button").click(function () {
+			bootbox.confirm({
+				message: "Are you sure you want to delete this paste?",
+				buttons: {
+					confirm: {
+						label: "Yes",
+						className: "btn-success"
+					},
+					cancel: {
+						label: "No",
+						className: "btn-danger"
+					}
+				},
+				callback: function callback(result) {
+					if (result) {
+						$("#delete-form").submit();
+					}
+				}
+			});
+		});
+
 		$("#decrypt-button").click(function () {
 			var cipherJson = $("#cipherJson").val();
 			var password = $("#password-input").val();
@@ -128,6 +141,8 @@ var LoadView = function LoadView(window, $, expiry) {
 					textAlign: "left",
 					loader: false
 				});
+
+				$("#delete-button").removeClass("hidden");
 			} catch (err) {
 				$.toast({
 					heading: "Failure",

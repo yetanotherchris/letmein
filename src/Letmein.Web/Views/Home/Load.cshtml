@@ -21,7 +21,10 @@ else
 			</p>
 		</div>
 		<div class="col-md-2">
-			<a class="pull-right">Delete</a>
+			<form method="post" action="/Delete" id="delete-form">
+				<input type="hidden" name="friendlyId" value="@Model.FriendlyId" />
+				<input type="button" class="hidden btn-link pull-right" value="Delete" id="delete-button" />
+			</form>
 		</div>
 	</div>
 	<form id="decrypt-form">

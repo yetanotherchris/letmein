@@ -10,15 +10,16 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 	{
 		public List<EncryptedItem> EncryptedItems { get; set; }
 		public EncryptedItem SavedEncryptedItem { get; set; }
+		public bool DeleteThrows { get; set; }
 
 		public TextRepositoryMock()
 		{
 			EncryptedItems = new List<EncryptedItem>();
 		}
 
-		public EncryptedItem Load(string url)
+		public EncryptedItem Load(string friendlyId)
 		{
-			return EncryptedItems.FirstOrDefault(x => x.FriendlyId == url);
+			return EncryptedItems.FirstOrDefault(x => x.FriendlyId == friendlyId);
 		}
 
 		public void Save(EncryptedItem encryptedItem)
@@ -31,8 +32,10 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 			yield break;
 		}
 
-		public void Delete(EncryptedItem encryptedItem)
+		public void Delete(string friendlyId)
 		{
+			if (DeleteThrows)
+				throw new Exception("Delete failed");
 		}
 	}
 }

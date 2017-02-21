@@ -8,18 +8,36 @@ branches:
 
 services:
   - docker
+  - postgresql
 
+addons:
+  postgresql: "9.5"
+
+# Symbolic link is a fix for Ubuntu using "nodejs" not "node"
 install:
-  - npm install uglify-js
-  - npm install babel-cli
-  - npm install babel-preset-env
+  - sudo ln -s /usr/bin/nodejs /usr/bin/node
+  - cd src/Letmein.Web/wwwroot
+  - npm install
+  - cd ../../../
+
+before_script:
+  - psql -c 'create database letmein;' -U postgres
 
 script:
-  - chmod 777 ./travis/prepare-wwwroot.sh
-  - ./travis/prepare-wwwroot.sh
+  - cd src/Letmein.Web/wwwroot
+  - ./node_modules/.bin/gulp
+  - cd ../../../
+  - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
+  - chmod 777 ./travis/replace-version.sh
+  - chmod 777 ./travis/clean-wwwroot.sh
+  - ./travis/replace-version.sh
+  - ./travis/clean-wwwroot.sh
   - export DOCKER_TAG="1.0.$TRAVIS_BUILD_NUMBER"
   - echo "Using $DOCKER_TAG for the Docker tag"
   - dotnet restore
+  - cd src/Letmein.Tests/
+  - dotnet test
+  - cd ../../
   - dotnet publish src/Letmein.Web -c Release
   - cd src/Letmein.Web
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"

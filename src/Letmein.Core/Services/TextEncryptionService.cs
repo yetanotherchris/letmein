@@ -57,16 +57,21 @@ namespace Letmein.Core.Services
 
 		public EncryptedItem LoadEncryptedJson(string friendlyId)
 		{
+			return _repository.Load(friendlyId);
+		}
+
+		public bool Delete(string friendlyId)
+		{
 			try
 			{
-				return _repository.Load(friendlyId);
+				_repository.Delete(friendlyId);
+				return true;
 			}
-			catch (EncryptionException ex)
+			catch (Exception ex)
 			{
-				_logger.LogInformation($"StoredEncryptedJson failed for '{friendlyId}': " + ex);
+				_logger.LogError("Failed to delete {0} : {1}", friendlyId, ex.ToString());
+				return false;
 			}
-
-			return null;
 		}
 	}
 }

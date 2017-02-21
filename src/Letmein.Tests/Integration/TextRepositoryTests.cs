@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Letmein.Core;
+using Letmein.Core.Configuration;
 using Letmein.Core.Repositories;
 using Letmein.Core.Repositories.Postgres;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 
 namespace Letmein.Tests.Integration
@@ -10,13 +12,16 @@ namespace Letmein.Tests.Integration
 	[TestFixture]
 	public class TextRepositoryTests
 	{
-		private string _connectionString = "host=localhost;database=letmein;password=letmein123;username=letmein";
 		private TextRepository _repository;
 
 		[SetUp]
 		public void Setup()
 		{
-			_repository = new TextRepository(_connectionString);
+			string connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTIONSTRING");
+			if (string.IsNullOrEmpty(connectionString))
+				connectionString = "host=localhost;database=letmein;password=letmein123;username=letmein";
+
+			_repository = new TextRepository(connectionString);
 			_repository.ClearDatabase();
 		}
 
@@ -78,7 +83,7 @@ namespace Letmein.Tests.Integration
 			_repository.Save(encryptedItem3);
 
 			// Act
-			_repository.Delete(encryptedItem2);
+			_repository.Delete(encryptedItem2.FriendlyId);
 			var items = _repository.All();
 
 			// Assert

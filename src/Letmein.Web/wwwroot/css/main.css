@@ -44,6 +44,10 @@ textarea {
 	margin-top: 15px;
 }
 
+.button-link {
+	border: 0px;
+}
+
 #shorturl {
 	padding: 5px;
 	font-family: 'Rubik', sans-serif;
