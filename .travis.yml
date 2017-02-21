@@ -14,7 +14,9 @@ services:
 addons:
   postgresql: "9.5"
 
+# Symbolic link is a fix for Ubuntu using "nodejs" not "node"
 install:
+  - ln -s /usr/bin/nodejs /usr/bin/node
   - cd src/Letmein.Web/wwwroot
   - npm install
   - cd ../../../
@@ -24,7 +26,7 @@ before_script:
 
 script:
   - cd src/Letmein.Web/wwwroot
-  - gulp
+  - ./node_modules/.bin/gulp
   - cd ../../../
   - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - chmod 777 ./travis/replace-version.sh
