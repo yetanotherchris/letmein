@@ -16,7 +16,7 @@ addons:
 
 # Symbolic link is a fix for Ubuntu using "nodejs" not "node"
 install:
-  - ln -s /usr/bin/nodejs /usr/bin/node
+  - sudo ln -s /usr/bin/nodejs /usr/bin/node
   - cd src/Letmein.Web/wwwroot
   - npm install
   - cd ../../../
