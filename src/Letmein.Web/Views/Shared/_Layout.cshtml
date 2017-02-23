@@ -29,9 +29,14 @@
 		@RenderBody()
 
 		<footer class="row">
-			<div class="col-md-12">
-				<p style="text-align:center">
-					v.@(ViewData["Version"]). <configtext key="FOOTER_TEXT" />
+			<div class="col-md-8">
+				<p class="pull-left">
+					<configtext key="FOOTER_TEXT" />
+				</p>
+			</div>
+			<div class="col-md-4">
+				<p class="pull-left">
+					v.@(ViewData["Version"])
 				</p>
 			</div>
 		</footer>

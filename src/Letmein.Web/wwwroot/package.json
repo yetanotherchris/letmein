@@ -1,28 +1,30 @@
 {
-  "name": "letmein.web",
-  "version": "1.0.0",
-  "+": null,
-  "scripts": {
-    "build": "babel src -d lib"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-preset-env": "^1.1.8",
-    "eslint": "^3.15.0",
-    "uglify-js": "^2.7.5"
-  },
-  "main": "_references.js",
-  "dependencies": {
-    "babel-preset-es2015": "^6.22.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-cli": "^1.2.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-series": "^1.0.2",
-    "gulp-uglify": "^2.0.1"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": ""
+	"name": "letmein.web",
+	"version": "1.0.0",
+	"+": null,
+	"scripts": {
+		"build": "babel src -d lib"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.23.0",
+		"babel-preset-env": "^1.1.8",
+		"eslint": "^3.15.0",
+		"uglify-js": "^2.7.5"
+	},
+	"main": "_references.js",
+	"dependencies": {
+		"babel-preset-es2015": "^6.22.0",
+		"gulp": "^3.9.1",
+		"gulp-babel": "^6.1.2",
+		"gulp-cli": "^1.2.2",
+		"gulp-concat": "^2.6.1",
+		"gulp-rename": "^1.2.2",
+		"gulp-series": "^1.0.2",
+		"gulp-uglify": "^2.0.1",
+		"yargs": "6.6.0",
+		"gutil": "1.6.4"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": ""
 }

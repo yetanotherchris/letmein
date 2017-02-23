@@ -29,7 +29,7 @@ script:
   - export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
   - echo "Using $DOCKER_TAG for the Docker tag"
   - cd src/Letmein.Web/wwwroot
-  - ./node_modules/.bin/gulp
+  - ./node_modules/.bin/gulp --docker_tag $DOCKER_TAG
   - cd ../../../
   - chmod 777 ./travis/replace-version.sh
   - chmod 777 ./travis/clean-wwwroot.sh
