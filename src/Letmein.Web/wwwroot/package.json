@@ -22,7 +22,7 @@
 		"gulp-series": "^1.0.2",
 		"gulp-uglify": "^2.0.1",
 		"yargs": "6.6.0",
-		"gutil": "1.6.4"
+		"gulp-util": "3.0.8"
 	},
 	"author": "",
 	"license": "ISC",
