@@ -23,7 +23,7 @@ namespace Letmein.Web.Controllers
 		public override void OnActionExecuted(ActionExecutedContext context)
 		{
 			base.OnActionExecuted(context);
-			ViewData["Version"] = typeof(HomeController).GetAssembly().GetName().Version;
+			ViewData["Version"] = typeof(HomeController).GetAssembly().GetName().Version.ToString(3);
 		}
 
 		public IActionResult Index()
