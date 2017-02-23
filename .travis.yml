@@ -17,6 +17,7 @@ addons:
 install:
   - sudo ln -s /usr/bin/nodejs /usr/bin/node
   - cd src/Letmein.Web/wwwroot
+  - npm config set registry http://registry.npmjs.org/
   - npm install
   - cd ../../../
 
