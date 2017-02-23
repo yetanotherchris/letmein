@@ -67,9 +67,9 @@ textarea {
 
 footer {
 	margin-top: 50px;
+	border-top: 1px solid #EEE;
 }
 
 footer > div > p {
 	padding-top: 10px;
-	border-top: 1px solid #EEE;
 }

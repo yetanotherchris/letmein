@@ -8,12 +8,8 @@
 	<link href="~/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="~/css/main.css" rel="stylesheet" />
 	<link href="~/css/jquery.toast.css" rel="stylesheet" />
-	<environment names="Development">
-		<script src="~/js/prod/letmein.min.js"></script>	
-	</environment>
-	<environment names="Production" >
-		<script src="~/js/prod/letmein.@(ViewData["Version"]).min.js"></script>
-	</environment>
+	<environment names="Development"><script src="~/js/prod/letmein.min.js"></script></environment>
+	<environment names="Production"><script src="~/js/prod/letmein.@(ViewData["Version"]).min.js"></script></environment>
 </head>
 <body>
 	<div class="container">
@@ -35,7 +31,7 @@
 				</p>
 			</div>
 			<div class="col-md-4">
-				<p class="pull-left">
+				<p class="pull-right">
 					v.@(ViewData["Version"])
 				</p>
 			</div>
