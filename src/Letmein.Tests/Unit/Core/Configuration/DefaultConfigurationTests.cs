@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Letmein.Core.Configuration;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -54,9 +56,10 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configDictionary = new Dictionary<string, string>();
 			configDictionary.Add("postgres_connectionSTRING", "");
 
+			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
 
-			// Act
+			// Assert
 			Assert.Throws<ConfigurationException>(() => new DefaultConfiguration(configRoot));
 		}
 
@@ -69,13 +72,56 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			configDictionary.Add("CLEANUP_SLEEPTIME", "0");
 			configDictionary.Add("EXPIRE_PASTES_AFTER", "-1");
 
+			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
 			IConfiguration config = new DefaultConfiguration(configRoot);
 
-			// Act
+			// Assert
 			Assert.That(config.CleanupSleepTime, Is.EqualTo(30));
 			Assert.That(config.ExpirePastesAfter, Is.EqualTo(60));
 
+		}
+
+		[Test]
+		public void should_parse_expiry_times()
+		{
+			// Arrange
+			var configDictionary = new Dictionary<string, string>();
+			configDictionary.Add("postgres_connectionstring", "connection string");
+			configDictionary.Add("EXPIRY_TIMES", "1, 60, 600");
+
+			// Act
+			var configRoot = GetConfigurationRoot(configDictionary);
+			IConfiguration config = new DefaultConfiguration(configRoot);
+
+			// Assert
+			var expiryTimes = config.ExpiryTimes.ToList();
+			Assert.That(expiryTimes.Count, Is.EqualTo(3));
+			Assert.That(expiryTimes[0], Is.EqualTo(1));
+			Assert.That(expiryTimes[1], Is.EqualTo(60));
+			Assert.That(expiryTimes[2], Is.EqualTo(600));
+		}
+
+		[Test]
+		[TestCase("")]
+		[TestCase("asdfasdf")]
+		public void should_parse_invalid_expiry_times_and_set_default(string expiryTime)
+		{
+			// Arrange
+			int defaultTime = (int) TimeSpan.FromHours(6).TotalMinutes;
+
+			var configDictionary = new Dictionary<string, string>();
+			configDictionary.Add("postgres_connectionstring", "connection string");
+			configDictionary.Add("EXPIRY_TIMES", expiryTime);
+
+			// Act
+			var configRoot = GetConfigurationRoot(configDictionary);
+			IConfiguration config = new DefaultConfiguration(configRoot);
+
+			// Assert
+			var expiryTimes = config.ExpiryTimes.ToList();
+			Assert.That(expiryTimes.Count, Is.EqualTo(1));
+			Assert.That(expiryTimes[0], Is.EqualTo(defaultTime));
 		}
 	}
 }
