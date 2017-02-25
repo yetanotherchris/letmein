@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Letmein.Core.Configuration;
 
@@ -9,12 +10,23 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 		public int CleanupSleepTime { get; set; }
 		public int ExpirePastesAfter { get; set; }
 		public ViewConfig ViewConfig { get; set; }
-		public IEnumerable<int> ExpiryTimes { get; set; }
+		private List<int> _expiryTimes;
+
+		public IEnumerable<int> ExpiryTimes
+		{
+			get { return _expiryTimes;}
+			set { _expiryTimes = new List<int>(value); }
+		}
 
 		public ConfigurationStub()
 		{
 			ViewConfig = new ViewConfig();
-			ExpiryTimes = new List<int>();
+			_expiryTimes = new List<int>();
+		}
+
+		public void AddExpiryTime(int expiry)
+		{
+			_expiryTimes.Add(expiry);
 		}
 	}
 }

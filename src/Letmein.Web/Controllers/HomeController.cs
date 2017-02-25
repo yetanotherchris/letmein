@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Web.Models;
@@ -28,7 +29,31 @@ namespace Letmein.Web.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+			// Model the times as nicely formatted minutes/hours
+			IEnumerable<int> expiryItems = _configuration.ExpiryTimes;
+			var formattedItems = new Dictionary<int, string>();
+
+			foreach (int expiry in expiryItems)
+			{
+				string displayText = $"{expiry} minutes";
+				if (expiry > 59)
+				{
+					if (expiry % 60 == 0)
+					{
+						int hours = expiry / 60;
+						displayText = $"{hours} hour";
+						displayText += (hours > 1) ? "s" : "";
+					}
+					else
+					{
+						displayText = TimeSpan.FromMinutes(expiry).ToString("%h' hour(s) '%m' minute(s)'");
+					}
+				}
+
+				formattedItems.Add(expiry, displayText);
+			}
+
+			return View(formattedItems);
 		}
 
 		[HttpPost]
@@ -36,7 +61,7 @@ namespace Letmein.Web.Controllers
 		{
 			if (string.IsNullOrEmpty(cipherJson))
 			{
-				ModelState.AddModelError("model", "The cipherJson is empty.");
+				ModelState.AddModelError("model", "The cipherJson is empty. Is Javascript enabled, or is the script loaded?");
 				return View(nameof(Index));
 			}
 

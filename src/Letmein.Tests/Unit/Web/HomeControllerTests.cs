@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Tests.Unit.MocksAndStubs;
@@ -34,13 +35,24 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Test]
-		public void Index_should_return_view()
+		[TestCase(31, "31 minutes")]
+		[TestCase(60, "1 hour")]
+		[TestCase(600, "10 hours")]
+		[TestCase(61, "1 hour(s) 1 minute(s)")]
+		public void Index_should_return_view_and_model_with_formatted_expiry_times(int expiry, string displayText)
 		{
-			// Arrange + Act
+			// Arrange
+			_configuration.AddExpiryTime(expiry);
+
+			// Act
 			ViewResult result = _controller.Index() as ViewResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
+
+			Dictionary<int, string> model = result.Model as Dictionary<int, string>;
+			Assert.That(model, Is.Not.Null);
+			Assert.That(model[expiry], Is.EqualTo(displayText));
 		}
 
 		[Test]
