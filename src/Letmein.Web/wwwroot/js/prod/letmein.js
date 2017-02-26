@@ -77,7 +77,7 @@ var StoreView = function StoreView($) {
 				stack: 5,
 				position: "top-center",
 				textAlign: "left",
-				loader: false
+				loader: true
 			});
 		});
 	});
@@ -139,7 +139,7 @@ var LoadView = function LoadView(window, $, expiry) {
 					stack: 5,
 					position: "top-center",
 					textAlign: "left",
-					loader: false
+					loader: true
 				});
 
 				$("#load-help").hide();
@@ -158,7 +158,7 @@ var LoadView = function LoadView(window, $, expiry) {
 					stack: 5,
 					position: "top-center",
 					textAlign: "left",
-					loader: false
+					loader: true
 				});
 
 				console.log(err);

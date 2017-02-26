@@ -64,7 +64,7 @@ class StoreView {
 					stack: 5,
 					position: "top-center",
 					textAlign: "left",
-					loader: false
+					loader: true
 				});
 			});
 		});
@@ -132,7 +132,7 @@ class LoadView {
 						stack: 5,
 						position: "top-center",
 						textAlign: "left",
-						loader: false
+						loader: true
 					});
 
 					$("#load-help").hide();
@@ -152,7 +152,7 @@ class LoadView {
 						stack: 5,
 						position: "top-center",
 						textAlign: "left",
-						loader: false
+						loader: true
 					});
 
 					console.log(err);

@@ -35,14 +35,24 @@ textarea {
 	border-radius: 5px;
 	border: 1px solid #CCC;
 	font-family: 'Rubik', sans-serif;
-	font-size: 16pt;
+	font-size: 12pt;
 	width: 100%;
 	margin-top: 15px;
 	background-color: #EFEFEF;
 }
 
+.mydropdown {
+	padding: 6px;
+	border-radius: 5px;
+	border: 1px solid #CCC;
+	font-family: 'Rubik', sans-serif;
+	font-size: 12pt;
+	margin-top: 15px;
+	background-color: #EFEFEF;
+}
+
 #encrypt-button, #decrypt-button {
-	padding: 10px;
+	padding: 6px;
 	font-family: 'Rubik', sans-serif;
 	font-size: 12pt;
 	width: 100%;

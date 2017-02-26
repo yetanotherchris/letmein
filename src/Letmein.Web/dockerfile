@@ -16,8 +16,8 @@ ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 # Postgres database connection string
 ENV POSTGRES_CONNECTIONSTRING=""
 
-# Minutes that pastes expire after
-ENV EXPIRE_PASTES_AFTER="720"
+# A comma-seperate list of minutes that pastes expire after.
+ENV EXPIRY_TIMES="720"
 
 # Number of seconds to sleep inbetween checking for expired pastes
 ENV CLEANUP_SLEEPTIME="30"
