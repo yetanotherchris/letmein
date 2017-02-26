@@ -68,7 +68,7 @@ namespace Letmein.Tests.Unit.Web
 			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "", expiresInMinutes)).Returns("the-friendlyid");
 
 			// Act
-			ViewResult result = _controller.Store(json, 90) as ViewResult;
+			ViewResult result = _controller.Store(json, expiresInMinutes) as ViewResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
@@ -77,7 +77,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(model, Is.Not.Null);
 			Assert.That(model.FriendlyId, Is.EqualTo("the-friendlyid"));
 			Assert.That(_controller.ViewData["BaseUrl"].ToString(), Is.EqualTo("localhost"));
-			Assert.That(model.ExpiryDate, Is.GreaterThanOrEqualTo(DateTime.Now.AddMinutes(expiresInMinutes)));
+			Assert.That(_controller.ViewData["ExpiresIn"].ToString(), Is.EqualTo("1 hour 30 minutes"));
 		}
 
 		[Test]
