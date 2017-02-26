@@ -35,25 +35,32 @@ namespace Letmein.Web.Controllers
 
 			foreach (int expiry in expiryItems)
 			{
-				string displayText = $"{expiry} minutes";
-				if (expiry > 59)
-				{
-					if (expiry % 60 == 0)
-					{
-						int hours = expiry / 60;
-						displayText = $"{hours} hour";
-						displayText += (hours > 1) ? "s" : "";
-					}
-					else
-					{
-						displayText = TimeSpan.FromMinutes(expiry).ToString("%h' hour(s) '%m' minute(s)'");
-					}
-				}
-
+				TimeSpan expiryTimeSpan = TimeSpan.FromMinutes(expiry);
+				string displayText = FormatTimeSpan(expiryTimeSpan);
 				formattedItems.Add(expiry, displayText);
 			}
 
 			return View(formattedItems);
+		}
+
+		public string FormatTimeSpan(TimeSpan timeSpan)
+		{
+			timeSpan = timeSpan.Duration();
+
+			string output = string.Format("{0} {1} {2}",
+							GetDurationText(timeSpan.Days, "day"),
+							GetDurationText(timeSpan.Hours, "hour"),
+							GetDurationText(timeSpan.Minutes, "minute"));
+
+			return output.Trim();
+		}
+
+		private string GetDurationText(int amount, string unit)
+		{
+			if (amount == 0)
+				return "";
+
+			return string.Format("{0} {1}{2}", amount, unit, (amount > 1) ? "s" : "");
 		}
 
 		[HttpPost]

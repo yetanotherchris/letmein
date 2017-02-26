@@ -38,7 +38,9 @@ namespace Letmein.Tests.Unit.Web
 		[TestCase(31, "31 minutes")]
 		[TestCase(60, "1 hour")]
 		[TestCase(600, "10 hours")]
-		[TestCase(61, "1 hour(s) 1 minute(s)")]
+		[TestCase(61, "1 hour 1 minute")]
+		[TestCase(62, "1 hour 2 minutes")]
+		[TestCase(60*26, "1 day 2 hours")]
 		public void Index_should_return_view_and_model_with_formatted_expiry_times(int expiry, string displayText)
 		{
 			// Arrange
