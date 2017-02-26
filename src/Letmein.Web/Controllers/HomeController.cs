@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Web.Models;
@@ -64,7 +65,7 @@ namespace Letmein.Web.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Store(string cipherJson)
+		public IActionResult Store(string cipherJson, int expiryTime)
 		{
 			if (string.IsNullOrEmpty(cipherJson))
 			{
@@ -72,12 +73,15 @@ namespace Letmein.Web.Controllers
 				return View(nameof(Index));
 			}
 
+			if (!_configuration.ExpiryTimes.Contains(expiryTime))
+				return View(nameof(Index));
+
 			string friendlyId = _service.StoredEncryptedJson(cipherJson, "");
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
 
 			ViewData["BaseUrl"] = this.Request.Host;
 
-			TimeSpan expireTimeSpan = TimeSpan.FromMinutes(_configuration.ExpirePastesAfter);
+			TimeSpan expireTimeSpan = TimeSpan.FromMinutes(expiryTime);
 
 			if (expireTimeSpan.TotalHours < 1)
 			{
