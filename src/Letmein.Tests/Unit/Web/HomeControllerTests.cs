@@ -81,7 +81,7 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Test]
-		[TestCase(90, "1 hour(s) 30 minute(s)")]
+		[TestCase(90, "1 hour 30 minutes")]
 		[TestCase(58, "58 minutes")]
 		public void Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
 		{
