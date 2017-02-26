@@ -76,21 +76,12 @@ namespace Letmein.Web.Controllers
 			if (!_configuration.ExpiryTimes.Contains(expiryTime))
 				return View(nameof(Index));
 
-			string friendlyId = _service.StoredEncryptedJson(cipherJson, "");
+			string friendlyId = _service.StoredEncryptedJson(cipherJson, "",  expiryTime);
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
 
-			ViewData["BaseUrl"] = this.Request.Host;
-
 			TimeSpan expireTimeSpan = TimeSpan.FromMinutes(expiryTime);
-
-			if (expireTimeSpan.TotalHours < 1)
-			{
-				ViewData["ExpiresIn"] = expireTimeSpan.TotalMinutes + " minutes";
-			}
-			else
-			{
-				ViewData["ExpiresIn"] = expireTimeSpan.ToString("%h' hour(s) '%m' minute(s)'");
-			}
+			ViewData["ExpiresIn"] = FormatTimeSpan(expireTimeSpan);
+			ViewData["BaseUrl"] = Request.Host;
 
 			return View(model);
 		}

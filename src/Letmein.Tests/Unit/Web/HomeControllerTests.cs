@@ -61,12 +61,14 @@ namespace Letmein.Tests.Unit.Web
 		public void Store_should_Store_and_return_model_with_new_friendlyid()
 		{
 			// Arrange
-			_configuration.ExpirePastesAfter = 90;
+			int expiresInMinutes = 90;
+			_configuration.AddExpiryTime(expiresInMinutes);
+
 			string json = "{json}";
-			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "")).Returns("the-friendlyid");
+			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "", expiresInMinutes)).Returns("the-friendlyid");
 
 			// Act
-			ViewResult result = _controller.Store(json) as ViewResult;
+			ViewResult result = _controller.Store(json, 90) as ViewResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
@@ -75,6 +77,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(model, Is.Not.Null);
 			Assert.That(model.FriendlyId, Is.EqualTo("the-friendlyid"));
 			Assert.That(_controller.ViewData["BaseUrl"].ToString(), Is.EqualTo("localhost"));
+			Assert.That(model.ExpiryDate, Is.GreaterThanOrEqualTo(DateTime.Now.AddMinutes(expiresInMinutes)));
 		}
 
 		[Test]
@@ -83,10 +86,10 @@ namespace Letmein.Tests.Unit.Web
 		public void Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
 		{
 			// Arrange
-			_configuration.ExpirePastesAfter = minutes;
+			_configuration.AddExpiryTime(minutes);
 
 			// Act
-			ViewResult result = _controller.Store("do you know jason?") as ViewResult;
+			ViewResult result = _controller.Store("do you know jason?", minutes) as ViewResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
@@ -96,12 +99,29 @@ namespace Letmein.Tests.Unit.Web
 		[Test]
 		public void Store_should_set_modelstate_errors_and_return_index_when_cipherJson_is_empty()
 		{
-			// Arrange + Act
-			ViewResult result = _controller.Store("") as ViewResult;
+			// Arrange
+			_configuration.AddExpiryTime(10);
+
+			// Act
+			ViewResult result = _controller.Store("", 1) as ViewResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
 			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+		}
+
+		[Test]
+		public void Store_should_return_index_when_expirytime_is_in_configuration()
+		{
+			// Arrange
+			_configuration.AddExpiryTime(10);
+
+			// Act
+			ViewResult result = _controller.Store("{ some: json }", 1) as ViewResult;
+
+			// Assert
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.ViewName, Is.EqualTo(nameof(HomeController.Index)));
 		}
 
 		[Test]

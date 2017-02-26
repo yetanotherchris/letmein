@@ -7,7 +7,6 @@ namespace Letmein.Core.Configuration
 	{
 		string PostgresConnectionString { get; set; }
 		int CleanupSleepTime { get; set; }
-		int ExpirePastesAfter { get; set; }
 		ViewConfig ViewConfig { get; set; }
 		IEnumerable<int> ExpiryTimes { get; set; }
 	}

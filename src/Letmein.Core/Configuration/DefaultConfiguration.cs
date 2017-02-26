@@ -8,9 +8,8 @@ namespace Letmein.Core.Configuration
 	{
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }
-		public int ExpirePastesAfter { get; set; }
-		public ViewConfig ViewConfig { get; set; }
 		public IEnumerable<int> ExpiryTimes { get; set; }
+		public ViewConfig ViewConfig { get; set; }
 
 		public DefaultConfiguration(IConfigurationRoot configRoot)
 		{
@@ -22,10 +21,6 @@ namespace Letmein.Core.Configuration
 			CleanupSleepTime = configRoot.GetValue<int>("CLEANUP_SLEEPTIME");
 			if (CleanupSleepTime < 1)
 				CleanupSleepTime = 30;
-
-			ExpirePastesAfter = configRoot.GetValue<int>("EXPIRE_PASTES_AFTER");
-			if (ExpirePastesAfter < 1)
-				ExpirePastesAfter = 60;
 
 			ExpiryTimes = ParseExpiryTimes(configRoot.GetValue<string>("EXPIRY_TIMES"));
 

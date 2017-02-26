@@ -26,7 +26,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configDictionary = new Dictionary<string,string>();
 			configDictionary.Add("postgres_connectionSTRING", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "60");
-			configDictionary.Add("EXPIRE_PASTES_AFTER", "120");
+			configDictionary.Add("EXPIRY_TIMES", "1, 120");
 			configDictionary.Add("PAGE_title", "page title");
 			configDictionary.Add("HEADER_TEXT", "header text");
 			configDictionary.Add("HEADER_SUBTEXT", "subtext");
@@ -40,7 +40,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			// Assert
 			Assert.That(config.PostgresConnectionString, Is.EqualTo("connection string"));
 			Assert.That(config.CleanupSleepTime, Is.EqualTo(60));
-			Assert.That(config.ExpirePastesAfter, Is.EqualTo(120));
+			Assert.That(config.ExpiryTimes.Count, Is.EqualTo(2));
 
 			Assert.That(config.ViewConfig, Is.Not.Null);
 			Assert.That(config.ViewConfig.PageTitle, Is.EqualTo("page title"));
@@ -70,7 +70,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configDictionary = new Dictionary<string, string>();
 			configDictionary.Add("postgres_connectionstring", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "0");
-			configDictionary.Add("EXPIRE_PASTES_AFTER", "-1");
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
@@ -78,7 +77,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Assert
 			Assert.That(config.CleanupSleepTime, Is.EqualTo(30));
-			Assert.That(config.ExpirePastesAfter, Is.EqualTo(60));
 
 		}
 

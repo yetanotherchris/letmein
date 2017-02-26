@@ -8,7 +8,6 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 	{
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }
-		public int ExpirePastesAfter { get; set; }
 		public ViewConfig ViewConfig { get; set; }
 		private List<int> _expiryTimes;
 
