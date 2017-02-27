@@ -102,6 +102,12 @@ namespace Letmein.Web
 				);
 
 				routes.MapRoute(
+					name: "Delete",
+					template: "delete",
+					defaults: new { controller = "Home", action = "Delete" }
+				);
+
+				routes.MapRoute(
 					name: "Load-Id",
 					template: "{friendlyId}",
 					defaults: new { controller = "Home", action = "Load" }

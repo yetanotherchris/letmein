@@ -1,12 +1,4 @@
-﻿// npm install eslint --save-dev
-// ./node_modules/.bin/eslint js/letmein-babel.js
-
-// npm install --save-dev uglify-js
-// npm install --save-dev babel-cli
-// npm install babel-preset-env --save-dev
-// ./node_modules/.bin/babel js/letmein.js -o js/prod/letmein.js
-// ./node_modules/.bin/uglifyjs js/prod/letmein.js js/libraries/*.js > js/prod/letmein.min.js
-class IndexView {
+﻿class IndexView {
 
 	constructor($, window) {
 
@@ -27,7 +19,7 @@ class IndexView {
 				var text = $("#text-textarea").val();
 				var password = $("#password-input").val();
 
-				// Clear so they're not POST'd
+				// Clear so they"re not POST"d
 				$("#text-textarea").val("");
 				$("#password-input").val("");
 
@@ -72,7 +64,7 @@ class StoreView {
 					stack: 5,
 					position: "top-center",
 					textAlign: "left",
-					loader: false
+					loader: true
 				});
 			});
 		});
@@ -87,6 +79,27 @@ class LoadView {
 
 			$("#decrypt-form").submit(() => {
 				return false;
+			});
+
+			$("#delete-button").click(() => {
+				bootbox.confirm({
+					message: "Are you sure you want to delete this paste?",
+					buttons: {
+						confirm: {
+							label: "Yes",
+							className: "btn-success"
+						},
+						cancel: {
+							label: "No",
+							className: "btn-danger"
+						}
+					},
+					callback: (result) => {
+						if (result) {
+							$("#delete-form").submit();
+						}
+					}
+				});
 			});
 
 			$("#decrypt-button").click(() => {
@@ -119,8 +132,15 @@ class LoadView {
 						stack: 5,
 						position: "top-center",
 						textAlign: "left",
-						loader: false
+						loader: true
 					});
+
+					$("#load-help").hide();
+					$("#delete-button").removeClass("hidden");
+					$("#cipher-textarea").fadeIn(500);
+					$("#password-input").hide();
+					$("#decrypt-button").hide();
+
 				} catch (err) {
 					$.toast({
 						heading: "Failure",
@@ -132,7 +152,7 @@ class LoadView {
 						stack: 5,
 						position: "top-center",
 						textAlign: "left",
-						loader: false
+						loader: true
 					});
 
 					console.log(err);

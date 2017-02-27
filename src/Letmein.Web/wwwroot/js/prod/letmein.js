@@ -4,14 +4,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// npm install eslint --save-dev
-// ./node_modules/.bin/eslint js/letmein-babel.js
-
-// npm install --save-dev uglify-js
-// npm install --save-dev babel-cli
-// npm install babel-preset-env --save-dev
-// ./node_modules/.bin/babel js/letmein.js -o js/prod/letmein.js
-// ./node_modules/.bin/uglifyjs js/prod/letmein.js > js/prod/letmein.min.js
 var IndexView = function () {
 	function IndexView($, window) {
 		var _this = this;
@@ -35,7 +27,7 @@ var IndexView = function () {
 				var text = $("#text-textarea").val();
 				var password = $("#password-input").val();
 
-				// Clear so they're not POST'd
+				// Clear so they"re not POST"d
 				$("#text-textarea").val("");
 				$("#password-input").val("");
 
@@ -85,7 +77,7 @@ var StoreView = function StoreView($) {
 				stack: 5,
 				position: "top-center",
 				textAlign: "left",
-				loader: false
+				loader: true
 			});
 		});
 	});
@@ -99,6 +91,27 @@ var LoadView = function LoadView(window, $, expiry) {
 
 		$("#decrypt-form").submit(function () {
 			return false;
+		});
+
+		$("#delete-button").click(function () {
+			bootbox.confirm({
+				message: "Are you sure you want to delete this paste?",
+				buttons: {
+					confirm: {
+						label: "Yes",
+						className: "btn-success"
+					},
+					cancel: {
+						label: "No",
+						className: "btn-danger"
+					}
+				},
+				callback: function callback(result) {
+					if (result) {
+						$("#delete-form").submit();
+					}
+				}
+			});
 		});
 
 		$("#decrypt-button").click(function () {
@@ -126,8 +139,14 @@ var LoadView = function LoadView(window, $, expiry) {
 					stack: 5,
 					position: "top-center",
 					textAlign: "left",
-					loader: false
+					loader: true
 				});
+
+				$("#load-help").hide();
+				$("#delete-button").removeClass("hidden");
+				$("#cipher-textarea").fadeIn(500);
+				$("#password-input").hide();
+				$("#decrypt-button").hide();
 			} catch (err) {
 				$.toast({
 					heading: "Failure",
@@ -139,7 +158,7 @@ var LoadView = function LoadView(window, $, expiry) {
 					stack: 5,
 					position: "top-center",
 					textAlign: "left",
-					loader: false
+					loader: true
 				});
 
 				console.log(err);

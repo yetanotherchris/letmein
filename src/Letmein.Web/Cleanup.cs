@@ -53,7 +53,7 @@ namespace Letmein.Web
 
 					foreach (EncryptedItem item in items)
 					{
-						repository.Delete(item);
+						repository.Delete(item.FriendlyId);
 						_logger.LogInformation("Deleted item '{0}' as its expiry date is '{1}'", item.FriendlyId, item.CreatedOn);
 					}
 
