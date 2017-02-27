@@ -97,7 +97,7 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Test]
-		public void Store_should_set_modelstate_errors_and_return_index_when_cipherJson_is_empty()
+		public void Store_should_set_modelstate_errors_and_return_error_view_when_cipherJson_is_empty()
 		{
 			// Arrange
 			_configuration.AddExpiryTime(10);
@@ -111,17 +111,19 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Test]
-		public void Store_should_return_index_when_expirytime_is_in_configuration()
+		public void Store_should_set_modelstate_errors_and_return_error_view_when_expirytime_is_not_in_configuration()
 		{
 			// Arrange
+			int badExpiryTime = 1;
 			_configuration.AddExpiryTime(10);
 
 			// Act
-			ViewResult result = _controller.Store("{ some: json }", 1) as ViewResult;
+			ViewResult result = _controller.Store("{ some: json }", badExpiryTime) as ViewResult;
 
 			// Assert
 			Assert.That(result, Is.Not.Null);
-			Assert.That(result.ViewName, Is.EqualTo(nameof(HomeController.Index)));
+			Assert.That(result.ViewName, Is.EqualTo(nameof(HomeController.Error)));
+			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
 		}
 
 		[Test]

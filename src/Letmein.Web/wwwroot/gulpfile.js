@@ -21,7 +21,7 @@ gulp.task('babel', () => {
 		.pipe(gulp.dest('js/prod', { overwrite: true }));
 });
 
-gulp.task('concat-uglify', () => {
+gulp.task('concat-uglify', ['babel'], () => {
 
 	var destFilename = `letmein.${argv.docker_tag}.min.js`;
 	gutil.log(`Filename: "${destFilename}"`);

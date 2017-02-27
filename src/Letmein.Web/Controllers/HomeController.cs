@@ -69,12 +69,15 @@ namespace Letmein.Web.Controllers
 		{
 			if (string.IsNullOrEmpty(cipherJson))
 			{
-				ModelState.AddModelError("model", "The cipherJson is empty. Is Javascript enabled, or is the script loaded?");
-				return View(nameof(Index));
+				ModelState.AddModelError("model", "The cipherJson is empty. Is Javascript enabled, or is the letmein.js script loaded?");
+				return View("Error");
 			}
 
 			if (!_configuration.ExpiryTimes.Contains(expiryTime))
-				return View(nameof(Index));
+			{
+				ModelState.AddModelError("model", "That expiry time isn't supported.");
+				return View("Error");
+			}
 
 			string friendlyId = _service.StoredEncryptedJson(cipherJson, "",  expiryTime);
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
@@ -90,7 +93,7 @@ namespace Letmein.Web.Controllers
 		{
 			if (string.IsNullOrEmpty(friendlyId))
 			{
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction(nameof(HomeController.Index));
 			}
 
 			EncryptedItem encryptedItem = _service.LoadEncryptedJson(friendlyId);
@@ -117,15 +120,17 @@ namespace Letmein.Web.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Delete(string friendlyid)
+		public IActionResult Delete(string friendlyId)
 		{
-			if (string.IsNullOrEmpty(friendlyid))
+			if (string.IsNullOrEmpty(friendlyId))
+			{
 				return RedirectToAction(nameof(Index));
+			}
 
-			bool result = _service.Delete(friendlyid);
+			bool result = _service.Delete(friendlyId);
 			if (!result)
 			{
-				return RedirectToAction(nameof(Load), new { friendlyid = friendlyid });
+				return RedirectToAction(nameof(Load), new { friendlyid = friendlyId });
 			}
 
 			return View("Deleted");
