@@ -24,7 +24,6 @@ namespace Letmein.Core.Configuration
 				CleanupSleepTime = 30;
 
 			ExpiryTimes = ParseExpiryTimes(configRoot.GetValue<string>("EXPIRY_TIMES"));
-
 			IdGenerationType = ParseIdGenerationType(configRoot);
 
 			ViewConfig = new ViewConfig();

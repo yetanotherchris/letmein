@@ -10,6 +10,7 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 		public int CleanupSleepTime { get; set; }
 		public ViewConfig ViewConfig { get; set; }
 		private List<int> _expiryTimes;
+		public IdGenerationType IdGenerationType { get; set; }
 
 		public IEnumerable<int> ExpiryTimes
 		{
@@ -27,5 +28,6 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 		{
 			_expiryTimes.Add(expiry);
 		}
+
 	}
 }

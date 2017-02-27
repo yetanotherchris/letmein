@@ -121,5 +121,28 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			Assert.That(expiryTimes.Count, Is.EqualTo(1));
 			Assert.That(expiryTimes[0], Is.EqualTo(defaultTime));
 		}
+
+		[Test]
+		[TestCase("default", IdGenerationType.RandomWithProunceable)]
+		[TestCase("random-with-pronounceable", IdGenerationType.RandomWithProunceable)]
+		[TestCase("pronounceabLE", IdGenerationType.Prounceable)]
+		[TestCase("short-PROnounceable", IdGenerationType.ShortPronounceable)]
+		[TestCase("short-mixedcase", IdGenerationType.ShortMixedCase)]
+		[TestCase("shortcode", IdGenerationType.ShortCode)]
+		public void should_parse_idgenerationtype(string idType, IdGenerationType expectedGenerationType)
+		{
+			// Arrange
+			var configDictionary = new Dictionary<string, string>();
+			configDictionary.Add("POSTGRES_CONNECTIONSTRING", "notused");
+			configDictionary.Add("ID_TYPE", idType);
+
+			var configRoot = GetConfigurationRoot(configDictionary);
+
+			// Act
+			IConfiguration config = new DefaultConfiguration(configRoot);
+
+			// Act
+			Assert.That(config.IdGenerationType, Is.EqualTo(expectedGenerationType));
+		}
 	}
 }

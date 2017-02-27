@@ -38,13 +38,6 @@ namespace Letmein.Tests.Unit.Core.Services
 			}
 		}
 
-		// v1: guid, random parts in hex. Too long
-		// v2: guid - parts in between. Too long, not any more random
-		// v3: prounceable password and + guid. Seemed a bit overkill
-		// v4: stackoverflow version. I wanted my own version
-		// v5: prounceable password + SO post. Better
-		// v6: prounceable password + random alphabet chars or digit
-
 		[Test]
 		[Explicit]
 		[Ignore("This takes a while to run")]
