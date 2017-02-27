@@ -1,12 +1,61 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "FAQ";
 }
 
-<h4>This stuff goes in the FAQ:</h4>
+<h1>FAQ</h1>
+
+<h3>How large can pastes be?</h3>
 <p>
-	Encrypt your text for a short period of time with the password you provide. The text can only be decrypted using this password, the passwords are never stored.
+	The maximum size supported by the web server is around 4 megabytes. However your browser is likely to struggle with a paste over 1mb, 
+	tests with this size showed Chrome runs out of memory or takes a long time to decrypt. So Letmein is designed for encrypting smaller text documents.
 </p>
 
+<h3>What encryption is used?</h3>
 <p>
-	Hitting encrypt will provide you with a url, where you can decrypt you top secret text at any time. This will expire after one hour and the text is deleted
+	Letmein uses AES with a keysize of 128 bits. The encryption is performed entirely inside your browser - no sensitive data is sent to the web server.
+	This is done using the excellent <a href="https://github.com/bitwiseshiftleft/sjcl" target="_blank">sjcl library</a>.
+</p>
+<p>
+	Your data is given a random IV, random salt which is combined with the key (your password). It uses the <a href="http://en.wikipedia.org/wiki/CCM_mode" target="_blank">CCM cipher mode</a>.
+</p>
+
+<h3>How long do pastes last?</h3>
+<p>
+	They will last the length that you specify, being deleted from the database typically 30 seconds after they expire.
+</p>
+
+<h3>Where are pastes stored? Are they private?</h3>
+<p>
+	The pastes are stored in a database, encrypted in a <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON format</a>. 
+	Nobody can see your data without knowing the url, and the password.
+</p>
+<p>
+	Here's an example of the JSON format:
+	<pre>{
+    "iv":"HBPeKfzU+L7F46P71YEhUQ==",
+    "v":1,
+    "iter":1000,
+    "ks":128,
+    "ts":64,
+    "mode":"ccm",
+    "adata":"",
+    "cipher":"aes",
+    "salt":"QYpnk3ZD4eo=",
+    "ct":"zoeoUqD24Ggf+iJm5hsK51d2NVu1"
+}</pre>
+</p>
+
+<h3>Is the password stored in the database?</h3>
+<p>
+	No. The JSON you see above is the only part stored in the database, along with the url and the expiry date.
+</p>
+
+<h3>Is the IV stored in the database?</h3>
+<p>
+	Yes, and the salt. However the IV and salt are randomly generated each time.
+</p>
+
+<h3>How do I delete my paste?</h3>
+<p>
+	You will need the url for your paste, and then press the delete button. You will need to enter your password first.
 </p>
