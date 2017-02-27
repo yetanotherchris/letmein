@@ -28,6 +28,11 @@ namespace Letmein.Web.Controllers
 			ViewData["Version"] = typeof(HomeController).GetAssembly().GetName().Version.ToString(3);
 		}
 
+		public IActionResult FAQ()
+		{
+			return View();
+		}
+
 		public IActionResult Index()
 		{
 			// Model the times as nicely formatted minutes/hours
