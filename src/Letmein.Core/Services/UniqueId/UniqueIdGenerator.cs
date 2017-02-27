@@ -80,14 +80,14 @@ namespace Letmein.Core.Services.UniqueId
 
 		private string GetShortCode()
 		{
-			// e.g.: U36R41
+			// e.g.: 99PB45
 			char char1 = _upperAlphabet[_random.Next(0, _upperAlphabetLength)];
 			char char2 = _upperAlphabet[_random.Next(0, _upperAlphabetLength)];
 
 			string first = DateTime.Now.ToString("ff");
 			string second = DateTime.Now.ToString("ss");
 
-			return string.Format("{0}{1}{2}{3}", char1, first, char2, second);
+			return string.Format("{0}{1}{2}{3}", first, char1, char2, second);
 		}
 	}
 }
