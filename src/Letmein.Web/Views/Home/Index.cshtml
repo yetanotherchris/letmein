@@ -1,12 +1,6 @@
-﻿@{
+﻿@model Dictionary<int, string>
+@{
 	ViewData["Title"] = "Home Page";
-}
-
-@foreach (var errors in ViewData.ModelState.Values.Where(x => x.Errors.Count > 0))
-{
-	<p>
-		@errors.Errors.FirstOrDefault().ErrorMessage
-	</p>
 }
 
 <div class="row">
@@ -19,11 +13,14 @@
 			<input type="hidden" id="cipherJson" name="cipherJson" />
 			<textarea name="text" id="text-textarea" rows="10" placeholder="Enter some text to encrypt"></textarea>
 
-			<div class="row">
-				<div class="col-md-10">
+			<div class="form-inline row">
+				<div class="form-group col-md-6">
 					<input name="password" id="password-input" class="password" type="password" placeholder="Create a password" />
 				</div>
-				<div class="col-md-2">
+				<div class="form-group col-md-3">
+					@Html.DropDownList("expiryTime", Model.Select(x => new SelectListItem() { Value = x.Key.ToString(), Text = "Expire in " + x.Value }), new { @class = "expiry-dropdown" })
+				</div>
+				<div class="form-group col-md-3">
 					<input type="submit" id="encrypt-button" class="btn btn-success" value="Encrypt" />
 				</div>
 			</div>
@@ -34,48 +31,6 @@
 @section scripts
 {
 	<script>
-		$(document).ready(function () {
-			$("#text-textarea").focus();
-
-			$("#encrypt-form").submit(function () {
-				if ($("#text-textarea").val() === "") {
-					showError("Please enter some text.");
-					return false;
-				}
-
-				if ($("#password-input").val().length < 5) {
-					showError("Please enter a password 5 or more characters long.");
-					return false;
-				}
-
-				var text = $("#text-textarea").val();
-				var password = $("#password-input").val();
-
-				// Clear so they're not POST'd
-				$("#text-textarea").val("");
-				$("#password-input").val("");
-
-				// Encrypt
-				var json = window.sjcl.encrypt(password, text);
-				$("#cipherJson").val(json);
-
-				return true;
-			});
-		});
-
-		function showError(text) {
-			$.toast({
-				heading: "Error",
-				text: text,
-				icon: "error",
-				showHideTransition: "fade",
-				allowToastClose: true,
-				hideAfter: 2000,
-				stack: 5,
-				position: "top-center",
-				textAlign: "left",
-				loader: false
-			});
-		}
+		new IndexView(jQuery, window);
 	</script>
 }

@@ -19,20 +19,6 @@
 @section scripts
 {
 	<script>
-		var clipboard = new Clipboard("#copy-link");
-		clipboard.on("success", function (e) {
-			$.toast({
-				text: "Copied to clipboard",
-				heading: "Success",
-				icon: "information",
-				showHideTransition: "fade",
-				allowToastClose: true,
-				hideAfter: 2000,
-				stack: 5,
-				position: "top-center",
-				textAlign: "left",
-				loader: false
-			});
-		});
+		new StoreView(jQuery);
 	</script>
 }

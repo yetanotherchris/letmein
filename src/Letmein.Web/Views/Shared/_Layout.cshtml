@@ -8,12 +8,8 @@
 	<link href="~/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="~/css/main.css" rel="stylesheet" />
 	<link href="~/css/jquery.toast.css" rel="stylesheet" />
-
-	<script src="~/js/jquery-3.1.1.min.js"></script>
-	<script src="~/js/sjcl.js"></script>
-	<script src="~/js/clipboard.min.js"></script>
-	<script src="~/js/jquery.toast.js"></script>
-	<script src="~/js/jquery.countdown.min.js"></script>
+	<environment names="Development"><script src="~/js/prod/letmein.min.js"></script></environment>
+	<environment names="Production"><script src="~/js/prod/letmein.@(ViewData["Version"]).min.js"></script></environment>
 </head>
 <body>
 	<div class="container">
@@ -29,9 +25,14 @@
 		@RenderBody()
 
 		<footer class="row">
-			<div class="col-md-12">
-				<p style="text-align:center">
+			<div class="col-md-8">
+				<p class="pull-left">
 					<configtext key="FOOTER_TEXT" />
+				</p>
+			</div>
+			<div class="col-md-4">
+				<p class="pull-right">
+					v.@(ViewData["Version"])
 				</p>
 			</div>
 		</footer>

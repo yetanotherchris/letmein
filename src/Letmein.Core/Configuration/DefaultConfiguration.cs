@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
 namespace Letmein.Core.Configuration
@@ -7,8 +8,8 @@ namespace Letmein.Core.Configuration
 	{
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }
-		public int ExpirePastesAfter { get; set; }
 		public IdGenerationType IdGenerationType { get; set; }
+		public IEnumerable<int> ExpiryTimes { get; set; }
 		public ViewConfig ViewConfig { get; set; }
 
 		public DefaultConfiguration(IConfigurationRoot configRoot)
@@ -22,9 +23,7 @@ namespace Letmein.Core.Configuration
 			if (CleanupSleepTime < 1)
 				CleanupSleepTime = 30;
 
-			ExpirePastesAfter = configRoot.GetValue<int>("EXPIRE_PASTES_AFTER");
-			if (ExpirePastesAfter < 1)
-				ExpirePastesAfter = 60;
+			ExpiryTimes = ParseExpiryTimes(configRoot.GetValue<string>("EXPIRY_TIMES"));
 
 			IdGenerationType = ParseIdGenerationType(configRoot);
 
@@ -66,6 +65,37 @@ namespace Letmein.Core.Configuration
 			}
 
 			return result;
+		}
+
+		private List<int> ParseExpiryTimes(string configValues)
+		{
+			var expiryTimes = new List<int>();
+			
+			if (!string.IsNullOrEmpty(configValues))
+			{
+				string[] values = configValues.Split(',');
+				if (values.Length > 0)
+				{
+					expiryTimes.Clear();
+
+					foreach (string item in values)
+					{
+						int expiryValue;
+						if (int.TryParse(item, out expiryValue))
+						{
+							expiryTimes.Add(expiryValue);
+						}
+					}
+				}
+			}
+
+			if (expiryTimes.Count == 0)
+			{
+				int defaultMinutes = (int)TimeSpan.FromHours(6).TotalMinutes;
+				expiryTimes.Add(defaultMinutes);
+			}
+
+			return expiryTimes;
 		}
 	}
 }

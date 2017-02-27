@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Letmein.Core.Configuration;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -24,7 +26,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configDictionary = new Dictionary<string,string>();
 			configDictionary.Add("postgres_connectionSTRING", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "60");
-			configDictionary.Add("EXPIRE_PASTES_AFTER", "120");
+			configDictionary.Add("EXPIRY_TIMES", "1, 120");
 			configDictionary.Add("PAGE_title", "page title");
 			configDictionary.Add("HEADER_TEXT", "header text");
 			configDictionary.Add("HEADER_SUBTEXT", "subtext");
@@ -38,7 +40,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			// Assert
 			Assert.That(config.PostgresConnectionString, Is.EqualTo("connection string"));
 			Assert.That(config.CleanupSleepTime, Is.EqualTo(60));
-			Assert.That(config.ExpirePastesAfter, Is.EqualTo(120));
+			Assert.That(config.ExpiryTimes.Count, Is.EqualTo(2));
 
 			Assert.That(config.ViewConfig, Is.Not.Null);
 			Assert.That(config.ViewConfig.PageTitle, Is.EqualTo("page title"));
@@ -54,9 +56,10 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configDictionary = new Dictionary<string, string>();
 			configDictionary.Add("postgres_connectionSTRING", "");
 
+			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
 
-			// Act
+			// Assert
 			Assert.Throws<ConfigurationException>(() => new DefaultConfiguration(configRoot));
 		}
 
@@ -67,38 +70,56 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configDictionary = new Dictionary<string, string>();
 			configDictionary.Add("postgres_connectionstring", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "0");
-			configDictionary.Add("EXPIRE_PASTES_AFTER", "-1");
 
+			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
 			IConfiguration config = new DefaultConfiguration(configRoot);
 
-			// Act
+			// Assert
 			Assert.That(config.CleanupSleepTime, Is.EqualTo(30));
-			Assert.That(config.ExpirePastesAfter, Is.EqualTo(60));
 
 		}
 
 		[Test]
-		[TestCase("default", IdGenerationType.RandomWithProunceable)]
-		[TestCase("random-with-pronounceable", IdGenerationType.RandomWithProunceable)]
-		[TestCase("pronounceabLE", IdGenerationType.Prounceable)]
-		[TestCase("short-PROnounceable", IdGenerationType.ShortPronounceable)]
-		[TestCase("short-mixedcase", IdGenerationType.ShortMixedCase)]
-		[TestCase("shortcode", IdGenerationType.ShortCode)]
-		public void should_parse_idgenerationtype(string idType, IdGenerationType expectedGenerationType)
+		public void should_parse_expiry_times()
 		{
 			// Arrange
 			var configDictionary = new Dictionary<string, string>();
-			configDictionary.Add("POSTGRES_CONNECTIONSTRING", "notused");
-			configDictionary.Add("ID_TYPE", idType);
-
-			var configRoot = GetConfigurationRoot(configDictionary);
+			configDictionary.Add("postgres_connectionstring", "connection string");
+			configDictionary.Add("EXPIRY_TIMES", "1, 60, 600");
 
 			// Act
+			var configRoot = GetConfigurationRoot(configDictionary);
 			IConfiguration config = new DefaultConfiguration(configRoot);
 
+			// Assert
+			var expiryTimes = config.ExpiryTimes.ToList();
+			Assert.That(expiryTimes.Count, Is.EqualTo(3));
+			Assert.That(expiryTimes[0], Is.EqualTo(1));
+			Assert.That(expiryTimes[1], Is.EqualTo(60));
+			Assert.That(expiryTimes[2], Is.EqualTo(600));
+		}
+
+		[Test]
+		[TestCase("")]
+		[TestCase("asdfasdf")]
+		public void should_parse_invalid_expiry_times_and_set_default(string expiryTime)
+		{
+			// Arrange
+			int defaultTime = (int) TimeSpan.FromHours(6).TotalMinutes;
+
+			var configDictionary = new Dictionary<string, string>();
+			configDictionary.Add("postgres_connectionstring", "connection string");
+			configDictionary.Add("EXPIRY_TIMES", expiryTime);
+
 			// Act
-			Assert.That(config.IdGenerationType, Is.EqualTo(expectedGenerationType));
+			var configRoot = GetConfigurationRoot(configDictionary);
+			IConfiguration config = new DefaultConfiguration(configRoot);
+
+			// Assert
+			var expiryTimes = config.ExpiryTimes.ToList();
+			Assert.That(expiryTimes.Count, Is.EqualTo(1));
+			Assert.That(expiryTimes[0], Is.EqualTo(defaultTime));
 		}
 	}
 }

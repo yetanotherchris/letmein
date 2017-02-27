@@ -19,10 +19,15 @@ h1 {
 
 textarea {
 	border: 1px solid #CCC;
-	background-color: #EFEFEF;
+	background-color: #000;
+	color: #00fd0a;
 	padding: 5px;
 	border-radius: 1px;
 	width: 100%;
+}
+
+#cipher-textarea {
+	display: none;
 }
 
 .password {
@@ -30,18 +35,32 @@ textarea {
 	border-radius: 5px;
 	border: 1px solid #CCC;
 	font-family: 'Rubik', sans-serif;
-	font-size: 16pt;
+	font-size: 12pt;
 	width: 100%;
 	margin-top: 15px;
 	background-color: #EFEFEF;
 }
 
+.expiry-dropdown {
+	padding: 6px;
+	border-radius: 5px;
+	border: 1px solid #CCC;
+	font-family: 'Rubik', sans-serif;
+	font-size: 12pt;
+	margin-top: 15px;
+	background-color: #EFEFEF;
+}
+
 #encrypt-button, #decrypt-button {
-	padding: 10px;
+	padding: 6px;
 	font-family: 'Rubik', sans-serif;
 	font-size: 12pt;
 	width: 100%;
 	margin-top: 15px;
+}
+
+.button-link {
+	border: 0px;
 }
 
 #shorturl {
@@ -58,9 +77,9 @@ textarea {
 
 footer {
 	margin-top: 50px;
+	border-top: 1px solid #EEE;
 }
 
 footer > div > p {
 	padding-top: 10px;
-	border-top: 1px solid #EEE;
 }

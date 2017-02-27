@@ -27,7 +27,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			_configuration = new ConfigurationStub();
 			_uniqueIdGeneratorMock = new Mock<IUniqueIdGenerator>();
 			_repository = new TextRepositoryMock();
-			_encryptionService = new TextEncryptionService(_uniqueIdGeneratorMock.Object, _repository, loggingFactory, _configuration);
+			_encryptionService = new TextEncryptionService(_uniqueIdGeneratorMock.Object, _repository, loggingFactory);
 		}
 
 		[Test]
@@ -35,12 +35,13 @@ namespace Letmein.Tests.Unit.Core.Services
 		{
 			// Arrange
 			string friendlyId = "my FriendlyId";
-			_configuration.ExpirePastesAfter = 60 * 12;
+			string json = "{ encrypted json }";
+			int expiresInMinutes = 60 * 12;
 
 			string json = "{ encrypted json }";
 
 			// Act
-			string newUrl = _encryptionService.StoredEncryptedJson(json, friendlyId);
+			string newUrl = _encryptionService.StoredEncryptedJson(json, friendlyId, expiresInMinutes);
 
 			// Assert
 			EncryptedItem actualSavedItem = _repository.SavedEncryptedItem;
@@ -50,7 +51,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			Assert.That(actualSavedItem.FriendlyId, Is.EqualTo(friendlyId));
 			Assert.That(actualSavedItem.CipherJson, Is.EqualTo(json));
 			Assert.That(actualSavedItem.CreatedOn, Is.GreaterThanOrEqualTo(DateTime.Today));
-			Assert.That(actualSavedItem.ExpiresOn, Is.EqualTo(actualSavedItem.CreatedOn.AddMinutes(_configuration.ExpirePastesAfter)));
+			Assert.That(actualSavedItem.ExpiresOn, Is.EqualTo(actualSavedItem.CreatedOn.AddMinutes(expiresInMinutes)));
 		}
 
 		[Test]
@@ -59,12 +60,10 @@ namespace Letmein.Tests.Unit.Core.Services
 			// Arrange
 			string json = "{ encrypted json }";
 			string friendlyId = "";
-			string expectedId = "short-id";
-			_configuration.IdGenerationType = IdGenerationType.ShortCode;
-			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.ShortCode)).Returns(expectedId);
+			int expiresInMinutes = 60 * 12;
 
 			// Act
-			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId);
+			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId, expiresInMinutes);
 
 			// Assert
 			Assert.That(newId, Is.EqualTo(expectedId));
@@ -103,6 +102,48 @@ namespace Letmein.Tests.Unit.Core.Services
 
 			// Assert
 			Assert.That(actualEncryptedItem, Is.Null);
+		}
+
+		[Test]
+		public void Delete_should_remove_item_using_repository_and_return_true()
+		{
+			// Arrange
+			string friendlyId = "myid";
+			var expectedEncryptedItem = new EncryptedItem
+			{
+				FriendlyId = friendlyId,
+				CipherJson = ""
+			};
+
+			_repository.EncryptedItems.Add(expectedEncryptedItem);
+			
+			// Act
+			bool result = _encryptionService.Delete(friendlyId);
+
+			// Assert
+			Assert.That(result, Is.True);
+		}
+
+		[Test]
+		public void Delete_should_return_false_when_delete_fails()
+		{
+			// Arrange
+			_repository.DeleteThrows = true;
+
+			string friendlyId = "myid";
+			var expectedEncryptedItem = new EncryptedItem
+			{
+				FriendlyId = friendlyId,
+				CipherJson = ""
+			};
+
+			_repository.EncryptedItems.Add(expectedEncryptedItem);
+
+			// Act
+			bool result = _encryptionService.Delete("myid");
+
+			// Assert
+			Assert.That(result, Is.False);
 		}
 	}
 }
