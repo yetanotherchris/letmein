@@ -25,5 +25,5 @@ before_script:
   - psql -c 'create database letmein;' -U postgres
 
 script:
-   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis/run-pullrequest; fi'
-   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash ./travis/run-master; fi'
+   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis/run-pullrequest.sh; fi'
+   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then bash ./travis/run-master.sh; fi'
