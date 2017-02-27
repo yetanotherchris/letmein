@@ -23,6 +23,11 @@ namespace Letmein.Web.Controllers
 			return View();
 		}
 
+		public IActionResult FAQ()
+		{
+			return View();
+		}
+
 		[HttpPost]
 		public IActionResult Store(string cipherJson)
 		{
