@@ -40,7 +40,7 @@ The letmein image is fairly customisable. The various customisations can be done
 - `POSTGRES_CONNECTIONSTRING` - The connection string to the Postgres database.
 - `EXPIRY_TIMES` - A comma-seperated list of minutes that pastes expire after. For example "90, 600" would be 1 hour 30 minutes, and 10 hours. The default for this setting is 720 minutes (12 hours)
 - `CLEANUP_SLEEPTIME` - Number of seconds to sleep inbetween checking for expired pastes. The default for this setting is 30 seconds.
-- `ID_TYPE` - Short url ID type. Possible values: default (random-with-pronounceable), pronounceable, short-pronounceable, short-mixedcase, shortcode. See below for notes on clash rates.
+- `ID_TYPE` - Short url ID type. Possible values: `default (random-with-pronounceable)`, `pronounceable`, `short-pronounceable`, `short-mixedcase`, `shortcode`. See below for notes on clash rates.
 
 #### UI Customisations
 
