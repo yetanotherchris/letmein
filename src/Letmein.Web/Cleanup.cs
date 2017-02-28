@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Repositories.Postgres;
+using Marten;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
@@ -40,9 +41,15 @@ namespace Letmein.Web
 			_logger.LogInformation("Starting...");
 			_logger.LogInformation("By default I will sleep {0} seconds between checks.", _defaultWaitTime);
 
+			var store = DocumentStore.For(options =>
+			{
+				options.Connection(_connectionString);
+				options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
+			});
+
 			Task.Run(() =>
 			{
-				var repository = new TextRepository(_connectionString);
+				var repository = new TextRepository(store);
 
 				while (true)
 				{

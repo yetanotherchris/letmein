@@ -1,10 +1,12 @@
 ﻿using System.Security.Cryptography;
+using Letmein.Core;
 using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Repositories;
 using Letmein.Core.Repositories.Postgres;
 using Letmein.Core.Services;
 using Letmein.Core.Services.UniqueId;
+using Marten;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -45,13 +47,24 @@ namespace Letmein.Web
 
 			services.AddSingleton<IConfigurationRoot>(sp => Configuration);
 			services.AddSingleton<IConfiguration>(sp => new DefaultConfiguration(Configuration));
-			services.AddScoped<SymmetricAlgorithm>(sp => Aes.Create());
+			services.AddSingleton<IDocumentStore>(service =>
+			{
+				// Configure Marten
+				var config = service.GetService<IConfiguration>();
+				return DocumentStore.For(options =>
+				{
+					options.Connection(config.PostgresConnectionString);
+					options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
+				});
+			});
+			services.AddScoped<SymmetricAlgorithm>(service => Aes.Create());
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
-			services.AddScoped<ITextRepository>(sp =>
+			services.AddScoped<ITextRepository>(service =>
 			{
-				var config = sp.GetService<IConfiguration>();
-				return new TextRepository(config.PostgresConnectionString);
+				// Configure the default Repositroy
+				var store = service.GetService<IDocumentStore>();
+				return new TextRepository(store);
 			});
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
 		}

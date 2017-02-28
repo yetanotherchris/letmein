@@ -10,15 +10,11 @@ namespace Letmein.Core.Repositories.Postgres
 		// docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres 
 		// choco install dotnetcore-runtime
 
-		private readonly DocumentStore _store;
+		private readonly IDocumentStore _store;
 
-		public TextRepository(string connectionString)
+		public TextRepository(IDocumentStore store)
 		{
-			_store = DocumentStore.For(options =>
-			{
-				options.Connection(connectionString);
-				options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
-			});
+			_store = store;
 		}
 
 		internal void ClearDatabase()

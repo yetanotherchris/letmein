@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Letmein.Core;
-using Letmein.Core.Configuration;
-using Letmein.Core.Repositories;
 using Letmein.Core.Repositories.Postgres;
-using Microsoft.Extensions.Configuration;
+using Marten;
 using NUnit.Framework;
 
 namespace Letmein.Tests.Integration
@@ -21,7 +19,13 @@ namespace Letmein.Tests.Integration
 			if (string.IsNullOrEmpty(connectionString))
 				connectionString = "host=localhost;database=letmein;password=letmein123;username=letmein";
 
-			_repository = new TextRepository(connectionString);
+			var store = DocumentStore.For(options =>
+			{
+				options.Connection(connectionString);
+				options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
+			});
+
+			_repository = new TextRepository(store);
 			_repository.ClearDatabase();
 		}
 
