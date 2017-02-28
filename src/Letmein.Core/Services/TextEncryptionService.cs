@@ -1,4 +1,5 @@
 ﻿using System;
+using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Repositories;
 using Letmein.Core.Services.UniqueId;
@@ -11,12 +12,14 @@ namespace Letmein.Core.Services
 	{
 		private readonly IUniqueIdGenerator _idGenerator;
 		private readonly ITextRepository _repository;
+		private readonly IConfiguration _configuration;
 		private readonly ILogger<TextEncryptionService> _logger;
 
-		public TextEncryptionService(IUniqueIdGenerator idGenerator, ITextRepository repository, ILoggerFactory loggingFactory)
+		public TextEncryptionService(IUniqueIdGenerator idGenerator, ITextRepository repository, ILoggerFactory loggingFactory, IConfiguration configuration)
 		{
 			_idGenerator = idGenerator;
 			_repository = repository;
+			_configuration = configuration;
 			_logger = loggingFactory.CreateLogger<TextEncryptionService>();
 		}
 
@@ -26,7 +29,7 @@ namespace Letmein.Core.Services
 			{
 				if (string.IsNullOrEmpty(friendlyId))
 				{
-					friendlyId = _idGenerator.Generate();
+					friendlyId = _idGenerator.Generate(_configuration.IdGenerationType);
 				}
 
 				var createdate = DateTime.UtcNow;

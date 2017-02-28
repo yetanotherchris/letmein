@@ -8,6 +8,7 @@ namespace Letmein.Core.Configuration
 	{
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }
+		public IdGenerationType IdGenerationType { get; set; }
 		public IEnumerable<int> ExpiryTimes { get; set; }
 		public ViewConfig ViewConfig { get; set; }
 
@@ -23,12 +24,46 @@ namespace Letmein.Core.Configuration
 				CleanupSleepTime = 30;
 
 			ExpiryTimes = ParseExpiryTimes(configRoot.GetValue<string>("EXPIRY_TIMES"));
+			IdGenerationType = ParseIdGenerationType(configRoot);
 
 			ViewConfig = new ViewConfig();
 			ViewConfig.PageTitle = configRoot.GetValue<string>("PAGE_TITLE");
 			ViewConfig.HeaderText = configRoot.GetValue<string>("HEADER_TEXT");
 			ViewConfig.HeaderSubtext = configRoot.GetValue<string>("HEADER_SUBTEXT");
 			ViewConfig.FooterText = configRoot.GetValue<string>("FOOTER_TEXT");
+		}
+
+		private IdGenerationType ParseIdGenerationType(IConfigurationRoot configRoot)
+		{
+			IdGenerationType result = IdGenerationType.Default;
+
+			string idTypeValue = configRoot.GetValue<string>("ID_TYPE");
+			if (!string.IsNullOrEmpty(idTypeValue))
+			{
+				idTypeValue = idTypeValue.ToLower();
+				if (idTypeValue == "short-mixedcase")
+				{
+					result = IdGenerationType.ShortMixedCase;
+				}
+				else if (idTypeValue == "shortcode")
+				{
+					result = IdGenerationType.ShortCode;
+				}
+				else if (idTypeValue == "pronounceable")
+				{
+					result = IdGenerationType.Prounceable;
+				}
+				else if (idTypeValue == "short-pronounceable")
+				{
+					result = IdGenerationType.ShortPronounceable;
+				}
+				else
+				{
+					result = IdGenerationType.Default;
+				}
+			}
+
+			return result;
 		}
 
 		private List<int> ParseExpiryTimes(string configValues)
