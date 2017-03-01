@@ -8,8 +8,19 @@
 	<link href="~/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="~/css/main.css" rel="stylesheet" />
 	<link href="~/css/jquery.toast.css" rel="stylesheet" />
-	<environment names="Development"><script src="~/js/prod/letmein.min.js"></script></environment>
-	<environment names="Production"><script src="~/js/prod/letmein.@(ViewData["Version"]).min.js"></script></environment>
+	<environment names="Development">
+		<script src="~/js/libraries/jquery-3.1.1.min.js"></script>
+		<script src="~/js/libraries/bootstrap.min.js"></script>
+		<script src="~/js/libraries/bootbox.min.js"></script>
+		<script src="~/js/libraries/sjcl.js"></script>
+		<script src="~/js/libraries/jquery.toast.js"></script>
+		<script src="~/js/libraries/clipboard.min.js"></script>
+		<script src="~/js/libraries/jquery.countdown.min.js"></script>
+		<script src="~/js/letmein.js"></script>
+	</environment>
+	<environment names="Production">
+		<script src="~/js/prod/letmein.@(ViewData["Version"]).min.js"></script>
+	</environment>
 </head>
 <body>
 	<div class="container">

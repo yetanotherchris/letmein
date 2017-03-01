@@ -102,6 +102,13 @@ class LoadView {
 				});
 			});
 
+			// Pressing return in the password decrypts
+			$("#password-input").keypress((e) => {
+				if (e.which === 13) {
+					$("#decrypt-button").trigger("click");
+				}
+			});
+
 			$("#decrypt-button").click(() => {
 				var cipherJson = $("#cipherJson").val();
 				var password = $("#password-input").val();
