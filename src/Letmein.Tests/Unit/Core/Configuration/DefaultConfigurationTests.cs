@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Letmein.Core.Configuration;
 using Microsoft.Extensions.Configuration;
-using NUnit.Framework;
+using Shouldly;
+using Xunit;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 
 namespace Letmein.Tests.Unit.Core.Configuration
@@ -18,7 +19,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			return builder.Build();
 		}
 
-		[Test]
+		[Fact]
 		public void should_get_values_from_configroot_and_be_case_insensitive()
 		{
 			// Arrange
@@ -37,18 +38,18 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			IConfiguration config = new DefaultConfiguration(configRoot);
 
 			// Assert
-			Assert.That(config.PostgresConnectionString, Is.EqualTo("connection string"));
-			Assert.That(config.CleanupSleepTime, Is.EqualTo(60));
-			Assert.That(config.ExpiryTimes.Count, Is.EqualTo(2));
+			config.PostgresConnectionString.ShouldBe("connection string");
+			config.CleanupSleepTime.ShouldBe(60);
+			config.ExpiryTimes.Count().ShouldBe(2);
 
-			Assert.That(config.ViewConfig, Is.Not.Null);
-			Assert.That(config.ViewConfig.PageTitle, Is.EqualTo("page title"));
-			Assert.That(config.ViewConfig.HeaderText, Is.EqualTo("header text"));
-			Assert.That(config.ViewConfig.HeaderSubtext, Is.EqualTo("subtext"));
-			Assert.That(config.ViewConfig.FooterText, Is.EqualTo("footer"));
+			config.ViewConfig.ShouldNotBeNull();
+			config.ViewConfig.PageTitle.ShouldBe("page title");
+			config.ViewConfig.HeaderText.ShouldBe("header text");
+			config.ViewConfig.HeaderSubtext.ShouldBe("subtext");
+			config.ViewConfig.FooterText.ShouldBe("footer");
 		}
 
-		[Test]
+		[Fact]
 		public void should_throw_when_connection_string_is_empty()
 		{
 			// Arrange
@@ -62,7 +63,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			Assert.Throws<ConfigurationException>(() => new DefaultConfiguration(configRoot));
 		}
 
-		[Test]
+		[Fact]
 		public void should_set_default_int_values_when_under_minimum()
 		{
 			// Arrange
@@ -75,10 +76,10 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			IConfiguration config = new DefaultConfiguration(configRoot);
 
 			// Assert
-			Assert.That(config.CleanupSleepTime, Is.EqualTo(30));
+			config.CleanupSleepTime.ShouldBe(30);
 		}
 
-		[Test]
+		[Fact]
 		public void should_parse_expiry_times()
 		{
 			// Arrange
@@ -92,15 +93,15 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Assert
 			var expiryTimes = config.ExpiryTimes.ToList();
-			Assert.That(expiryTimes.Count, Is.EqualTo(3));
-			Assert.That(expiryTimes[0], Is.EqualTo(1));
-			Assert.That(expiryTimes[1], Is.EqualTo(60));
-			Assert.That(expiryTimes[2], Is.EqualTo(600));
+			expiryTimes.Count.ShouldBe(3);
+			expiryTimes[0].ShouldBe(1);
+			expiryTimes[1].ShouldBe(60);
+			expiryTimes[2].ShouldBe(600);
 		}
 
-		[Test]
-		[TestCase("")]
-		[TestCase("asdfasdf")]
+		[Theory]
+		[InlineData("")]
+		[InlineData("this isn't a number!")]
 		public void should_parse_invalid_expiry_times_and_set_default(string expiryTime)
 		{
 			// Arrange
@@ -116,17 +117,17 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Assert
 			var expiryTimes = config.ExpiryTimes.ToList();
-			Assert.That(expiryTimes.Count, Is.EqualTo(1));
-			Assert.That(expiryTimes[0], Is.EqualTo(defaultTime));
+			expiryTimes.Count.ShouldBe(1);
+			expiryTimes[0].ShouldBe(defaultTime);
 		}
 
-		[Test]
-		[TestCase("default", IdGenerationType.RandomWithProunceable)]
-		[TestCase("random-with-pronounceable", IdGenerationType.RandomWithProunceable)]
-		[TestCase("pronounceabLE", IdGenerationType.Prounceable)]
-		[TestCase("short-PROnounceable", IdGenerationType.ShortPronounceable)]
-		[TestCase("short-mixedcase", IdGenerationType.ShortMixedCase)]
-		[TestCase("shortcode", IdGenerationType.ShortCode)]
+		[Theory]
+		[InlineData("default", IdGenerationType.RandomWithProunceable)]
+		[InlineData("random-with-pronounceable", IdGenerationType.RandomWithProunceable)]
+		[InlineData("pronounceabLE", IdGenerationType.Prounceable)]
+		[InlineData("short-PROnounceable", IdGenerationType.ShortPronounceable)]
+		[InlineData("short-mixedcase", IdGenerationType.ShortMixedCase)]
+		[InlineData("shortcode", IdGenerationType.ShortCode)]
 		public void should_parse_idgenerationtype(string idType, IdGenerationType expectedGenerationType)
 		{
 			// Arrange
@@ -140,7 +141,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			IConfiguration config = new DefaultConfiguration(configRoot);
 
 			// Act
-			Assert.That(config.IdGenerationType, Is.EqualTo(expectedGenerationType));
+			config.IdGenerationType.ShouldBe(expectedGenerationType);
 		}
 	}
 }

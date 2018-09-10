@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Marten;
+
+[assembly:InternalsVisibleTo("Letmein.Tests")]
 
 namespace Letmein.Core.Repositories.Postgres
 {

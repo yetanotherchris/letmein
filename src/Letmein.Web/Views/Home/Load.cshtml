@@ -45,7 +45,7 @@ else
     @section scripts
     {
     <script>
-        new LoadView(window, jQuery, "@Model.ExpiryDate.ToString("o")");
+        new LoadView(window, jQuery, "@Model.ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss UTC")");
     </script>
     }
 }
