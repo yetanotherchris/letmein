@@ -2,7 +2,7 @@ FROM microsoft/dotnet
 MAINTAINER Chris Small
 
 RUN mkdir /app
-COPY ./bin/Release/netcoreapp1.1/publish /app
+COPY ./bin/Release/netcoreapp2.1/publish /app
 WORKDIR /app
 
 ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]
