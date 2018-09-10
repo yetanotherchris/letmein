@@ -14,30 +14,35 @@ namespace Letmein.Core.Configuration
 
 		public DefaultConfiguration(IConfigurationRoot configRoot)
 		{
+			// This class needs refactoring so there's IOptions injected instead of this class.
+
 			// Keys are case insensitive, they're just uppercase for readability/match the dockerfile.
-			PostgresConnectionString = configRoot.GetValue<string>("POSTGRES_CONNECTIONSTRING");
+			PostgresConnectionString = configRoot["POSTGRES_CONNECTIONSTRING"];
 			if (string.IsNullOrEmpty(PostgresConnectionString))
 				throw new ConfigurationException("POSTGRES_CONNECTIONSTRING variable is empty (keys are case insensitive).");
 
-			CleanupSleepTime = configRoot.GetValue<int>("CLEANUP_SLEEPTIME");
+			int parsedSleepTime;
+			int.TryParse(configRoot["CLEANUP_SLEEPTIME"], out parsedSleepTime);
+			CleanupSleepTime = parsedSleepTime;
+
 			if (CleanupSleepTime < 1)
 				CleanupSleepTime = 30;
 
-			ExpiryTimes = ParseExpiryTimes(configRoot.GetValue<string>("EXPIRY_TIMES"));
+			ExpiryTimes = ParseExpiryTimes(configRoot["EXPIRY_TIMES"]);
 			IdGenerationType = ParseIdGenerationType(configRoot);
 
 			ViewConfig = new ViewConfig();
-			ViewConfig.PageTitle = configRoot.GetValue<string>("PAGE_TITLE");
-			ViewConfig.HeaderText = configRoot.GetValue<string>("HEADER_TEXT");
-			ViewConfig.HeaderSubtext = configRoot.GetValue<string>("HEADER_SUBTEXT");
-			ViewConfig.FooterText = configRoot.GetValue<string>("FOOTER_TEXT");
+			ViewConfig.PageTitle = configRoot["PAGE_TITLE"];
+			ViewConfig.HeaderText = configRoot["HEADER_TEXT"];
+			ViewConfig.HeaderSubtext = configRoot["HEADER_SUBTEXT"];
+			ViewConfig.FooterText = configRoot["FOOTER_TEXT"];
 		}
 
 		private IdGenerationType ParseIdGenerationType(IConfigurationRoot configRoot)
 		{
 			IdGenerationType result = IdGenerationType.Default;
 
-			string idTypeValue = configRoot.GetValue<string>("ID_TYPE");
+			string idTypeValue = configRoot["ID_TYPE"];
 			if (!string.IsNullOrEmpty(idTypeValue))
 			{
 				idTypeValue = idTypeValue.ToLower();
@@ -69,7 +74,7 @@ namespace Letmein.Core.Configuration
 		private List<int> ParseExpiryTimes(string configValues)
 		{
 			var expiryTimes = new List<int>();
-			
+
 			if (!string.IsNullOrEmpty(configValues))
 			{
 				string[] values = configValues.Split(',');

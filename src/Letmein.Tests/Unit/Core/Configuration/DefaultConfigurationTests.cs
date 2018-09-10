@@ -8,22 +8,21 @@ using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 
 namespace Letmein.Tests.Unit.Core.Configuration
 {
-	[TestFixture]
-    public class DefaultConfigurationTests
-    {
-	    public IConfigurationRoot GetConfigurationRoot(Dictionary<string, string> configDictionary)
-	    {
-		    var builder = new ConfigurationBuilder()
+	public class DefaultConfigurationTests
+	{
+		public IConfigurationRoot GetConfigurationRoot(Dictionary<string, string> configDictionary)
+		{
+			var builder = new ConfigurationBuilder()
 				.AddInMemoryCollection(configDictionary);
 
-		    return builder.Build();
-	    }
+			return builder.Build();
+		}
 
 		[Test]
 		public void should_get_values_from_configroot_and_be_case_insensitive()
 		{
 			// Arrange
-			var configDictionary = new Dictionary<string,string>();
+			var configDictionary = new Dictionary<string, string>();
 			configDictionary.Add("postgres_connectionSTRING", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "60");
 			configDictionary.Add("EXPIRY_TIMES", "1, 120");
@@ -77,7 +76,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Assert
 			Assert.That(config.CleanupSleepTime, Is.EqualTo(30));
-
 		}
 
 		[Test]
@@ -106,7 +104,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		public void should_parse_invalid_expiry_times_and_set_default(string expiryTime)
 		{
 			// Arrange
-			int defaultTime = (int) TimeSpan.FromHours(6).TotalMinutes;
+			int defaultTime = (int)TimeSpan.FromHours(6).TotalMinutes;
 
 			var configDictionary = new Dictionary<string, string>();
 			configDictionary.Add("postgres_connectionstring", "connection string");

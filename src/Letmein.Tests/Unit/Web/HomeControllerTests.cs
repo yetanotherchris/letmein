@@ -10,18 +10,17 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using Xunit;
 
 namespace Letmein.Tests.Unit.Web
 {
-	[TestFixture]
 	public class HomeControllerTests
 	{
 		private HomeController _controller;
 		private Mock<ITextEncryptionService> _encryptionService;
 		private ConfigurationStub _configuration;
 
-		[SetUp]
-		public void Setup()
+		public HomeControllerTests()
 		{
 			var httpcontext = new DefaultHttpContext();
 			var request = new DefaultHttpRequest(httpcontext);
@@ -34,13 +33,13 @@ namespace Letmein.Tests.Unit.Web
 			_controller.ControllerContext.HttpContext = httpcontext;
 		}
 
-		[Test]
-		[TestCase(31, "31 minutes")]
-		[TestCase(60, "1 hour")]
-		[TestCase(600, "10 hours")]
-		[TestCase(61, "1 hour 1 minute")]
-		[TestCase(62, "1 hour 2 minutes")]
-		[TestCase(60*26, "1 day 2 hours")]
+		[Theory]
+		[InlineData(31, "31 minutes")]
+		[InlineData(60, "1 hour")]
+		[InlineData(600, "10 hours")]
+		[InlineData(61, "1 hour 1 minute")]
+		[InlineData(62, "1 hour 2 minutes")]
+		[InlineData(60 * 26, "1 day 2 hours")]
 		public void Index_should_return_view_and_model_with_formatted_expiry_times(int expiry, string displayText)
 		{
 			// Arrange
@@ -57,7 +56,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(model[expiry], Is.EqualTo(displayText));
 		}
 
-		[Test]
+		[Fact]
 		public void Store_should_Store_and_return_model_with_new_friendlyid()
 		{
 			// Arrange
@@ -80,9 +79,9 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(_controller.ViewData["ExpiresIn"].ToString(), Is.EqualTo("1 hour 30 minutes"));
 		}
 
-		[Test]
-		[TestCase(90, "1 hour 30 minutes")]
-		[TestCase(58, "58 minutes")]
+		[Theory]
+		[InlineData(90, "1 hour 30 minutes")]
+		[InlineData(58, "58 minutes")]
 		public void Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
 		{
 			// Arrange
@@ -96,7 +95,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(_controller.ViewData["ExpiresIn"].ToString(), Is.EqualTo(expectedViewData));
 		}
 
-		[Test]
+		[Fact]
 		public void Store_should_set_modelstate_errors_and_return_error_view_when_cipherJson_is_empty()
 		{
 			// Arrange
@@ -110,7 +109,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
 		}
 
-		[Test]
+		[Fact]
 		public void Store_should_set_modelstate_errors_and_return_error_view_when_expirytime_is_not_in_configuration()
 		{
 			// Arrange
@@ -126,7 +125,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_return_model_using_service()
 		{
 			// Arrange
@@ -151,7 +150,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(model.CipherJson, Is.EqualTo(expectedItem.CipherJson));
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_return_redirectresult_when_friendlyid_is_empty()
 		{
 			// Arrange + Act
@@ -162,7 +161,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(result.ActionName, Is.EqualTo(nameof(HomeController.Index)));
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_set_modelstate_errors_and_return_null_model_when_service_returns_null()
 		{
 			// Arrange
@@ -179,7 +178,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_set_modelstate_errors_and_return_null_model_when_item_is_expired()
 		{
 			// Arrange
@@ -203,7 +202,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_remove_item_and_redirect_to_index()
 		{
 			// Arrange
@@ -218,7 +217,7 @@ namespace Letmein.Tests.Unit.Web
 			_encryptionService.Verify(x => x.Delete("the-friendlyid"));
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_redirect_to_load_page_when_service_fails()
 		{
 			// Arrange
@@ -233,7 +232,7 @@ namespace Letmein.Tests.Unit.Web
 			Assert.That(result.RouteValues["friendlyId"], Is.EqualTo("the-friendlyid"));
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_redirect_when_friendlyid_is_empty()
 		{
 			// Arrange + Act
