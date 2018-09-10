@@ -3,17 +3,16 @@ using System.Linq;
 using Letmein.Core;
 using Letmein.Core.Repositories.Postgres;
 using Marten;
-using NUnit.Framework;
+using Shouldly;
+using Xunit;
 
 namespace Letmein.Tests.Integration
 {
-	[TestFixture]
 	public class TextRepositoryTests
 	{
 		private TextRepository _repository;
 
-		[SetUp]
-		public void Setup()
+		public TextRepositoryTests()
 		{
 			string connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTIONSTRING");
 			if (string.IsNullOrEmpty(connectionString))
@@ -29,7 +28,7 @@ namespace Letmein.Tests.Integration
 			_repository.ClearDatabase();
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_loads_entity_and_Save_should_store()
 		{
 			// Arrange
@@ -48,33 +47,33 @@ namespace Letmein.Tests.Integration
 			EncryptedItem loadedItem = _repository.Load(encryptedItem.FriendlyId);
 
 			// Assert
-			Assert.NotNull(loadedItem);
-			Assert.That(loadedItem.Id, Is.EqualTo(encryptedItem.Id));
-			Assert.That(loadedItem.AlgorithmName, Is.EqualTo(encryptedItem.AlgorithmName));
-			Assert.That(loadedItem.FriendlyId, Is.EqualTo(encryptedItem.FriendlyId));
-			Assert.That(loadedItem.CreatedOn, Is.EqualTo(encryptedItem.CreatedOn));
+			loadedItem.ShouldNotBeNull();
+			loadedItem.Id.ShouldBe(encryptedItem.Id);
+			loadedItem.AlgorithmName.ShouldBe(encryptedItem.AlgorithmName);
+			loadedItem.FriendlyId.ShouldBe(encryptedItem.FriendlyId);
+			loadedItem.CreatedOn.ShouldBe(encryptedItem.CreatedOn);
 		}
 
-		[Test]
-		public void GetExpireItems_should_get_old_items()
+		[Fact]
+		public void GetExpireItems_should_get_old_items_before_given_date()
 		{
 			// Arrange
-			var encryptedItem1 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id1", ExpiresOn = DateTime.Today.AddMinutes(1) };
-			var encryptedItem2 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id2", ExpiresOn = DateTime.Today.AddDays(-1) };
-			var encryptedItem3 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id3", ExpiresOn = DateTime.Today.AddDays(-2) };
+			var encryptedItem1 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id1", ExpiresOn = DateTime.UtcNow.AddMinutes(1) };
+			var encryptedItem2 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id2", ExpiresOn = DateTime.UtcNow.AddDays(-1) };
+			var encryptedItem3 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id3", ExpiresOn = DateTime.UtcNow.AddDays(-2) };
 
 			_repository.Save(encryptedItem1);
 			_repository.Save(encryptedItem2);
 			_repository.Save(encryptedItem3);
 
 			// Act
-			var items = _repository.GetExpiredItems(DateTime.Today);
+			var items = _repository.GetExpiredItems(DateTime.UtcNow);
 
 			// Assert
-			Assert.That(items.Count(), Is.EqualTo(2));
+			items.Count().ShouldBe(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_remove_expected_item()
 		{
 			// Arrange
@@ -91,8 +90,8 @@ namespace Letmein.Tests.Integration
 			var items = _repository.All();
 
 			// Assert
-			Assert.That(items.Count(), Is.EqualTo(2));
-			Assert.That(items.Last().FriendlyId, Is.EqualTo("id3"));
+			items.Count().ShouldBe(2);
+			items.Last().FriendlyId.ShouldBe("id3");
 		}
 	}
 }

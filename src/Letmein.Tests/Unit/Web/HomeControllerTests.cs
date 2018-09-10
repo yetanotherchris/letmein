@@ -9,19 +9,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using NUnit.Framework;
+using Shouldly;
+using Xunit;
 
 namespace Letmein.Tests.Unit.Web
 {
-	[TestFixture]
 	public class HomeControllerTests
 	{
 		private HomeController _controller;
 		private Mock<ITextEncryptionService> _encryptionService;
 		private ConfigurationStub _configuration;
 
-		[SetUp]
-		public void Setup()
+		public HomeControllerTests()
 		{
 			var httpcontext = new DefaultHttpContext();
 			var request = new DefaultHttpRequest(httpcontext);
@@ -34,13 +33,13 @@ namespace Letmein.Tests.Unit.Web
 			_controller.ControllerContext.HttpContext = httpcontext;
 		}
 
-		[Test]
-		[TestCase(31, "31 minutes")]
-		[TestCase(60, "1 hour")]
-		[TestCase(600, "10 hours")]
-		[TestCase(61, "1 hour 1 minute")]
-		[TestCase(62, "1 hour 2 minutes")]
-		[TestCase(60*26, "1 day 2 hours")]
+		[Theory]
+		[InlineData(31, "31 minutes")]
+		[InlineData(60, "1 hour")]
+		[InlineData(600, "10 hours")]
+		[InlineData(61, "1 hour 1 minute")]
+		[InlineData(62, "1 hour 2 minutes")]
+		[InlineData(60 * 26, "1 day 2 hours")]
 		public void Index_should_return_view_and_model_with_formatted_expiry_times(int expiry, string displayText)
 		{
 			// Arrange
@@ -50,14 +49,14 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Index() as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
+			result.ShouldNotBeNull();
 
 			Dictionary<int, string> model = result.Model as Dictionary<int, string>;
-			Assert.That(model, Is.Not.Null);
-			Assert.That(model[expiry], Is.EqualTo(displayText));
+			model.ShouldNotBeNull();
+			model[expiry].ShouldBe(displayText);
 		}
 
-		[Test]
+		[Fact]
 		public void Store_should_Store_and_return_model_with_new_friendlyid()
 		{
 			// Arrange
@@ -71,18 +70,18 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Store(json, expiresInMinutes) as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
+			result.ShouldNotBeNull();
 
 			EncryptedItemViewModel model = result.Model as EncryptedItemViewModel;
-			Assert.That(model, Is.Not.Null);
-			Assert.That(model.FriendlyId, Is.EqualTo("the-friendlyid"));
-			Assert.That(_controller.ViewData["BaseUrl"].ToString(), Is.EqualTo("localhost"));
-			Assert.That(_controller.ViewData["ExpiresIn"].ToString(), Is.EqualTo("1 hour 30 minutes"));
+			model.ShouldNotBeNull();
+			model.FriendlyId.ShouldBe("the-friendlyid");
+			_controller.ViewData["BaseUrl"].ToString().ShouldBe("localhost");
+			_controller.ViewData["ExpiresIn"].ToString().ShouldBe("1 hour 30 minutes");
 		}
 
-		[Test]
-		[TestCase(90, "1 hour 30 minutes")]
-		[TestCase(58, "58 minutes")]
+		[Theory]
+		[InlineData(90, "1 hour 30 minutes")]
+		[InlineData(58, "58 minutes")]
 		public void Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
 		{
 			// Arrange
@@ -92,11 +91,11 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Store("do you know jason?", minutes) as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(_controller.ViewData["ExpiresIn"].ToString(), Is.EqualTo(expectedViewData));
+			result.ShouldNotBeNull();
+			_controller.ViewData["ExpiresIn"].ToString().ShouldBe(expectedViewData);
 		}
 
-		[Test]
+		[Fact]
 		public void Store_should_set_modelstate_errors_and_return_error_view_when_cipherJson_is_empty()
 		{
 			// Arrange
@@ -106,11 +105,11 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Store("", 1) as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+			result.ShouldNotBeNull();
+			_controller.ModelState.Count.ShouldBe(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Store_should_set_modelstate_errors_and_return_error_view_when_expirytime_is_not_in_configuration()
 		{
 			// Arrange
@@ -121,12 +120,12 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Store("{ some: json }", badExpiryTime) as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(result.ViewName, Is.EqualTo(nameof(HomeController.Error)));
-			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+			result.ShouldNotBeNull();
+			result.ViewName.ShouldBe(nameof(HomeController.Error));
+			_controller.ModelState.Count.ShouldBe(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_return_model_using_service()
 		{
 			// Arrange
@@ -143,26 +142,26 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
+			result.ShouldNotBeNull();
 
 			EncryptedItemViewModel model = result.Model as EncryptedItemViewModel;
-			Assert.That(model, Is.Not.Null);
-			Assert.That(model.FriendlyId, Is.EqualTo(expectedItem.FriendlyId));
-			Assert.That(model.CipherJson, Is.EqualTo(expectedItem.CipherJson));
+			model.ShouldNotBeNull();
+			model.FriendlyId.ShouldBe(expectedItem.FriendlyId);
+			model.CipherJson.ShouldBe(expectedItem.CipherJson);
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_return_redirectresult_when_friendlyid_is_empty()
 		{
 			// Arrange + Act
 			RedirectToActionResult result = _controller.Load("") as RedirectToActionResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(result.ActionName, Is.EqualTo(nameof(HomeController.Index)));
+			result.ShouldNotBeNull();
+			result.ActionName.ShouldBe(nameof(HomeController.Index));
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_set_modelstate_errors_and_return_null_model_when_service_returns_null()
 		{
 			// Arrange
@@ -172,14 +171,14 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
+			result.ShouldNotBeNull();
 
 			EncryptedItemViewModel model = result.Model as EncryptedItemViewModel;
-			Assert.That(model, Is.Null);
-			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+			model.ShouldBeNull();
+			_controller.ModelState.Count.ShouldBe(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Load_should_set_modelstate_errors_and_return_null_model_when_item_is_expired()
 		{
 			// Arrange
@@ -196,14 +195,14 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
+			result.ShouldNotBeNull();
 
 			EncryptedItemViewModel model = result.Model as EncryptedItemViewModel;
-			Assert.That(model, Is.Null);
-			Assert.That(_controller.ModelState.Count, Is.EqualTo(1));
+			model.ShouldBeNull();
+			_controller.ModelState.Count.ShouldBe(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_remove_item_and_redirect_to_index()
 		{
 			// Arrange
@@ -213,12 +212,12 @@ namespace Letmein.Tests.Unit.Web
 			ViewResult result = _controller.Delete("the-friendlyid") as ViewResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(result.ViewName, Is.EqualTo("Deleted"));
+			result.ShouldNotBeNull();
+			result.ViewName.ShouldBe("Deleted");
 			_encryptionService.Verify(x => x.Delete("the-friendlyid"));
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_redirect_to_load_page_when_service_fails()
 		{
 			// Arrange
@@ -228,20 +227,20 @@ namespace Letmein.Tests.Unit.Web
 			RedirectToActionResult result = _controller.Delete("the-friendlyid") as RedirectToActionResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(result.ActionName, Is.EqualTo(nameof(HomeController.Load)));
-			Assert.That(result.RouteValues["friendlyId"], Is.EqualTo("the-friendlyid"));
+			result.ShouldNotBeNull();
+			result.ActionName.ShouldBe(nameof(HomeController.Load));
+			result.RouteValues["friendlyId"].ShouldBe("the-friendlyid");
 		}
 
-		[Test]
+		[Fact]
 		public void Delete_should_redirect_when_friendlyid_is_empty()
 		{
 			// Arrange + Act
 			RedirectToActionResult result = _controller.Delete("") as RedirectToActionResult;
 
 			// Assert
-			Assert.That(result, Is.Not.Null);
-			Assert.That(result.ActionName, Is.EqualTo(nameof(HomeController.Index)));
+			result.ShouldNotBeNull();
+			result.ActionName.ShouldBe(nameof(HomeController.Index));
 		}
 	}
 }

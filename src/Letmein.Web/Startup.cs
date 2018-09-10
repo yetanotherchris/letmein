@@ -34,7 +34,7 @@ namespace Letmein.Web
 			// Setup Sirilog
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()
-				.WriteTo.LiterateConsole(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Website] {Message}{NewLine}{Exception}")
+				.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Website] {Message}{NewLine}{Exception}")
 				.CreateLogger();
 		}
 
@@ -131,6 +131,7 @@ namespace Letmein.Web
 		public static class IoC
 		{
 			public static Container Container { get; set; }
+
 			static IoC()
 			{
 				Container = new Container();

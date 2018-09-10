@@ -2,7 +2,8 @@
 {
 	public enum IdGenerationType
 	{
-		Default = 1,
+		Default = RandomWithProunceable,
+
 		RandomWithProunceable = 1,
 		Prounceable = 2,
 		ShortPronounceable = 3,

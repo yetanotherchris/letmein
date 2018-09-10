@@ -23,7 +23,7 @@ namespace Letmein.Web
 			// Sirilog for nicer looking console logs
 			Log.Logger = new LoggerConfiguration()
 				.Enrich.FromLogContext()
-				.WriteTo.LiterateConsole(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Cleanup Service] {Message}{NewLine}{Exception}")
+				.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Cleanup Service] {Message}{NewLine}{Exception}")
 				.CreateLogger();
 
 			// Configure MS Logging

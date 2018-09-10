@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Letmein.Core.Configuration;
 using Letmein.Core.Services.UniqueId;
-using NUnit.Framework;
+using Xunit;
 
 namespace Letmein.Tests.Unit.Core.Services
 {
 	public class UniqueIdGeneratorTests
 	{
-		[Test]
-		[TestCase(IdGenerationType.ShortMixedCase)]
-		[TestCase(IdGenerationType.ShortCode)]
-		[TestCase(IdGenerationType.Default)]
-		[TestCase(IdGenerationType.Prounceable)]
-		[TestCase(IdGenerationType.RandomWithProunceable)]
-		[TestCase(IdGenerationType.ShortPronounceable)]
+		[Theory]
+		[InlineData(IdGenerationType.ShortMixedCase)]
+		[InlineData(IdGenerationType.ShortCode)]
+		[InlineData(IdGenerationType.Default)]
+		[InlineData(IdGenerationType.Prounceable)]
+		[InlineData(IdGenerationType.RandomWithProunceable)]
+		[InlineData(IdGenerationType.ShortPronounceable)]
 		public void should_generate_unqueids(IdGenerationType idGenerationType)
 		{
 			// Arrange
@@ -30,17 +30,14 @@ namespace Letmein.Tests.Unit.Core.Services
 
 				if (list.Contains(password))
 				{
-					Assert.Fail("None unique ID generated");
-					break;
+					throw new Exception("None unique ID generated");
 				}
 
 				list.Add(password);
 			}
 		}
 
-		[Test]
-		[Explicit]
-		[Ignore("This takes a while to run")]
+		[Fact(Skip = "This takes a while to run")]
 		public void clash_test2()
 		{
 			// Arrange
@@ -71,9 +68,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			Console.WriteLine(list.Distinct().Count());
 		}
 
-		[Test]
-		[Explicit]
-		[Ignore("This takes 20 minutes to run")]
+		[Fact(Skip = "This takes 20 minutes to run")]
 		public void clash_test()
 		{
 			// Arrange
