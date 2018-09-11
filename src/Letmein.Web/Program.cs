@@ -14,7 +14,7 @@ namespace Letmein.Web
 			// Cleanup service
 			IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
 			var configurationRoot = configurationBuilder.Build();
-			var configuration = new DefaultConfiguration(configurationRoot);
+			var configuration = new Configuration(configurationRoot);
 
 			var cleanup = new Cleanup(configuration);
 	        cleanup.StartBackgroundCleanup();

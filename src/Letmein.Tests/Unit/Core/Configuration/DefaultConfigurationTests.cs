@@ -35,7 +35,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configRoot = GetConfigurationRoot(configDictionary);
 
 			// Act
-			IConfiguration config = new DefaultConfiguration(configRoot);
+			IConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
 
 			// Assert
 			config.PostgresConnectionString.ShouldBe("connection string");
@@ -60,7 +60,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configRoot = GetConfigurationRoot(configDictionary);
 
 			// Assert
-			Assert.Throws<ConfigurationException>(() => new DefaultConfiguration(configRoot));
+			Assert.Throws<ConfigurationException>(() => new Letmein.Core.Configuration.Configuration(configRoot));
 		}
 
 		[Fact]
@@ -73,7 +73,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
-			IConfiguration config = new DefaultConfiguration(configRoot);
+			IConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
 
 			// Assert
 			config.CleanupSleepTime.ShouldBe(30);
@@ -89,7 +89,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
-			IConfiguration config = new DefaultConfiguration(configRoot);
+			IConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
 
 			// Assert
 			var expiryTimes = config.ExpiryTimes.ToList();
@@ -113,7 +113,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
-			IConfiguration config = new DefaultConfiguration(configRoot);
+			IConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
 
 			// Assert
 			var expiryTimes = config.ExpiryTimes.ToList();
@@ -138,7 +138,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configRoot = GetConfigurationRoot(configDictionary);
 
 			// Act
-			IConfiguration config = new DefaultConfiguration(configRoot);
+			IConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
 
 			// Act
 			config.IdGenerationType.ShouldBe(expectedGenerationType);

@@ -46,7 +46,7 @@ namespace Letmein.Web
 			services.AddLogging();
 
 			services.AddSingleton<IConfigurationRoot>(sp => Configuration);
-			services.AddSingleton<IConfiguration>(sp => new DefaultConfiguration(Configuration));
+			services.AddSingleton<IConfiguration>(sp => new Configuration(Configuration));
 			services.AddSingleton<IDocumentStore>(service =>
 			{
 				// Configure Marten
