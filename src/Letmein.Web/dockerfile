@@ -5,6 +5,9 @@ RUN mkdir /app
 COPY ./bin/Release/netcoreapp2.1/publish /app
 WORKDIR /app
 
+RUN mkdir /app/pastes
+RUN chmod 777 /app/pastes
+
 ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]
 
 # ASP.NET Core: make sure views use the production versions
@@ -12,6 +15,13 @@ ENV ASPNETCORE_ENVIRONMENT="Production"
 
 # ASP.NET Core: Kestrel should listen on all IPs
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+
+# Can either be "FileSystem" or "Postgres"
+# Use file system to store pastes by default. 
+ENV REPOSITORY_TYPE="FileSystem"
+
+# Store them in the pastes folder
+ENV PASTES_STORE_PATH="pastes"
 
 # Postgres database connection string
 ENV POSTGRES_CONNECTIONSTRING=""

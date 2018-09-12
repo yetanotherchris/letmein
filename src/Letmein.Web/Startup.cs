@@ -1,8 +1,10 @@
-﻿using System.Security.Cryptography;
+﻿using System.IO;
+using System.Security.Cryptography;
 using Letmein.Core;
 using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Repositories;
+using Letmein.Core.Repositories.FileSystem;
 using Letmein.Core.Repositories.Postgres;
 using Letmein.Core.Services;
 using Letmein.Core.Services.UniqueId;
@@ -15,12 +17,24 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using StructureMap;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Letmein.Web
 {
 	public class Startup
 	{
 		public IConfigurationRoot Configuration { get; }
+
+		public Startup()
+		{
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+				.AddJsonFile($"appsettings.development.json", optional: true)
+				.AddEnvironmentVariables();
+
+			Configuration = builder.Build();
+		}
 
 		public Startup(IHostingEnvironment env)
 		{
@@ -29,13 +43,8 @@ namespace Letmein.Web
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
 				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
 				.AddEnvironmentVariables();
-			Configuration = builder.Build();
 
-			// Setup Sirilog
-			Log.Logger = new LoggerConfiguration()
-				.Enrich.FromLogContext()
-				.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Website] {Message}{NewLine}{Exception}")
-				.CreateLogger();
+			Configuration = builder.Build();
 		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.
@@ -46,32 +55,58 @@ namespace Letmein.Web
 			services.AddLogging();
 
 			services.AddSingleton<IConfigurationRoot>(sp => Configuration);
-			services.AddSingleton<IConfiguration>(sp => new Configuration(Configuration));
-			services.AddSingleton<IDocumentStore>(service =>
-			{
-				// Configure Marten
-				var config = service.GetService<IConfiguration>();
-				return DocumentStore.For(options =>
-				{
-					options.Connection(config.PostgresConnectionString);
-					options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
-				});
-			});
+			var configuration = new Configuration(Configuration);
+
+			services.AddSingleton((System.Func<System.IServiceProvider, IConfiguration>)(sp => configuration));
+			ConfigureRepository(services, configuration);
+
 			services.AddScoped<SymmetricAlgorithm>(service => Aes.Create());
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
-			services.AddScoped<ITextRepository>(service =>
-			{
-				// Configure the default Repositroy
-				var store = service.GetService<IDocumentStore>();
-				return new TextRepository(store);
-			});
+
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
+		}
+
+		private static void ConfigureRepository(IServiceCollection services, IConfiguration configuration)
+		{
+			if (configuration.RepositoryType == RepositoryType.Postgres)
+			{
+				services.AddSingleton<IDocumentStore>(service =>
+				{
+					// Configure Marten
+					var config = service.GetService<IConfiguration>();
+					return DocumentStore.For(options =>
+					{
+						options.Connection(config.PostgresConnectionString);
+						options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
+					});
+				});
+
+				services.AddScoped<ITextRepository>(service =>
+				{
+					var store = service.GetService<IDocumentStore>();
+					return new PostgresTextRepository(store);
+				});
+			}
+			else
+			{
+				services.AddTransient<ITextRepository>(service =>
+				{
+					ILogger logger = service.GetService<ILogger>();
+					return new FileSystemRepository(configuration, logger);
+				});
+			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
+			// Setup Sirilog
+			Log.Logger = new LoggerConfiguration()
+				.Enrich.FromLogContext()
+				.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Website] {Message}{NewLine}{Exception}")
+				.CreateLogger();
+
 			loggerFactory.AddSerilog();
 			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
 			loggerFactory.AddDebug();

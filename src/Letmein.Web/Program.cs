@@ -7,27 +7,24 @@ using Microsoft.Extensions.Configuration;
 
 namespace Letmein.Web
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-			// Cleanup service
-			IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
-			var configurationRoot = configurationBuilder.Build();
-			var configuration = new Configuration(configurationRoot);
-
-			var cleanup = new Cleanup(configuration);
-	        cleanup.StartBackgroundCleanup();
-
-			// Website
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			// Configure web
 			var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
+				.UseKestrel()
+				.UseContentRoot(Directory.GetCurrentDirectory())
+				.UseIISIntegration()
+				.UseStartup<Startup>()
+				.Build();
 
-            host.Run();
-        }
-    }
+			// Start the cleanup service
+			var cleanup = new Cleanup(host.Services);
+			cleanup.StartBackgroundCleanup();
+
+			// Start the web
+			host.Run();
+		}
+	}
 }

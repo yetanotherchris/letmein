@@ -10,7 +10,7 @@ namespace Letmein.Tests.Integration
 {
 	public class TextRepositoryTests
 	{
-		private TextRepository _repository;
+		private PostgresTextRepository _repository;
 
 		public TextRepositoryTests()
 		{
@@ -24,7 +24,7 @@ namespace Letmein.Tests.Integration
 				options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
 			});
 
-			_repository = new TextRepository(store);
+			_repository = new PostgresTextRepository(store);
 			_repository.ClearDatabase();
 		}
 

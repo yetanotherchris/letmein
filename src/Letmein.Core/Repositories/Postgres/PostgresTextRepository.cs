@@ -4,18 +4,18 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Marten;
 
-[assembly:InternalsVisibleTo("Letmein.Tests")]
+[assembly: InternalsVisibleTo("Letmein.Tests")]
 
 namespace Letmein.Core.Repositories.Postgres
 {
-	public class TextRepository : ITextRepository
+	public class PostgresTextRepository : ITextRepository
 	{
-		// docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres 
+		// docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres
 		// choco install dotnetcore-runtime
 
 		private readonly IDocumentStore _store;
 
-		public TextRepository(IDocumentStore store)
+		public PostgresTextRepository(IDocumentStore store)
 		{
 			_store = store;
 		}
