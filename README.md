@@ -74,7 +74,7 @@ Start a Postgres container (it needs 9.5 or higher):
 
 #### Step 2. Run the Letmein Docker container
 
-And then run the Letmein container:
+Run the Letmein Docker container (below assumes you're using Postgres):
 
     docker run -d -p 8080:5000 --link postgres:postgres -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" anotherchris/letmein
 
