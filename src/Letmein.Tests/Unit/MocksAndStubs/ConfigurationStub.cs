@@ -14,9 +14,12 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 
 		public IEnumerable<int> ExpiryTimes
 		{
-			get { return _expiryTimes;}
+			get { return _expiryTimes; }
 			set { _expiryTimes = new List<int>(value); }
 		}
+
+		public RepositoryType RepositoryType { get; set; }
+		public string PastesStorePath { get; set; }
 
 		public ConfigurationStub()
 		{
@@ -28,6 +31,5 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 		{
 			_expiryTimes.Add(expiry);
 		}
-
 	}
 }

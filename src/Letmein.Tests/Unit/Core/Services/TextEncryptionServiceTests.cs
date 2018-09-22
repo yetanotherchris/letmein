@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Configuration;
 using Letmein.Core.Services;
@@ -30,7 +31,7 @@ namespace Letmein.Tests.Unit.Core.Services
 		}
 
 		[Fact]
-		public void StoredEncryptedJson_should_persist_to_repository_and_set_expiry()
+		public async Task StoredEncryptedJson_should_persist_to_repository_and_set_expiry()
 		{
 			// Arrange
 			string friendlyId = "my FriendlyId";
@@ -38,7 +39,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			int expiresInMinutes = 60 * 12;
 
 			// Act
-			string newUrl = _encryptionService.StoredEncryptedJson(json, friendlyId, expiresInMinutes);
+			string newUrl = await _encryptionService.StoredEncryptedJson(json, friendlyId, expiresInMinutes);
 
 			// Assert
 			EncryptedItem actualSavedItem = _repository.SavedEncryptedItem;
@@ -52,7 +53,7 @@ namespace Letmein.Tests.Unit.Core.Services
 		}
 
 		[Fact]
-		public void StoredEncryptedJson_generate_unique_id_when_id_is_empty()
+		public async Task StoredEncryptedJson_generate_unique_id_when_id_is_empty()
 		{
 			// Arrange
 			string json = "{ encrypted json }";
@@ -62,14 +63,14 @@ namespace Letmein.Tests.Unit.Core.Services
 			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.ShortCode)).Returns(expectedId);
 
 			// Act
-			string newId = _encryptionService.StoredEncryptedJson(json, friendlyId, 90);
+			string newId = await _encryptionService.StoredEncryptedJson(json, friendlyId, 90);
 
 			// Assert
 			newId.ShouldBe(expectedId);
 		}
 
 		[Fact]
-		public void LoadEncryptedJson_should_load_json_by_uniqueid()
+		public async Task LoadEncryptedJson_should_load_json_by_uniqueid()
 		{
 			// Arrange
 			string friendlyId = "nIce-Id";
@@ -84,27 +85,27 @@ namespace Letmein.Tests.Unit.Core.Services
 			_repository.EncryptedItems.Add(expectedEncryptedItem);
 
 			// Act
-			EncryptedItem actualEncryptedItem = _encryptionService.LoadEncryptedJson(friendlyId);
+			EncryptedItem actualEncryptedItem = await _encryptionService.LoadEncryptedJson(friendlyId);
 
 			// Assert
 			actualEncryptedItem.CipherJson.ShouldBe(json);
 		}
 
 		[Fact]
-		public void LoadEncryptedJson_should_return_null_when_load_fails()
+		public async Task LoadEncryptedJson_should_return_null_when_load_fails()
 		{
 			// Arrange
 			string friendlyId = "nIce-Id";
 
 			// Act
-			EncryptedItem actualEncryptedItem = _encryptionService.LoadEncryptedJson(friendlyId);
+			EncryptedItem actualEncryptedItem = await _encryptionService.LoadEncryptedJson(friendlyId);
 
 			// Assert
 			actualEncryptedItem.ShouldBeNull();
 		}
 
 		[Fact]
-		public void Delete_should_remove_item_using_repository_and_return_true()
+		public async Task Delete_should_remove_item_using_repository_and_return_true()
 		{
 			// Arrange
 			string friendlyId = "myid";
@@ -117,14 +118,14 @@ namespace Letmein.Tests.Unit.Core.Services
 			_repository.EncryptedItems.Add(expectedEncryptedItem);
 
 			// Act
-			bool result = _encryptionService.Delete(friendlyId);
+			bool result = await _encryptionService.Delete(friendlyId);
 
 			// Assert
 			result.ShouldBeTrue();
 		}
 
 		[Fact]
-		public void Delete_should_return_false_when_delete_fails()
+		public async Task Delete_should_return_false_when_delete_fails()
 		{
 			// Arrange
 			_repository.DeleteThrows = true;
@@ -139,7 +140,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			_repository.EncryptedItems.Add(expectedEncryptedItem);
 
 			// Act
-			bool result = _encryptionService.Delete("myid");
+			bool result = await _encryptionService.Delete("myid");
 
 			// Assert
 			result.ShouldBeFalse();

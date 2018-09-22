@@ -5,6 +5,9 @@ RUN mkdir /app
 COPY ./bin/Release/netcoreapp2.1/publish /app
 WORKDIR /app
 
+RUN mkdir /app/pastes
+RUN chmod 777 /app/pastes
+
 ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]
 
 # ASP.NET Core: make sure views use the production versions
@@ -13,6 +16,13 @@ ENV ASPNETCORE_ENVIRONMENT="Production"
 # ASP.NET Core: Kestrel should listen on all IPs
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 
+# The storage type for pastes.
+# Possible values:  "Postgres", "FileSystem", "S3", "GoogleCloud", "AzureBlobs"
+ENV REPOSITORY_TYPE="FileSystem"
+
+# Store them in the pastes folder
+ENV PASTES_STORE_PATH="pastes"
+
 # Postgres database connection string
 ENV POSTGRES_CONNECTIONSTRING=""
 
@@ -20,7 +30,7 @@ ENV POSTGRES_CONNECTIONSTRING=""
 ENV EXPIRY_TIMES="720"
 
 # Number of seconds to sleep inbetween checking for expired pastes
-ENV CLEANUP_SLEEPTIME="30"
+ENV CLEANUP_SLEEPTIME="300"
 
 # Short url ID type. 
 # Possible values: default (random-with-pronounceable), pronounceable, short-pronounceable, short-mixedcase, shortcode

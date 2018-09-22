@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Repositories;
@@ -23,7 +24,7 @@ namespace Letmein.Core.Services
 			_logger = loggingFactory.CreateLogger<TextEncryptionService>();
 		}
 
-		public string StoredEncryptedJson(string json, string friendlyId, int expiresInMinutes)
+		public async Task<string> StoredEncryptedJson(string json, string friendlyId, int expiresInMinutes)
 		{
 			try
 			{
@@ -43,7 +44,7 @@ namespace Letmein.Core.Services
 					CipherJson = json,
 				};
 
-				_repository.Save(encryptedItem);
+				await _repository.Save(encryptedItem);
 
 				return friendlyId;
 			}
@@ -55,16 +56,16 @@ namespace Letmein.Core.Services
 			return "";
 		}
 
-		public EncryptedItem LoadEncryptedJson(string friendlyId)
+		public async Task<EncryptedItem> LoadEncryptedJson(string friendlyId)
 		{
-			return _repository.Load(friendlyId);
+			return await _repository.Load(friendlyId);
 		}
 
-		public bool Delete(string friendlyId)
+		public async Task<bool> Delete(string friendlyId)
 		{
 			try
 			{
-				_repository.Delete(friendlyId);
+				await _repository.Delete(friendlyId);
 				return true;
 			}
 			catch (Exception ex)

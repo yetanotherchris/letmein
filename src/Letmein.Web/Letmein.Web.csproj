@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Letmein.Core\Letmein.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="pastes\" />
+  </ItemGroup>
+
 </Project>

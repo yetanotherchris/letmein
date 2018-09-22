@@ -4,25 +4,31 @@ using Microsoft.Extensions.Configuration;
 
 namespace Letmein.Core.Configuration
 {
-	public class DefaultConfiguration : IConfiguration
+	public class Configuration : IConfiguration
 	{
+		public RepositoryType RepositoryType { get; set; }
+		public string PastesStorePath { get; set; }
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }
 		public IdGenerationType IdGenerationType { get; set; }
 		public IEnumerable<int> ExpiryTimes { get; set; }
 		public ViewConfig ViewConfig { get; set; }
 
-		public DefaultConfiguration(IConfigurationRoot configRoot)
+		public Configuration(IConfigurationRoot configRoot)
 		{
 			// This class needs refactoring so there's IOptions injected instead of this class.
 
 			// Keys are case insensitive, they're just uppercase for readability/match the dockerfile.
 			PostgresConnectionString = configRoot["POSTGRES_CONNECTIONSTRING"];
-			if (string.IsNullOrEmpty(PostgresConnectionString))
-				throw new ConfigurationException("POSTGRES_CONNECTIONSTRING variable is empty (keys are case insensitive).");
+			PastesStorePath = configRoot["PASTES_STORE_PATH"];
 
-			int parsedSleepTime;
-			int.TryParse(configRoot["CLEANUP_SLEEPTIME"], out parsedSleepTime);
+			if (string.IsNullOrEmpty(PostgresConnectionString) && string.IsNullOrEmpty(PastesStorePath))
+				throw new ConfigurationException("Both POSTGRES_CONNECTIONSTRING and NOTES_PATH are empty (keys are case insensitive). Please use one setting.");
+
+			RepositoryType.TryParse(configRoot["REPOSITORY_TYPE"], true, out RepositoryType repositoryTypeParsed);
+			RepositoryType = repositoryTypeParsed;
+
+			int.TryParse(configRoot["CLEANUP_SLEEPTIME"], out var parsedSleepTime);
 			CleanupSleepTime = parsedSleepTime;
 
 			if (CleanupSleepTime < 1)

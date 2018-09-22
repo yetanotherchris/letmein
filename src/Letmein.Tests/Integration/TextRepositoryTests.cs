@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Repositories.Postgres;
 using Marten;
@@ -10,7 +11,7 @@ namespace Letmein.Tests.Integration
 {
 	public class TextRepositoryTests
 	{
-		private TextRepository _repository;
+		private PostgresTextRepository _repository;
 
 		public TextRepositoryTests()
 		{
@@ -24,12 +25,12 @@ namespace Letmein.Tests.Integration
 				options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
 			});
 
-			_repository = new TextRepository(store);
+			_repository = new PostgresTextRepository(store);
 			_repository.ClearDatabase();
 		}
 
 		[Fact]
-		public void Load_should_loads_entity_and_Save_should_store()
+		public async Task Load_should_loads_entity_and_Save_should_store()
 		{
 			// Arrange
 			var encryptedItem = new EncryptedItem()
@@ -41,10 +42,10 @@ namespace Letmein.Tests.Integration
 				CreatedOn = DateTime.UtcNow
 			};
 
-			_repository.Save(encryptedItem);
+			await _repository.Save(encryptedItem);
 
 			// Act
-			EncryptedItem loadedItem = _repository.Load(encryptedItem.FriendlyId);
+			EncryptedItem loadedItem = await _repository.Load(encryptedItem.FriendlyId);
 
 			// Assert
 			loadedItem.ShouldNotBeNull();
@@ -55,38 +56,38 @@ namespace Letmein.Tests.Integration
 		}
 
 		[Fact]
-		public void GetExpireItems_should_get_old_items_before_given_date()
+		public async Task GetExpireItems_should_get_old_items_before_given_date()
 		{
 			// Arrange
 			var encryptedItem1 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id1", ExpiresOn = DateTime.UtcNow.AddMinutes(1) };
 			var encryptedItem2 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id2", ExpiresOn = DateTime.UtcNow.AddDays(-1) };
 			var encryptedItem3 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id3", ExpiresOn = DateTime.UtcNow.AddDays(-2) };
 
-			_repository.Save(encryptedItem1);
-			_repository.Save(encryptedItem2);
-			_repository.Save(encryptedItem3);
+			await _repository.Save(encryptedItem1);
+			await _repository.Save(encryptedItem2);
+			await _repository.Save(encryptedItem3);
 
 			// Act
-			var items = _repository.GetExpiredItems(DateTime.UtcNow);
+			var items = await _repository.GetExpiredItems(DateTime.UtcNow);
 
 			// Assert
 			items.Count().ShouldBe(2);
 		}
 
 		[Fact]
-		public void Delete_should_remove_expected_item()
+		public async Task Delete_should_remove_expected_item()
 		{
 			// Arrange
 			var encryptedItem1 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id1" };
 			var encryptedItem2 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id2" };
 			var encryptedItem3 = new EncryptedItem() { Id = Guid.NewGuid(), FriendlyId = "id3" };
 
-			_repository.Save(encryptedItem1);
-			_repository.Save(encryptedItem2);
-			_repository.Save(encryptedItem3);
+			await _repository.Save(encryptedItem1);
+			await _repository.Save(encryptedItem2);
+			await _repository.Save(encryptedItem3);
 
 			// Act
-			_repository.Delete(encryptedItem2.FriendlyId);
+			await _repository.Delete(encryptedItem2.FriendlyId);
 			var items = _repository.All();
 
 			// Assert

@@ -5,6 +5,8 @@
 
 ![](https://github.com/yetanotherchris/letmein/raw/master/src/Letmein.Web/wwwroot/images/favicon.png)
 
+### What is it?
+
 Letmein is an encrypted notes service, similar to cryptobin.co. No encryption keys are stored in the database, and the encryption is performed in the browser. Notes last 12 hours by default, but this is configurable (see below) with the option to have multiple expiry times. A background service runs in the same process as the web server (in a separate thread), cleaning up expired notes every 30 seconds. This 30 second wait time is also configurable.
 
 The service is intended to be run using Docker stack, with Kestrel (Microsoft's cross-platform web server) and is currently tested on Linux but developed on Windows with Docker for Windows. A demo is available at [www.letmein.io](http://www.letmein.io) which runs inside Kubernetes on Google Cloud.
@@ -13,15 +15,64 @@ Running the Docker image will start the Kestrel web server with letmein running.
 
 ### Tech stack
 
-- .NET core 1.1
+- .NET core 2.1
 - [Sjcl](https://github.com/bitwiseshiftleft/sjcl) Javascript library for encryption.
 - Postgres (using [Marten](https://github.com/JasperFx/marten))
+- Cloud storage (S3, Azure, Google) (using [CloudFileStore](https://github.com/yetanotherchris/CloudFileStore))
 
 ### Quick start
 
-To run, start a Postgres container (it needs 9.5 or higher):
+Letmein now supports two different ways to store your pastes: file and database. File is cloud based, database is Postgres.
+
+#### Step 1. Configure a storage provider
+
+##### S3
+Add the following to your environmental variables
+
+```
+REPOSITORY_TYPE=S3
+S3__AccessKey=key
+S3__BucketName=bucket
+S3__Region=for example, eu-west-1
+S3__SecretKey=secret
+```
+
+##### Google Cloud Storage
+Add the following to your environmental variables
+
+```
+REPOSITORY_TYPE=GoogleCloud
+GoogleCloud:BucketName=name of your bucket
+GoogleCloud:type=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:project_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:private_key_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:private_key=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:client_email=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:client_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:auth_uri=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:token_uri=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:auth_provider_x509_cert_url=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud:client_x509_cert_url=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+```
+
+##### Azure Blobs
+Add the following to your environmental variables
+
+```
+REPOSITORY_TYPE=AzureBlobs
+Azure__ContainerName=container name
+Azure__ConnectionString=get this from the Azure portal
+```
+
+##### Postgres
+
+If you don't want to buy Postgres hosting (such as AWS RDS), you can run Postgres as a Docker container. The example below assumes the Postgres container is inside the same Docker network as your Letmein Docker container.
+
+Start a Postgres container (it needs 9.5 or higher):
 
     docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres 
+
+#### Step 2. Run the Letmein Docker container
 
 And then run the Letmein container:
 

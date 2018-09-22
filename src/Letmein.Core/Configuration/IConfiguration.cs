@@ -5,6 +5,8 @@ namespace Letmein.Core.Configuration
 {
 	public interface IConfiguration
 	{
+		RepositoryType RepositoryType { get; set; }
+		string PastesStorePath { get; set; }
 		string PostgresConnectionString { get; set; }
 		int CleanupSleepTime { get; set; }
 		IdGenerationType IdGenerationType { get; set; }
