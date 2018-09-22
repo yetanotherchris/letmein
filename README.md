@@ -42,17 +42,17 @@ Add the following to your environmental variables
 
 ```
 REPOSITORY_TYPE=GoogleCloud
-GoogleCloud:BucketName=name of your bucket
-GoogleCloud:type=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:project_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:private_key_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:private_key=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:client_email=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:client_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:auth_uri=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:token_uri=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:auth_provider_x509_cert_url=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
-GoogleCloud:client_x509_cert_url=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__BucketName=name of your bucket
+GoogleCloud__type=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__project_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__private_key_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__private_key=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__client_email=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__client_id=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__auth_uri=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__token_uri=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__auth_provider_x509_cert_url=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
+GoogleCloud__client_x509_cert_url=<COPY FROM YOUR SERVICE ACCOUNT JSON FILE>
 ```
 
 ##### Azure Blobs
