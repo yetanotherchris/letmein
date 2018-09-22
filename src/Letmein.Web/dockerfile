@@ -16,8 +16,8 @@ ENV ASPNETCORE_ENVIRONMENT="Production"
 # ASP.NET Core: Kestrel should listen on all IPs
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 
-# Can either be "FileSystem" or "Postgres"
-# Use file system to store pastes by default. 
+# The storage type for pastes.
+# Possible values:  "Postgres", "FileSystem", "S3", "GoogleCloud", "AzureBlobs"
 ENV REPOSITORY_TYPE="FileSystem"
 
 # Store them in the pastes folder
@@ -30,7 +30,7 @@ ENV POSTGRES_CONNECTIONSTRING=""
 ENV EXPIRY_TIMES="720"
 
 # Number of seconds to sleep inbetween checking for expired pastes
-ENV CLEANUP_SLEEPTIME="30"
+ENV CLEANUP_SLEEPTIME="300"
 
 # Short url ID type. 
 # Possible values: default (random-with-pronounceable), pronounceable, short-pronounceable, short-mixedcase, shortcode

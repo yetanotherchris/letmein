@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Services;
 using Letmein.Tests.Unit.MocksAndStubs;
@@ -57,17 +58,18 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Store_should_Store_and_return_model_with_new_friendlyid()
+		public async Task Store_should_Store_and_return_model_with_new_friendlyid()
 		{
 			// Arrange
 			int expiresInMinutes = 90;
 			_configuration.AddExpiryTime(expiresInMinutes);
 
 			string json = "{json}";
-			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "", expiresInMinutes)).Returns("the-friendlyid");
+			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "", expiresInMinutes))
+							  .ReturnsAsync("the-friendlyid");
 
 			// Act
-			ViewResult result = _controller.Store(json, expiresInMinutes) as ViewResult;
+			ViewResult result = await _controller.Store(json, expiresInMinutes) as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -82,13 +84,13 @@ namespace Letmein.Tests.Unit.Web
 		[Theory]
 		[InlineData(90, "1 hour 30 minutes")]
 		[InlineData(58, "58 minutes")]
-		public void Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
+		public async Task Store_should_Store_fill_expiresin_view_data(int minutes, string expectedViewData)
 		{
 			// Arrange
 			_configuration.AddExpiryTime(minutes);
 
 			// Act
-			ViewResult result = _controller.Store("do you know jason?", minutes) as ViewResult;
+			ViewResult result = await _controller.Store("do you know jason?", minutes) as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -96,13 +98,13 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Store_should_set_modelstate_errors_and_return_error_view_when_cipherJson_is_empty()
+		public async Task Store_should_set_modelstate_errors_and_return_error_view_when_cipherJson_is_empty()
 		{
 			// Arrange
 			_configuration.AddExpiryTime(10);
 
 			// Act
-			ViewResult result = _controller.Store("", 1) as ViewResult;
+			ViewResult result = await _controller.Store("", 1) as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -110,14 +112,14 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Store_should_set_modelstate_errors_and_return_error_view_when_expirytime_is_not_in_configuration()
+		public async Task Store_should_set_modelstate_errors_and_return_error_view_when_expirytime_is_not_in_configuration()
 		{
 			// Arrange
 			int badExpiryTime = 1;
 			_configuration.AddExpiryTime(10);
 
 			// Act
-			ViewResult result = _controller.Store("{ some: json }", badExpiryTime) as ViewResult;
+			ViewResult result = await _controller.Store("{ some: json }", badExpiryTime) as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -126,7 +128,7 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Load_should_return_model_using_service()
+		public async Task Load_should_return_model_using_service()
 		{
 			// Arrange
 			var expectedItem = new EncryptedItem()
@@ -136,10 +138,10 @@ namespace Letmein.Tests.Unit.Web
 				ExpiresOn = DateTime.Today.AddDays(1)
 			};
 
-			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).Returns(expectedItem);
+			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).ReturnsAsync(expectedItem);
 
 			// Act
-			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
+			ViewResult result = await _controller.Load("the-friendlyid") as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -151,10 +153,10 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Load_should_return_redirectresult_when_friendlyid_is_empty()
+		public async Task Load_should_return_redirectresult_when_friendlyid_is_empty()
 		{
 			// Arrange + Act
-			RedirectToActionResult result = _controller.Load("") as RedirectToActionResult;
+			RedirectToActionResult result = await _controller.Load("") as RedirectToActionResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -162,13 +164,14 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Load_should_set_modelstate_errors_and_return_null_model_when_service_returns_null()
+		public async Task Load_should_set_modelstate_errors_and_return_null_model_when_service_returns_null()
 		{
 			// Arrange
-			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).Returns<EncryptedItem>(null);
+			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid"))
+							  .ReturnsAsync((EncryptedItem)null);
 
 			// Act
-			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
+			ViewResult result = await _controller.Load("the-friendlyid") as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -179,7 +182,7 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Load_should_set_modelstate_errors_and_return_null_model_when_item_is_expired()
+		public async Task Load_should_set_modelstate_errors_and_return_null_model_when_item_is_expired()
 		{
 			// Arrange
 			var expectedItem = new EncryptedItem()
@@ -189,10 +192,10 @@ namespace Letmein.Tests.Unit.Web
 				ExpiresOn = DateTime.Today.AddYears(-1)
 			};
 
-			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).Returns(expectedItem);
+			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).ReturnsAsync(expectedItem);
 
 			// Act
-			ViewResult result = _controller.Load("the-friendlyid") as ViewResult;
+			ViewResult result = await _controller.Load("the-friendlyid") as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -203,13 +206,13 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Delete_should_remove_item_and_redirect_to_index()
+		public async Task Delete_should_remove_item_and_redirect_to_index()
 		{
 			// Arrange
-			_encryptionService.Setup(x => x.Delete("the-friendlyid")).Returns(true);
+			_encryptionService.Setup(x => x.Delete("the-friendlyid")).ReturnsAsync(true);
 
 			// Act
-			ViewResult result = _controller.Delete("the-friendlyid") as ViewResult;
+			ViewResult result = await _controller.Delete("the-friendlyid") as ViewResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -218,13 +221,13 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Delete_should_redirect_to_load_page_when_service_fails()
+		public async Task Delete_should_redirect_to_load_page_when_service_fails()
 		{
 			// Arrange
-			_encryptionService.Setup(x => x.Delete("the-friendlyid")).Returns(false);
+			_encryptionService.Setup(x => x.Delete("the-friendlyid")).ReturnsAsync(false);
 
 			// Act
-			RedirectToActionResult result = _controller.Delete("the-friendlyid") as RedirectToActionResult;
+			RedirectToActionResult result = await _controller.Delete("the-friendlyid") as RedirectToActionResult;
 
 			// Assert
 			result.ShouldNotBeNull();
@@ -233,10 +236,10 @@ namespace Letmein.Tests.Unit.Web
 		}
 
 		[Fact]
-		public void Delete_should_redirect_when_friendlyid_is_empty()
+		public async Task Delete_should_redirect_when_friendlyid_is_empty()
 		{
 			// Arrange + Act
-			RedirectToActionResult result = _controller.Delete("") as RedirectToActionResult;
+			RedirectToActionResult result = await _controller.Delete("") as RedirectToActionResult;
 
 			// Assert
 			result.ShouldNotBeNull();

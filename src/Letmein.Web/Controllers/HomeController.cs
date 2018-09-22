@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using IConfiguration = Letmein.Core.Configuration.IConfiguration;
 using StructureMap.TypeRules;
+using System.Threading.Tasks;
 
 namespace Letmein.Web.Controllers
 {
@@ -70,7 +71,7 @@ namespace Letmein.Web.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Store(string cipherJson, int expiryTime)
+		public async Task<IActionResult> Store(string cipherJson, int expiryTime)
 		{
 			if (string.IsNullOrEmpty(cipherJson))
 			{
@@ -84,7 +85,7 @@ namespace Letmein.Web.Controllers
 				return View("Error");
 			}
 
-			string friendlyId = _service.StoredEncryptedJson(cipherJson, "",  expiryTime);
+			string friendlyId = await _service.StoredEncryptedJson(cipherJson, "", expiryTime);
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
 
 			TimeSpan expireTimeSpan = TimeSpan.FromMinutes(expiryTime);
@@ -94,14 +95,14 @@ namespace Letmein.Web.Controllers
 			return View(model);
 		}
 
-		public IActionResult Load(string friendlyId)
+		public async Task<IActionResult> Load(string friendlyId)
 		{
 			if (string.IsNullOrEmpty(friendlyId))
 			{
 				return RedirectToAction(nameof(HomeController.Index));
 			}
 
-			EncryptedItem encryptedItem = _service.LoadEncryptedJson(friendlyId);
+			EncryptedItem encryptedItem = await _service.LoadEncryptedJson(friendlyId);
 			if (encryptedItem == null)
 			{
 				ModelState.AddModelError("Failure", "The url is invalid or the paste has expired.");
@@ -125,14 +126,14 @@ namespace Letmein.Web.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Delete(string friendlyId)
+		public async Task<IActionResult> Delete(string friendlyId)
 		{
 			if (string.IsNullOrEmpty(friendlyId))
 			{
 				return RedirectToAction(nameof(Index));
 			}
 
-			bool result = _service.Delete(friendlyId);
+			bool result = await _service.Delete(friendlyId);
 			if (!result)
 			{
 				return RedirectToAction(nameof(Load), new { friendlyid = friendlyId });

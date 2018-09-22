@@ -1,5 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography;
+using CloudFileStore.AWS;
+using CloudFileStore.Azure;
+using CloudFileStore.GoogleCloud;
 using Letmein.Core;
 using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
@@ -58,7 +62,7 @@ namespace Letmein.Web
 			var configuration = new Configuration(Configuration);
 
 			services.AddSingleton((System.Func<System.IServiceProvider, IConfiguration>)(sp => configuration));
-			ConfigureRepository(services, configuration);
+			ConfigureRepository(services, configuration, Configuration);
 
 			services.AddScoped<SymmetricAlgorithm>(service => Aes.Create());
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
@@ -67,35 +71,101 @@ namespace Letmein.Web
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
 		}
 
-		private static void ConfigureRepository(IServiceCollection services, IConfiguration configuration)
+		private static void ConfigureRepository(IServiceCollection services, IConfiguration configuration, IConfigurationRoot configurationRoot)
 		{
+			switch (configuration.RepositoryType)
+			{
+				case RepositoryType.FileSystem:
+					break;
+
+				case RepositoryType.S3:
+					ConfigureForS3(services, configurationRoot);
+					break;
+
+				case RepositoryType.GoogleCloud:
+					ConfigureForGCloud(services, configurationRoot);
+					break;
+
+				case RepositoryType.AzureBlobs:
+					ConfigureForAzureBlobs(services, configurationRoot);
+					break;
+
+				case RepositoryType.Postgres:
+					ConfigureForPostgres(services);
+					break;
+
+				default:
+					throw new NotSupportedException("Please enter a valid repository type");
+			}
+
 			if (configuration.RepositoryType == RepositoryType.Postgres)
 			{
-				services.AddSingleton<IDocumentStore>(service =>
-				{
-					// Configure Marten
-					var config = service.GetService<IConfiguration>();
-					return DocumentStore.For(options =>
-					{
-						options.Connection(config.PostgresConnectionString);
-						options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
-					});
-				});
-
-				services.AddScoped<ITextRepository>(service =>
-				{
-					var store = service.GetService<IDocumentStore>();
-					return new PostgresTextRepository(store);
-				});
 			}
 			else
 			{
-				services.AddTransient<ITextRepository>(service =>
-				{
-					ILogger logger = service.GetService<ILogger>();
-					return new FileSystemRepository(configuration, logger);
-				});
 			}
+		}
+
+		private static void ConfigureForS3(IServiceCollection services, IConfigurationRoot configurationRoot)
+		{
+			services.AddSingleton<ITextRepository>(service =>
+			{
+				var s3Configuration = new S3Configuration();
+				configurationRoot.Bind("S3", s3Configuration);
+
+				var s3Provider = new S3StorageProvider(s3Configuration);
+				var logger = service.GetService<ILogger>();
+
+				return new JsonTextFileRepository(logger, s3Provider);
+			});
+		}
+
+		private static void ConfigureForGCloud(IServiceCollection services, IConfigurationRoot configurationRoot)
+		{
+			services.AddSingleton<ITextRepository>(service =>
+			{
+				var googleCloudConfig = new GoogleCloudConfiguration();
+				configurationRoot.Bind("GoogleCloud", googleCloudConfig);
+
+				var googleCloudProvider = new GoogleCloudStorageProvider(googleCloudConfig);
+				var logger = service.GetService<ILogger>();
+
+				return new JsonTextFileRepository(logger, googleCloudProvider);
+			});
+		}
+
+		private static void ConfigureForAzureBlobs(IServiceCollection services, IConfigurationRoot configurationRoot)
+		{
+			services.AddSingleton<ITextRepository>(service =>
+			{
+				var azureConfig = new AzureBlobConfiguration();
+				configurationRoot.Bind("Azure", azureConfig);
+
+				var azureProvider = new AzureBlobStorageProvider(azureConfig);
+				var logger = service.GetService<ILogger>();
+
+				return new JsonTextFileRepository(logger, azureProvider);
+			});
+		}
+
+		private static void ConfigureForPostgres(IServiceCollection services)
+		{
+			services.AddSingleton<IDocumentStore>(service =>
+			{
+				// Configure Marten
+				var config = service.GetService<IConfiguration>();
+				return DocumentStore.For(options =>
+				{
+					options.Connection(config.PostgresConnectionString);
+					options.Schema.For<EncryptedItem>().Index(x => x.FriendlyId);
+				});
+			});
+
+			services.AddScoped<ITextRepository>(service =>
+			{
+				var store = service.GetService<IDocumentStore>();
+				return new PostgresTextRepository(store);
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Repositories;
 
@@ -17,22 +18,22 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 			EncryptedItems = new List<EncryptedItem>();
 		}
 
-		public EncryptedItem Load(string friendlyId)
+		public async Task<EncryptedItem> Load(string friendlyId)
 		{
 			return EncryptedItems.FirstOrDefault(x => x.FriendlyId == friendlyId);
 		}
 
-		public void Save(EncryptedItem encryptedItem)
+		public async Task Save(EncryptedItem encryptedItem)
 		{
 			SavedEncryptedItem = encryptedItem;
 		}
 
-		public IEnumerable<EncryptedItem> GetExpiredItems(DateTime beforeDate)
+		public async Task<IEnumerable<EncryptedItem>> GetExpiredItems(DateTime beforeDate)
 		{
-			yield break;
+			return null;
 		}
 
-		public void Delete(string friendlyId)
+		public async Task Delete(string friendlyId)
 		{
 			if (DeleteThrows)
 				throw new Exception("Delete failed");

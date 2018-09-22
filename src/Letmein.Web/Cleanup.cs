@@ -45,7 +45,7 @@ namespace Letmein.Web
 			_logger.LogInformation("Starting...");
 			_logger.LogInformation("By default I will sleep {0} seconds between checks.", _defaultWaitTime);
 
-			Task.Run(() =>
+			Task.Run(async () =>
 			{
 				while (true)
 				{
@@ -55,13 +55,13 @@ namespace Letmein.Web
 					// needing to scan each time...could be improved.
 					var textRepository = _serviceProvider.GetRequiredService<ITextRepository>();
 
-					IEnumerable<EncryptedItem> items = textRepository.GetExpiredItems(now);
+					IEnumerable<EncryptedItem> items = await textRepository.GetExpiredItems(now);
 
 					_logger.LogInformation("{0} expired items found", items.Count());
 
 					foreach (EncryptedItem item in items)
 					{
-						textRepository.Delete(item.FriendlyId);
+						await textRepository.Delete(item.FriendlyId);
 						_logger.LogInformation("Deleted item {0} as its expiry date is {1}", item.FriendlyId, item.CreatedOn);
 					}
 

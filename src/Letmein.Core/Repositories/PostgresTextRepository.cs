@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Marten;
 
 [assembly: InternalsVisibleTo("Letmein.Tests")]
@@ -37,32 +38,35 @@ namespace Letmein.Core.Repositories.Postgres
 			}
 		}
 
-		public void Save(EncryptedItem encryptedItem)
+		public async Task Save(EncryptedItem encryptedItem)
 		{
 			using (IDocumentSession session = _store.LightweightSession())
 			{
 				session.Store(encryptedItem);
-				session.SaveChanges();
+				await session.SaveChangesAsync();
 			}
 		}
 
-		public EncryptedItem Load(string friendlyId)
+		public async Task<EncryptedItem> Load(string friendlyId)
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
-				return session.Query<EncryptedItem>().FirstOrDefault(x => x.FriendlyId == friendlyId);
+				return await session.Query<EncryptedItem>()
+									.FirstOrDefaultAsync(x => x.FriendlyId == friendlyId);
 			}
 		}
 
-		public IEnumerable<EncryptedItem> GetExpiredItems(DateTime beforeDate)
+		public async Task<IEnumerable<EncryptedItem>> GetExpiredItems(DateTime beforeDate)
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
-				return session.Query<EncryptedItem>().Where(x => x.ExpiresOn <= beforeDate);
+				return await session.Query<EncryptedItem>()
+									.Where(x => x.ExpiresOn <= beforeDate)
+									.ToListAsync<EncryptedItem>();
 			}
 		}
 
-		public void Delete(string friendlyId)
+		public async Task Delete(string friendlyId)
 		{
 			var item = Load(friendlyId);
 			if (item != null)
@@ -70,7 +74,7 @@ namespace Letmein.Core.Repositories.Postgres
 				using (IDocumentSession session = _store.LightweightSession())
 				{
 					session.Delete(item);
-					session.SaveChanges();
+					await session.SaveChangesAsync();
 				}
 			}
 		}
