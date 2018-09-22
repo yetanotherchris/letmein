@@ -17,8 +17,8 @@ ENV ASPNETCORE_ENVIRONMENT="Production"
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
 
 # The storage type for pastes.
-# Possible values:  "Postgres", "FileSystem", "S3", "GoogleCloud", "AzureBlobs"
-ENV REPOSITORY_TYPE="FileSystem"
+# Possible values:  "Postgres", "S3", "GoogleCloud", "AzureBlobs"
+ENV REPOSITORY_TYPE="Postgres"
 
 # Store them in the pastes folder
 ENV PASTES_STORE_PATH="pastes"
