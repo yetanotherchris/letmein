@@ -4,7 +4,7 @@ using Letmein.Core.Configuration;
 
 namespace Letmein.Tests.Unit.MocksAndStubs
 {
-	public class ConfigurationStub : IConfiguration
+	public class ConfigurationStub : ILetmeinConfiguration
 	{
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }

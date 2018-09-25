@@ -13,10 +13,10 @@ namespace Letmein.Core.Services
 	{
 		private readonly IUniqueIdGenerator _idGenerator;
 		private readonly ITextRepository _repository;
-		private readonly IConfiguration _configuration;
+		private readonly ILetmeinConfiguration _configuration;
 		private readonly ILogger<TextEncryptionService> _logger;
 
-		public TextEncryptionService(IUniqueIdGenerator idGenerator, ITextRepository repository, ILoggerFactory loggingFactory, IConfiguration configuration)
+		public TextEncryptionService(IUniqueIdGenerator idGenerator, ITextRepository repository, ILoggerFactory loggingFactory, ILetmeinConfiguration configuration)
 		{
 			_idGenerator = idGenerator;
 			_repository = repository;

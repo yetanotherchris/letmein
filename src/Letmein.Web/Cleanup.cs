@@ -10,7 +10,7 @@ using Marten;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using IConfiguration = Letmein.Core.Configuration.IConfiguration;
+using ILetmeinConfiguration = Letmein.Core.Configuration.ILetmeinConfiguration;
 
 namespace Letmein.Web
 {
@@ -24,18 +24,12 @@ namespace Letmein.Web
 		{
 			_serviceProvider = serviceProvider;
 
-			// Sirilog for nicer looking console logs
-			Log.Logger = new LoggerConfiguration()
-				.Enrich.FromLogContext()
-				.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [Cleanup Service] {Message}{NewLine}{Exception}")
-				.CreateLogger();
-
-			// Configure MS Logging
+			// Logging
 			ILoggerFactory loggingFactory = new LoggerFactory().AddSerilog();
 			_logger = loggingFactory.CreateLogger<Cleanup>();
 
 			// Config
-			var configuration = _serviceProvider.GetService<IConfiguration>();
+			var configuration = _serviceProvider.GetService<ILetmeinConfiguration>();
 			_defaultWaitTime = TimeSpan.FromSeconds(configuration.CleanupSleepTime);
 		}
 

@@ -14,8 +14,7 @@
       "launchUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "REPOSITORY_TYPE": "Postgres",
-        "PASTES_STORE_PATH": "./pastes",
+        "REPOSITORY_TYPE": "AzureBlobs",
         "EXPIRY_TIMES": "1, 60, 720, 10080",
         "CLEANUP_SLEEPTIME": "60",
         "ID_TYPE": "shortcode",

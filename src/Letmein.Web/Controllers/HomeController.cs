@@ -6,7 +6,7 @@ using Letmein.Core.Services;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using IConfiguration = Letmein.Core.Configuration.IConfiguration;
+using ILetmeinConfiguration = Letmein.Core.Configuration.ILetmeinConfiguration;
 using StructureMap.TypeRules;
 using System.Threading.Tasks;
 
@@ -15,9 +15,9 @@ namespace Letmein.Web.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ITextEncryptionService _service;
-		private readonly IConfiguration _configuration;
+		private readonly ILetmeinConfiguration _configuration;
 
-		public HomeController(ITextEncryptionService service, IConfiguration configuration)
+		public HomeController(ITextEncryptionService service, ILetmeinConfiguration configuration)
 		{
 			_service = service;
 			_configuration = configuration;
