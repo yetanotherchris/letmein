@@ -246,3 +246,6 @@ ModelManifest.xml
 
 *.lock.json
 .vs/*
+
+.vscode/*
+.idea/*

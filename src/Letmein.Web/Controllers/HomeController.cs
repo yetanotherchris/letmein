@@ -88,9 +88,15 @@ namespace Letmein.Web.Controllers
 			string friendlyId = await _service.StoredEncryptedJson(cipherJson, "", expiryTime);
 			var model = new EncryptedItemViewModel() { FriendlyId = friendlyId };
 
+			string baseUrl = Request.Headers["X-Forwarded-Host"];
+			if (string.IsNullOrEmpty(baseUrl))
+			{
+				baseUrl = Request.Host.ToString();
+			}
+
 			TimeSpan expireTimeSpan = TimeSpan.FromMinutes(expiryTime);
 			ViewData["ExpiresIn"] = FormatTimeSpan(expireTimeSpan);
-			ViewData["BaseUrl"] = Request.Host;
+			ViewData["BaseUrl"] = baseUrl;
 
 			return View(model);
 		}
