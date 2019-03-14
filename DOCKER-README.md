@@ -94,6 +94,8 @@ server {
     add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
     add_header X-Frame-Options DENY;
     add_header X-Content-Type-Options nosniff;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
 
     #Redirects all traffic
     location / {
