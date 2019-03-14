@@ -40,6 +40,69 @@ Run the Letmein Docker container:
 
 Now go to [http://localhost:8080](http://localhost:8080) and store some text.
 
+#### Docker compose example using Nginx as a proxy
+
+```
+version: '3'
+services:
+    letmein:
+        ports:
+            - '5000:5000'
+        environment:
+            - EXPIRY_TIMES=5,60,360,720
+            - REPOSITORY_TYPE=S3
+            - S3__AccessKey={YOUR KEY}
+            - S3__SecretKey={YOUR SECRET KEY}
+            - S3__BucketName={YOUR BUCKET}
+            - S3__Region=eu-west-1
+        container_name: letmein
+        image: anotherchris/letmein
+    nginx:
+        ports:
+            - '80:80'
+            - '443:443'
+        volumes:
+            - '~/nginx:/etc/nginx/conf.d:ro'
+        image: nginx
+```
+
+An example of the nginx.conf you would put into ~/nginx:
+
+```
+limit_req_zone $binary_remote_addr zone=one:10m rate=1r/s;
+
+server {
+    listen *:80;
+    add_header Strict-Transport-Security max-age=15768000;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen *:443    ssl;
+    server_name     letmein.io;
+    ssl_certificate /etc/nginx/conf.d/cert-bundle.pem;
+    ssl_certificate_key /etc/nginx/conf.d/privatekey.pem;
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+    ssl_ecdh_curve secp384r1;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+    ssl_stapling on; #ensure your cert is capable
+    ssl_stapling_verify on; #ensure your cert is capable
+
+    add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+    add_header X-Frame-Options DENY;
+    add_header X-Content-Type-Options nosniff;
+
+    #Redirects all traffic
+    location / {
+        proxy_pass  http://letmein:5000;
+        limit_req   zone=one burst=10 nodelay;
+    }
+}
+```
+
 ### Help
 
 For more information, see the [Github Repository](https://github.com/yetanotherchris/letmein)
