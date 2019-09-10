@@ -9,7 +9,7 @@
 
 Letmein is an encrypted notes service, similar to cryptobin.co. No encryption keys are stored in the database, and the encryption is performed in the browser. Notes last 12 hours by default, but this is configurable (see below) with the option to have multiple expiry times. A background service runs in the same process as the web server (in a separate thread), cleaning up expired notes every 5 minutes. This 5 minutes/300 second wait time is also configurable.
 
-The service is intended to be run using Docker stack, with Kestrel (Microsoft's cross-platform web server) and is currently tested on Linux but developed on Windows with Docker for Windows. A demo is available at [www.letmein.io](http://www.letmein.io) which runs inside Kubernetes on Google Cloud.
+The service is intended to be run using Docker stack, with Kestrel (Microsoft's cross-platform web server) and is currently tested on Linux but developed on Windows with Docker for Windows. 
 
 Running the Docker image will start the Kestrel web server with letmein running.
 
