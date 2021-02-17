@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Letmein.Web
@@ -22,8 +23,15 @@ namespace Letmein.Web
 					.UseContentRoot(Directory.GetCurrentDirectory())
 					.UseStartup<Startup>()
 					.UseSerilog()
+					.ConfigureAppConfiguration(configBuilder =>
+					{
+						configBuilder
+							.SetBasePath(Directory.GetCurrentDirectory())
+							.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+							.AddEnvironmentVariables();
+					})
 					.Build();
-
+				
 				// Start the cleanup service
 				var cleanup = new Cleanup(host.Services);
 				cleanup.StartBackgroundCleanup();

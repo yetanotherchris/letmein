@@ -7,7 +7,6 @@ using Letmein.Tests.Unit.MocksAndStubs;
 using Letmein.Web.Controllers;
 using Letmein.Web.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Shouldly;
@@ -24,8 +23,7 @@ namespace Letmein.Tests.Unit.Web
 		public HomeControllerTests()
 		{
 			var httpcontext = new DefaultHttpContext();
-			var request = new DefaultHttpRequest(httpcontext);
-			request.Host = new HostString("localhost");
+			httpcontext.Request.Host = new HostString("localhost");
 
 			_configuration = new ConfigurationStub();
 			_encryptionService = new Mock<ITextEncryptionService>();
