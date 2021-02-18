@@ -1,4 +1,4 @@
-export DOCKER_TAG="2.0.$TRAVIS_BUILD_NUMBER"
+export DOCKER_TAG="5.0.$TRAVIS_BUILD_NUMBER"
 export POSTGRES_CONNECTIONSTRING="host=localhost;database=letmein;username=postgres;password="
 echo "Using $DOCKER_TAG for the Docker tag"
 cd src/Letmein.Web/wwwroot
