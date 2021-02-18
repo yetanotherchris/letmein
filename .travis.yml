@@ -1,6 +1,6 @@
 # https://docs.travis-ci.com/user/environment-variables/
 language: csharp
-dotnet: 2.1.302
+dotnet: 5.0
 
 branches:
   only:
