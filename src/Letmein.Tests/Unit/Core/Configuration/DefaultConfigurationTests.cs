@@ -50,25 +50,10 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		}
 
 		[Fact]
-		public void should_throw_when_connection_string_is_empty()
-		{
-			// Arrange
-			var configDictionary = new Dictionary<string, string>();
-			configDictionary.Add("postgres_connectionSTRING", "");
-
-			// Act
-			var configRoot = GetConfigurationRoot(configDictionary);
-
-			// Assert
-			Assert.Throws<ConfigurationException>(() => new Letmein.Core.Configuration.Configuration(configRoot));
-		}
-
-		[Fact]
 		public void should_set_default_int_values_when_under_minimum()
 		{
 			// Arrange
 			var configDictionary = new Dictionary<string, string>();
-			configDictionary.Add("postgres_connectionstring", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "0");
 
 			// Act
@@ -84,7 +69,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		{
 			// Arrange
 			var configDictionary = new Dictionary<string, string>();
-			configDictionary.Add("postgres_connectionstring", "connection string");
 			configDictionary.Add("EXPIRY_TIMES", "1, 60, 600");
 
 			// Act
@@ -108,7 +92,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			int defaultTime = (int)TimeSpan.FromHours(6).TotalMinutes;
 
 			var configDictionary = new Dictionary<string, string>();
-			configDictionary.Add("postgres_connectionstring", "connection string");
 			configDictionary.Add("EXPIRY_TIMES", expiryTime);
 
 			// Act
@@ -132,7 +115,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		{
 			// Arrange
 			var configDictionary = new Dictionary<string, string>();
-			configDictionary.Add("POSTGRES_CONNECTIONSTRING", "notused");
 			configDictionary.Add("ID_TYPE", idType);
 
 			var configRoot = GetConfigurationRoot(configDictionary);

@@ -14,7 +14,8 @@
       "launchUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "REPOSITORY_TYPE": "AzureBlobs",
+        "REPOSITORY_TYPE": "Postgres",
+        "POSTGRES_CONNECTIONSTRING": "server=localhost;username=letmein;password=letmein123;database=letmein",
         "EXPIRY_TIMES": "1, 60, 720, 10080",
         "CLEANUP_SLEEPTIME": "60",
         "ID_TYPE": "shortcode",

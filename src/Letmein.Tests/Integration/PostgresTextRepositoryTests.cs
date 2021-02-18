@@ -9,11 +9,11 @@ using Xunit;
 
 namespace Letmein.Tests.Integration
 {
-	public class TextRepositoryTests
+	public class PostgresTextRepositoryTests
 	{
 		private PostgresTextRepository _repository;
 
-		public TextRepositoryTests()
+		public PostgresTextRepositoryTests()
 		{
 			string connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTIONSTRING");
 			if (string.IsNullOrEmpty(connectionString))

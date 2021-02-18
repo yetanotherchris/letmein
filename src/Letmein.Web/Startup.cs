@@ -1,27 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
-using CloudFileStore.AWS;
-using CloudFileStore.Azure;
-using CloudFileStore.GoogleCloud;
-using Letmein.Core;
-using Letmein.Core.Configuration;
-using Letmein.Core.Encryption;
-using Letmein.Core.Repositories;
-using Letmein.Core.Repositories.FileSystem;
-using Letmein.Core.Repositories.Postgres;
-using Letmein.Core.Services;
-using Letmein.Core.Services.UniqueId;
-using Marten;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using StructureMap;
-using IConfiguration = Letmein.Core.Configuration.ILetmeinConfiguration;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
+using Microsoft.Extensions.Hosting;
 
 namespace Letmein.Web
 {
@@ -29,43 +10,27 @@ namespace Letmein.Web
 	{
 		public IConfigurationRoot Configuration { get; }
 
-		public Startup()
+		public Startup(IConfiguration configuration)
 		{
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-				.AddEnvironmentVariables();
-
-			Configuration = builder.Build();
+			Configuration = (IConfigurationRoot) configuration;
 		}
-
-		public Startup(IHostingEnvironment env)
-		{
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(env.ContentRootPath)
-				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-				.AddEnvironmentVariables();
-
-			Configuration = builder.Build();
-		}
-
-		// This method gets called by the runtime. Use this method to add services to the container.
+		
 		public void ConfigureServices(IServiceCollection services)
 		{
-			// Add framework services.
-			services.AddMvc();
 			services.AddLogging();
-
+			services.AddRouting();
+			services.AddControllersWithViews();
+			services.AddRazorPages();
+			
 			DependencyInjection.ConfigureServices(services, Configuration);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseBrowserLink();
 			}
 			else
 			{
@@ -73,44 +38,46 @@ namespace Letmein.Web
 			}
 
 			app.UseStaticFiles();
-
-			app.UseMvc(routes =>
+			app.UseRouting();
+			app.UseEndpoints(endpoints =>
 			{
-				routes.MapRoute(
+				endpoints.MapControllerRoute(
 					name: "Index",
-					template: "",
+					pattern: "",
 					defaults: new { controller = "Home", action = "Index" }
 				);
 
-				routes.MapRoute(
+				endpoints.MapControllerRoute(
 					name: "FAQ",
-					template: "faq",
+					pattern: "faq",
 					defaults: new { controller = "Home", action = "FAQ" }
 				);
 
-				routes.MapRoute(
+				endpoints.MapControllerRoute(
 					name: "Store",
-					template: "store",
+					pattern: "store",
 					defaults: new { controller = "Home", action = "Store" }
 				);
 
-				routes.MapRoute(
+				endpoints.MapControllerRoute(
 					name: "Load",
-					template: "load",
+					pattern: "load",
 					defaults: new { controller = "Home", action = "Load" }
 				);
 
-				routes.MapRoute(
+				endpoints.MapControllerRoute(
 					name: "Delete",
-					template: "delete",
+					pattern: "delete",
 					defaults: new { controller = "Home", action = "Delete" }
 				);
 
-				routes.MapRoute(
+				endpoints.MapControllerRoute(
 					name: "Load-Id",
-					template: "{friendlyId}",
+					pattern: "{friendlyId}",
 					defaults: new { controller = "Home", action = "Load" }
 				);
+
+				endpoints.MapRazorPages();
 			});
 		}
 	}

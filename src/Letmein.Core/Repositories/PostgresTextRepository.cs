@@ -68,7 +68,7 @@ namespace Letmein.Core.Repositories.Postgres
 
 		public async Task Delete(string friendlyId)
 		{
-			var item = Load(friendlyId);
+			EncryptedItem item = await Load(friendlyId);
 			if (item != null)
 			{
 				using (IDocumentSession session = _store.LightweightSession())

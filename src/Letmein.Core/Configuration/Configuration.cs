@@ -20,7 +20,7 @@ namespace Letmein.Core.Configuration
 
 			PostgresConnectionString = configRoot["POSTGRES_CONNECTIONSTRING"];
 
-			RepositoryType.TryParse(configRoot["REPOSITORY_TYPE"], true, out RepositoryType repositoryTypeParsed);
+			RepositoryType.TryParse(configRoot["REPOSITORY_TYPE"], false, out RepositoryType repositoryTypeParsed);
 			RepositoryType = repositoryTypeParsed;
 
 			int.TryParse(configRoot["CLEANUP_SLEEPTIME"], out var parsedSleepTime);

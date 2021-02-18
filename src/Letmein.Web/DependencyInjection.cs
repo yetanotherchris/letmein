@@ -3,7 +3,6 @@ using CloudFileStore.Azure;
 using CloudFileStore.GoogleCloud;
 using GuardNet;
 using Letmein.Core;
-using Letmein.Core.Configuration;
 using Letmein.Core.Encryption;
 using Letmein.Core.Repositories;
 using Letmein.Core.Repositories.FileSystem;
@@ -19,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Letmein.Core.Configuration;
+using LetmeinConfiguration = Letmein.Core.Configuration.Configuration;
 
 namespace Letmein.Web
 {
@@ -27,35 +28,36 @@ namespace Letmein.Web
 		public static void ConfigureServices(IServiceCollection services, IConfigurationRoot configurationRoot)
 		{
 			services.AddSingleton<IConfigurationRoot>(provider => configurationRoot);
-			var configuration = new Configuration(configurationRoot);
 
-			services.AddSingleton<ILetmeinConfiguration>(provider => configuration);
-			ConfigureRepository(services, configuration, configurationRoot);
+			var letmeinConfig = new LetmeinConfiguration(configurationRoot);
+			services.AddSingleton<ILetmeinConfiguration>(provider => letmeinConfig);
+			ConfigureRepository(services, letmeinConfig, configurationRoot);
 
 			services.AddScoped<SymmetricAlgorithm>(service => Aes.Create());
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
 
+			services.AddScoped<ITextRepository, PostgresTextRepository>();
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
 		}
 
-		private static void ConfigureRepository(IServiceCollection services, ILetmeinConfiguration configuration, IConfigurationRoot configurationRoot)
+		private static void ConfigureRepository(IServiceCollection services, ILetmeinConfiguration letmeinConfiguration, IConfigurationRoot configuration)
 		{
-			switch (configuration.RepositoryType)
+			switch (letmeinConfiguration.RepositoryType)
 			{
 				case RepositoryType.FileSystem:
 					break;
 
 				case RepositoryType.S3:
-					ConfigureForS3(services, configurationRoot);
+					ConfigureForS3(services, configuration);
 					break;
 
 				case RepositoryType.GoogleCloud:
-					ConfigureForGCloud(services, configurationRoot);
+					ConfigureForGCloud(services, configuration);
 					break;
 
 				case RepositoryType.AzureBlobs:
-					ConfigureForAzureBlobs(services, configurationRoot);
+					ConfigureForAzureBlobs(services, configuration);
 					break;
 
 				case RepositoryType.Postgres:
@@ -65,6 +67,23 @@ namespace Letmein.Web
 				default:
 					throw new NotSupportedException("Please enter a valid repository type");
 			}
+		}
+		
+		private static void ConfigureForFileSystem(IServiceCollection services, IConfigurationRoot configurationRoot)
+		{
+			services.AddSingleton<ITextRepository>(service =>
+			{
+				const string sectionName = "GoogleCloud";
+
+				var googleCloudConfig = new GoogleCloudConfiguration();
+				configurationRoot.Bind(sectionName, googleCloudConfig);
+				GuardAllConfigProperties(sectionName, googleCloudConfig);
+
+				var googleCloudProvider = new GoogleCloudStorageProvider(googleCloudConfig);
+				var logger = service.GetService<ILogger>();
+
+				return new JsonTextFileRepository(logger, googleCloudProvider);
+			});
 		}
 
 		private static void ConfigureForS3(IServiceCollection services, IConfigurationRoot configurationRoot)
