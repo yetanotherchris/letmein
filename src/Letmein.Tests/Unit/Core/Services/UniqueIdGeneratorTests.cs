@@ -12,9 +12,8 @@ namespace Letmein.Tests.Unit.Core.Services
 		[Theory]
 		[InlineData(IdGenerationType.ShortMixedCase)]
 		[InlineData(IdGenerationType.ShortCode)]
-		[InlineData(IdGenerationType.Default)]
-		[InlineData(IdGenerationType.Prounceable)]
-		[InlineData(IdGenerationType.RandomWithProunceable)]
+		[InlineData(IdGenerationType.Pronounceable)]
+		[InlineData(IdGenerationType.RandomWithPronounceable)]
 		[InlineData(IdGenerationType.ShortPronounceable)]
 		public void should_generate_unqueids(IdGenerationType idGenerationType)
 		{
@@ -50,7 +49,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			int i = 0;
 			while (i < 100000)
 			{
-				string pwd = generator.Generate(IdGenerationType.Prounceable);
+				string pwd = generator.Generate(IdGenerationType.Pronounceable);
 
 				if (list.Contains(pwd))
 				{
@@ -83,7 +82,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			TimeSpan total = DateTime.Now - now;
 			while (total.TotalSeconds < secondsToRun)
 			{
-				string pwd = generator.Generate(IdGenerationType.Prounceable);
+				string pwd = generator.Generate(IdGenerationType.Pronounceable);
 
 				if (list.Contains(pwd))
 					break;

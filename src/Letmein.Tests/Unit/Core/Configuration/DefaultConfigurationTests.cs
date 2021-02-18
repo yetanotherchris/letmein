@@ -105,9 +105,9 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		}
 
 		[Theory]
-		[InlineData("default", IdGenerationType.RandomWithProunceable)]
-		[InlineData("random-with-pronounceable", IdGenerationType.RandomWithProunceable)]
-		[InlineData("pronounceabLE", IdGenerationType.Prounceable)]
+		[InlineData("default", IdGenerationType.RandomWithPronounceable)]
+		[InlineData("random-with-pronounceable", IdGenerationType.RandomWithPronounceable)]
+		[InlineData("pronounceabLE", IdGenerationType.Pronounceable)]
 		[InlineData("short-PROnounceable", IdGenerationType.ShortPronounceable)]
 		[InlineData("short-mixedcase", IdGenerationType.ShortMixedCase)]
 		[InlineData("shortcode", IdGenerationType.ShortCode)]

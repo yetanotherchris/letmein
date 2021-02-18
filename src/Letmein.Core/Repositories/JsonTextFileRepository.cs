@@ -137,6 +137,11 @@ namespace Letmein.Core.Repositories.FileSystem
 
 				return false;
 			}
+
+			public override int GetHashCode()
+			{
+				return EncryptedItemId.GetHashCode();
+			}
 		}
 	}
 }

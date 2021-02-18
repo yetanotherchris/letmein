@@ -22,11 +22,11 @@ namespace Letmein.Core.Services.UniqueId
 
 			switch (idGenerationType)
 			{
-				case IdGenerationType.RandomWithProunceable:
+				case IdGenerationType.RandomWithPronounceable:
 					password = GetRandomCharacters(4) + "_" + GetPronounceable();
 					break;
 
-				case IdGenerationType.Prounceable:
+				case IdGenerationType.Pronounceable:
 					password = GetPronounceable();
 					break;
 

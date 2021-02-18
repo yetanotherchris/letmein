@@ -57,7 +57,7 @@ namespace Letmein.Core.Configuration
 				}
 				else if (idTypeValue == "pronounceable")
 				{
-					result = IdGenerationType.Prounceable;
+					result = IdGenerationType.Pronounceable;
 				}
 				else if (idTypeValue == "short-pronounceable")
 				{

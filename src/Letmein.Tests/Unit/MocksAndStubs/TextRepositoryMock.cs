@@ -18,25 +18,28 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 			EncryptedItems = new List<EncryptedItem>();
 		}
 
-		public async Task<EncryptedItem> Load(string friendlyId)
+		public Task<EncryptedItem> Load(string friendlyId)
 		{
-			return EncryptedItems.FirstOrDefault(x => x.FriendlyId == friendlyId);
+			return Task.FromResult(EncryptedItems.FirstOrDefault(x => x.FriendlyId == friendlyId));
 		}
 
-		public async Task Save(EncryptedItem encryptedItem)
+		public Task Save(EncryptedItem encryptedItem)
 		{
 			SavedEncryptedItem = encryptedItem;
+			return Task.CompletedTask;
 		}
 
-		public async Task<IEnumerable<EncryptedItem>> GetExpiredItems(DateTime beforeDate)
+		public Task<IEnumerable<EncryptedItem>> GetExpiredItems(DateTime beforeDate)
 		{
-			return null;
+			return Task.FromResult(Enumerable.Empty<EncryptedItem>());
 		}
 
-		public async Task Delete(string friendlyId)
+		public Task Delete(string friendlyId)
 		{
 			if (DeleteThrows)
 				throw new Exception("Delete failed");
+
+			return Task.CompletedTask;
 		}
 	}
 }
