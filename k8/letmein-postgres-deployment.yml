@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: letmein-postgres
+  labels:
+    app: letmein
+spec:
+  selector:
+    app: letmein
+    tier: postgres
+  ports:
+    - port: 5432
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: letmein-postgres
+  labels:
+    app: letmein
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: letmein
+      tier: postgres
+  template:
+    metadata:
+      labels:
+        app: letmein
+        tier: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: letmein
+            - name: POSTGRES_PASSWORD
+              value: letmein123
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 500m
+            limits:
+              memory: 192Mi
+              cpu: 1000m
+          volumeMounts:
+            - name: postgres-persistent-storage
+              mountPath: /var/lib/postgresql/data
+
+      volumes:
+      - name: postgres-persistent-storage
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+  labels:
+    app: letmein
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi

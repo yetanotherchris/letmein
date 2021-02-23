@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: letmein-website
+  labels:
+    app: letmein
+spec:
+  selector:
+    app: letmein
+    tier: website
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: letmein-website
+  labels:
+    app: letmein
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: letmein
+      tier: website
+  template:
+    metadata:
+      labels:
+        app: letmein
+        tier: website
+    spec:
+      containers:
+        - name: letmein
+          image: anotherchris/letmein:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: POSTGRES_CONNECTIONSTRING
+              value: "host=letmein-postgres;database=letmein;password=letmein123;username=letmein"
+            - name: REPOSITORY_TYPE
+              value: Postgres
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 500m
+            limits:
+              memory: 192Mi
+              cpu: 1000m
