@@ -4,7 +4,13 @@
 
 You can run Letmein in a Kubernetes cluster fairly easily, details below are tested on a local Kubernetes cluster.
 
-There is also some instructions for doing it on Google Cloud which is probably the least friction of the Kubernetes as a service offerings.
+There is also some instructions in a separate googlecloud.md for using Google Cloud for Kubernetes. The best experience I've had so far has been with DigitalOcean, and then Google Cloud. DigitalOcean is as simple as running
+
+```
+kubectl --kubeconfig="D:/k8s-digitalocean-letmein-kubeconfig.yaml" get nodes
+```
+
+while Google Cloud has tighter security as the document shows. Both services have their own command line tool, DigitalOcean's being `doctl`.
 
 [This Digital Ocean article][1] has a really good run down of Kubernetes architecture.
 
@@ -26,19 +32,23 @@ kubectl delete pod $deploymentName
 
 ## Creating and running the deployments
 
+The pod described above is a fast, but non permanent way of getting letmein working in k8. Deployments enable versioning and the full infrastructure to be created. 
+
 The deployment YAML files in this folder combine the service, volumes and deployments into a single YAML file.
 
 There are two services, one for Postgres, one for the website. For production environments it'd be better to use Postgres on something like AWS RDS, and to have NGinx infront of Letmein.
 
 ### 1. Deployment and services
 ```
+kubectl create -f .\letmein-postgres-volume.yml
 kubectl create -f .\letmein-postgres-deployment.yml
 kubectl create -f .\letmein-website-deployment.yml
 ```
 
-To see the service locally:
+To see the service locally/remotely:
 ```
 minikube service letmein-website
+kubectl describe endpoints 
 ```
 
 Applying changes or editing the deployments:
@@ -57,7 +67,7 @@ kubectl describe ingress.networking.k8s.io/letmein-ingress
 
 ### 3. Tearing down
 ```
-kubectl delete deployment/letmein-postgres;kubectl delete deployment/letmein-website; kubectl delete service/letmein-postgres; kubectl delete service/letmein-website
+kubectl delete service/letmein-postgres; kubectl delete deployment/letmein-postgres;kubectl delete deployment/letmein-website; kubectl delete service/letmein-website
 
 kubectl delete PersistentVolumeClaim/postgres-pv-claim
 kubectl delete ingress.networking.k8s.io/letmein-ingress
@@ -71,6 +81,7 @@ kubectl delete ingress.networking.k8s.io/letmein-ingress
 Windows:
 ```
 choco install minikube
+minikube addons enable ingress
 minikube start
 minikube dashboard
 ```
@@ -98,4 +109,4 @@ kubectl exec -i -t dnsutils -- nslookup letmein-postgres
 - [Env variable data](https://kubernetes.io/docs/tasks/inject-data-application/)
 - [Kubernetes resources details](https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits)
 - [Example Wordpress/MySQL deployment](https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/)
-
+https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0

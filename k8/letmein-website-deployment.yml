@@ -10,9 +10,14 @@ spec:
     tier: website
   ports:
     - protocol: TCP
-      port: 80
+      port: 5000
       targetPort: 5000
-  type: LoadBalancer
+  
+  # Uncomment the type if you prefer to use load balancers instead of ingress.
+  # Ingress is typically cheaper as you only use one load balancer, e.g. nginx
+  # More details: https://v1-18.docs.kubernetes.io/docs/concepts/services-networking/ingress-controllers/
+  
+  #type: LoadBalancer 
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,7 +50,7 @@ spec:
           resources:
             requests:
               memory: 128Mi
-              cpu: 500m
+              cpu: 128m
             limits:
               memory: 192Mi
-              cpu: 1000m
+              cpu: 256m

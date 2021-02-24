@@ -40,31 +40,20 @@ spec:
               value: letmein
             - name: POSTGRES_PASSWORD
               value: letmein123
+            - name: PGDATA
+              value: /persistence-storage/data
           resources:
             requests:
               memory: 128Mi
-              cpu: 500m
+              cpu: 128m
             limits:
               memory: 192Mi
-              cpu: 1000m
+              cpu: 256m
           volumeMounts:
             - name: postgres-persistent-storage
-              mountPath: /var/lib/postgresql/data
+              mountPath: /persistence-storage
 
       volumes:
       - name: postgres-persistent-storage
         persistentVolumeClaim:
           claimName: postgres-pv-claim
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pv-claim
-  labels:
-    app: letmein
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi

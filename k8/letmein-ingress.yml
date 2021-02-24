@@ -3,6 +3,12 @@ kind: Ingress
 metadata:
   name: letmein-ingress
 spec:
+  # remove defaultBackend if your k8 cluster is serving multiple sites
+  defaultBackend:
+    service:
+      name: letmein-website
+      port:
+        number: 5000
   rules:
   - http:
       paths:
@@ -10,7 +16,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: letmein-service
+            name: letmein-website
             port:
-              number: 80
-            
+              number: 5000
