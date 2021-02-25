@@ -81,10 +81,18 @@ kubectl delete ingress.networking.k8s.io/letmein-ingress
 Windows:
 ```
 choco install minikube
-minikube addons enable ingress
 minikube start
+minikube addons enable ingress
 minikube dashboard
 ```
+
+In another terminal window, you can use this to access the service:
+
+``
+minikube service letmein-website
+``
+
+If you want to try out ingress with Minikube, [details can be found here](https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/), it basically involves editing the hosts file.
 
 For development, install the Kubernetes VSCode extension.
 
