@@ -9,6 +9,9 @@ using Xunit;
 
 namespace Letmein.Tests.Integration
 {
+	// To run these tests, ensure you have :
+	// docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres
+	
 	public class PostgresTextRepositoryTests
 	{
 		private PostgresTextRepository _repository;

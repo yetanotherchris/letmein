@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CloudFileStore;
-using Letmein.Core.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -96,7 +95,8 @@ namespace Letmein.Core.Repositories.FileSystem
 			var expiredItems = new List<EncryptedItem>();
 			foreach (ExpiryItem expiryItem in expiredIds)
 			{
-				EncryptedItem encryptedItem = await Load(expiryItem.EncryptedItemId);
+				string filename = $"{expiryItem.EncryptedItemId}.json";
+				EncryptedItem encryptedItem = await Load(filename);
 
 				if (encryptedItem != null)
 					expiredItems.Add(encryptedItem);
@@ -127,7 +127,7 @@ namespace Letmein.Core.Repositories.FileSystem
 
 		private class ExpiryItem
 		{
-			public DateTime ExpiryDate { get; set; }
+			public DateTimeOffset ExpiryDate { get; set; }
 			public string EncryptedItemId { get; set; }
 
 			public override bool Equals(object obj)

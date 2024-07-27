@@ -24,7 +24,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			var expectedItem = new EncryptedItem() { FriendlyId = expectedId };
 			string expectedJson = JsonConvert.SerializeObject(expectedItem);
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 
 			var jsonRepository = new JsonTextFileRepository(logger, storageProvider);
@@ -46,14 +46,14 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			// Arrange
 			string expectedFilename = "friendly-id.json";
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 			storageProvider.FileExistsAsync(expectedFilename).Returns(Task.FromResult(true));
 
 			var jsonRepository = new JsonTextFileRepository(logger, storageProvider);
 
 			// Act
-			await jsonRepository.Load("friendly-id");
+			await jsonRepository.Load("friendly-id.json");
 
 			// Assert
 			Received.InOrder(async () =>
@@ -81,7 +81,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 				$"{item2.FriendlyId}.json"
 			};
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 
 			storageProvider.ListFilesAsync(1000, false).Returns(Task.FromResult(fileList.AsEnumerable()));
@@ -106,7 +106,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			// Arrange
 			string expectedFilename = "friendly-id.json";
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 			storageProvider.FileExistsAsync(expectedFilename).Returns(Task.FromResult(true));
 
