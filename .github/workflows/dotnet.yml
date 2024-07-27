@@ -47,11 +47,12 @@ jobs:
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
+    # See: https://github.com/dotnet/sdk-container-builds/blob/main/docs/RegistryAuthentication.md
     - name: Publish Docker container
       id: publish-container
       shell: pwsh
       env:
-        ContainerImageName: yetanotherchris/letmein
+        ContainerImageName: anotherchris/letmein
         ContainerRegistry: docker.io
         ContainerRepository: letmein
       run: |
