@@ -15,6 +15,24 @@
     <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
     <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
     <ContainerVersion>$(GITHUB_SHA)</ContainerVersion>
+
+    <ContainerEnvironmentalVariable Include="ASPNETCORE_ENVIRONMENT" Value="Production" />
+    <ContainerEnvironmentalVariable Include="ASPNETCORE_URLS" Value="http://0.0.0.0:5000" />
+    <!-- Possible values:  "Filesystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs" -->
+    <ContainerEnvironmentalVariable Include="REPOSITORY_TYPE" Value="Postgres" />
+    <ContainerEnvironmentalVariable Include="PASTES_STORE_PATH" Value="pastes" />
+    <ContainerEnvironmentalVariable Include="POSTGRES_CONNECTIONSTRING" Value="" />
+    <!-- A comma-seperated list of minutes that pastes expire after. -->
+    <ContainerEnvironmentalVariable Include="EXPIRY_TIMES" Value="720" />
+    <!-- Number of seconds to sleep inbetween checking for expired pastes -->
+    <ContainerEnvironmentalVariable Include="CLEANUP_SLEEPTIME" Value="300" />
+    <!-- Short url ID type. -->
+    <!-- Possible values: default (random-with-pronounceable), pronounceable, short-pronounceable, short-mixedcase, shortcode -->
+    <ContainerEnvironmentalVariable Include="ID_TYPE" Value="default" />
+    <ContainerEnvironmentalVariable Include="PAGE_TITLE" Value="letmein.io" />
+    <ContainerEnvironmentalVariable Include="HEADER_TEXT" Value="letmein.io" />
+    <ContainerEnvironmentalVariable Include="HEADER_SUBTEXT" Value="note encryption service" />
+    <ContainerEnvironmentalVariable Include="FOOTER_TEXT" Value="&lt;a href&quot; Value=&quot;https://github.com/yetanotherchris/letmein&quot;&gt;Github source&lt;/a&gt;&nbsp;|&nbsp;&lt;a href&quot; Value=&quot;/FAQ&quot;&gt;FAQ&lt;/a&gt;" />
   </PropertyGroup>
   <ItemGroup Condition=" '$(CI)' == 'true' ">
     <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/commit/$(GITHUB_SHA)" />
