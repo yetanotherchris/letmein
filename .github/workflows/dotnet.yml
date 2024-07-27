@@ -82,5 +82,7 @@ jobs:
       env:
         ContainerRegistry: docker.io
         ContainerRepository: letmein
+        # Needed for Docker Hub
+        ContainerImageName: anotherchris/letmein
       run: |
         dotnet publish ./src/Letmein.Web/Letmein.Web.csproj --arch x64 --os linux -p:PublishProfile=DefaultContainer
