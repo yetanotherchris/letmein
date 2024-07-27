@@ -45,7 +45,7 @@ jobs:
         pushd src/Letmein.Web/wwwroot
         npm config set registry http://registry.npmjs.org/
         npm install
-        ./node_modules/.bin/gulp --docker_tag ${{ env.VERSION_NUMBER }}.${{ env.GITHUB_RUN_NUMBER }}
+        ./node_modules/.bin/gulp --docker_tag $VERSION_NUMBER.$GITHUB_RUN_NUMBER
         popd
 
     - name: Clean wwwroot
