@@ -36,7 +36,7 @@
     <ContainerEnvironmentalVariable Include="PAGE_TITLE" Value="letmein.io" />
     <ContainerEnvironmentalVariable Include="HEADER_TEXT" Value="letmein.io" />
     <ContainerEnvironmentalVariable Include="HEADER_SUBTEXT" Value="note encryption service" />
-    <ContainerEnvironmentalVariable Include="FOOTER_TEXT" Value="&lt;a href&quot; Value=&quot;https://github.com/yetanotherchris/letmein&quot;&gt;Github source&lt;/a&gt;&nbsp;|&nbsp;&lt;a href&quot; Value=&quot;/FAQ&quot;&gt;FAQ&lt;/a&gt;" />
+    <ContainerEnvironmentalVariable Include="FOOTER_TEXT" Value="&lt;a href&quot; Value=&quot;https://github.com/yetanotherchris/letmein&quot;&gt;Github source&lt;/a&gt;&#160;|&#160;&lt;a href&quot; Value=&quot;/FAQ&quot;&gt;FAQ&lt;/a&gt;" />
   </ItemGroup>
 
   <ItemGroup>
