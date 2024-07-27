@@ -10,6 +10,8 @@ on:
     branches: [ "master" ]
 
 jobs:
+  env:
+    VERSION_NUMBER: 8.0
   
   build:
     runs-on: ubuntu-latest
@@ -18,14 +20,40 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_DB: letmein
           POSTGRES_USER: letmein
           POSTGRES_PASSWORD: letmein123
         ports:
           - 5432:5432
+        run:
+
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Update version number
+      run: | 
+        sed "s|<Version>99.88.77</Version>|<Version>8.0.$GITHUB_RUN_NUMBER</Version>|" src/Letmein.Web/Letmein.Web.csproj > src/Letmein.Web/Letmein.Web.csproj.temp
+        mv src/Letmein.Web/Letmein.Web.csproj.temp src/Letmein.Web/Letmein.Web.csproj
+        cat src/Letmein.Web/Letmein.Web.csproj
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+
+    - name: Node install
+      run: |
+        pushd src/Letmein.Web/wwwroot
+        npm config set registry http://registry.npmjs.org/
+        npm install
+        popd
+
+    - name: Clean wwwroot
+      run: |
+        rm -rf ./src/Letmein.Web/wwwroot/js/libraries
+        rm ./src/Letmein.Web/wwwroot/js/letmein.js
+        rm ./src/Letmein.Web/wwwroot/_references.js
+        rm ./src/Letmein.Web/wwwroot/package.json
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
