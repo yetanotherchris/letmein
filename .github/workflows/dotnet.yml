@@ -26,7 +26,7 @@ jobs:
     - uses: addnab/docker-run-action@v3
       with:
         image: postgres:latest
-        run: --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123
+        options: --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123
         
     - name: Restore dependencies
       run: dotnet restore
