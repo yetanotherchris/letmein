@@ -91,7 +91,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			storageProvider.LoadTextFileAsync(item2Filename).Returns(Task.FromResult(item2Json));
 
 			var jsonRepository = new JsonTextFileRepository(logger, storageProvider);
-			await jsonRepository.FindAllExpiryItems();
+			await jsonRepository.FindAllItems();
 
 			// Act
 			var expiredItems = await jsonRepository.GetExpiredItems(DateTime.Now);
