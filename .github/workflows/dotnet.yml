@@ -24,7 +24,8 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -40,12 +41,13 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
       
+    - name: Docker login
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
-    - name: Publish container
+    - name: Publish Docker container
       id: publish-container
       shell: pwsh
       env:
