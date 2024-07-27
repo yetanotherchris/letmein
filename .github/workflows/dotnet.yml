@@ -80,7 +80,6 @@ jobs:
       id: publish-container
       shell: pwsh
       env:
-        ContainerImageName: anotherchris/letmein
         ContainerRegistry: docker.io
         ContainerRepository: letmein
       run: |

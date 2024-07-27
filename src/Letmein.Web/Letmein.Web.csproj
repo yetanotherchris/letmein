@@ -15,6 +15,10 @@
     <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
     <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
     <ContainerVersion>$(GITHUB_SHA)</ContainerVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(CI)' == 'true' ">
+    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/commit/$(GITHUB_SHA)" />
+    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
 
     <ContainerEnvironmentalVariable Include="ASPNETCORE_ENVIRONMENT" Value="Production" />
     <ContainerEnvironmentalVariable Include="ASPNETCORE_URLS" Value="http://0.0.0.0:5000" />
@@ -33,10 +37,6 @@
     <ContainerEnvironmentalVariable Include="HEADER_TEXT" Value="letmein.io" />
     <ContainerEnvironmentalVariable Include="HEADER_SUBTEXT" Value="note encryption service" />
     <ContainerEnvironmentalVariable Include="FOOTER_TEXT" Value="&lt;a href&quot; Value=&quot;https://github.com/yetanotherchris/letmein&quot;&gt;Github source&lt;/a&gt;&nbsp;|&nbsp;&lt;a href&quot; Value=&quot;/FAQ&quot;&gt;FAQ&lt;/a&gt;" />
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(CI)' == 'true' ">
-    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/commit/$(GITHUB_SHA)" />
-    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
   </ItemGroup>
 
   <ItemGroup>
