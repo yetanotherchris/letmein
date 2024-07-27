@@ -10,11 +10,11 @@ on:
     branches: [ "master" ]
 
 jobs:
-  env:
-    VERSION_NUMBER: 8.0
-  
+
   build:
     runs-on: ubuntu-latest
+    env:
+      VERSION_NUMBER: 8.0
 
     services:
       postgres:
