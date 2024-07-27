@@ -34,18 +34,19 @@ jobs:
 
     - name: Update version number
       run: | 
-        sed "s|<Version>99.88.77</Version>|<Version>8.0.$GITHUB_RUN_NUMBER</Version>|" src/Letmein.Web/Letmein.Web.csproj > src/Letmein.Web/Letmein.Web.csproj.temp
+        sed "s|<Version>99.88.77</Version>|<Version>$VERSION_NUMBER.$GITHUB_RUN_NUMBER</Version>|" src/Letmein.Web/Letmein.Web.csproj > src/Letmein.Web/Letmein.Web.csproj.temp
         mv src/Letmein.Web/Letmein.Web.csproj.temp src/Letmein.Web/Letmein.Web.csproj
         cat src/Letmein.Web/Letmein.Web.csproj
 
     - name: Setup Node
       uses: actions/setup-node@v4
 
-    - name: Node install
+    - name: Node install and run
       run: |
         pushd src/Letmein.Web/wwwroot
         npm config set registry http://registry.npmjs.org/
         npm install
+        ./node_modules/.bin/gulp --docker_tag ${{ env.VERSION_NUMBER }}.${{ env.GITHUB_RUN_NUMBER }}
         popd
 
     - name: Clean wwwroot

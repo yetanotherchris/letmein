@@ -6,6 +6,7 @@
     <Version>99.88.77</Version>
   </PropertyGroup>
 
+  <!-- The Version above is replaced by Github Actions workflow -->
   <PropertyGroup Condition=" '$(CI)' == 'true' ">
     <ContainerPrPrefix Condition=" '$(GITHUB_HEAD_REF)' != '' ">pr-</ContainerPrPrefix>
     <ContainerImageTags>${ContainerPrPrefix}${Version}</ContainerImageTags>

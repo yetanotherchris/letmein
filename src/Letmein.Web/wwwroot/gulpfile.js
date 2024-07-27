@@ -6,12 +6,11 @@ const uglify = require('gulp-uglify');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
 const argv = require('yargs').argv;
-var gutil = require('gulp-util');
+const fancylog = require('fancylog');
+const { series } = require('gulp');
 
-gulp.task('default', ['babel', 'concat-uglify']);
-
-gulp.task('babel', () => {
-
+function babelTask()
+{
 	// Use babeljs on the letmein javascript to transcode it from ECMAScript
 	return gulp
 		.src('js/letmein.js')
@@ -19,12 +18,12 @@ gulp.task('babel', () => {
 			presets: ['es2015']
 		}))
 		.pipe(gulp.dest('js/prod', { overwrite: true }));
-});
+};
 
-gulp.task('concat-uglify', ['babel'], () => {
+function concatUglifyTask() {
 
 	var destFilename = `letmein.${argv.docker_tag}.min.js`;
-	gutil.log(`Filename: "${destFilename}"`);
+	fancylog.info(`Filename: "${destFilename}"`);
 
 	return gulp
 		.src(['js/libraries/jquery-3.1.1.min.js',
@@ -39,4 +38,6 @@ gulp.task('concat-uglify', ['babel'], () => {
 		.pipe(concat(destFilename))
 		.pipe(uglify())
 		.pipe(gulp.dest('js/prod'));
-});
+}
+
+exports.default = series(babelTask, concatUglifyTask);
