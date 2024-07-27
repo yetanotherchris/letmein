@@ -10,19 +10,21 @@ on:
     branches: [ "master" ]
 
 jobs:
-  services:
-    postgres:
-      image: postgres
-      env:
-        POSTGRES_USER: letmein
-        POSTGRES_PASSWORD: letmein123
-      ports:
-        - 5432:5432
   
   build:
     runs-on: ubuntu-latest
+    
     env:
       CONTAINER_REGISTRY: hub.docker.com
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: letmein
+          POSTGRES_PASSWORD: letmein123
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v4
