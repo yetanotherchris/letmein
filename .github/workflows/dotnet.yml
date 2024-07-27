@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      CONTAINER_REGISTRY: hub.docker.com
+      CONTAINER_REGISTRY: docker.io
 
     services:
       postgres:
