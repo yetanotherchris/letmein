@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      VERSION_NUMBER: 8.0
+      VERSION_NUMBER: "8.0"
 
     services:
       postgres:
@@ -30,7 +30,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Update version number
+    - name: Update csproj version number
       run: | 
         sed "s|<Version>99.88.77</Version>|<Version>$VERSION_NUMBER.$GITHUB_RUN_NUMBER</Version>|" src/Letmein.Web/Letmein.Web.csproj > src/Letmein.Web/Letmein.Web.csproj.temp
         mv src/Letmein.Web/Letmein.Web.csproj.temp src/Letmein.Web/Letmein.Web.csproj
