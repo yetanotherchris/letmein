@@ -10,6 +10,15 @@ on:
     branches: [ "master" ]
 
 jobs:
+  services:
+    postgres:
+      image: postgres
+      env:
+        POSTGRES_USER: letmein
+        POSTGRES_PASSWORD: letmein123
+      ports:
+        - 5432:5432
+  
   build:
     runs-on: ubuntu-latest
     env:
@@ -23,11 +32,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - uses: addnab/docker-run-action@v3
-      with:
-        image: postgres:latest
-        options: --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123
-        
     - name: Restore dependencies
       run: dotnet restore
       
