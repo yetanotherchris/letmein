@@ -9,7 +9,7 @@
   <!-- The Version above is replaced by Github Actions workflow -->
   <PropertyGroup Condition=" '$(CI)' == 'true' ">
     <ContainerPrPrefix Condition=" '$(GITHUB_HEAD_REF)' != '' ">-pr</ContainerPrPrefix>
-    <ContainerImageTags>${Version}${ContainerPrPrefix}</ContainerImageTags>
+    <ContainerImageTags>$(Version)$(ContainerPrPrefix)</ContainerImageTags>
     <ContainerImageTags Condition=" '$(GITHUB_HEAD_REF)' == '' ">$(ContainerImageTags);latest</ContainerImageTags>
     <ContainerRepository>$(GITHUB_REPOSITORY)</ContainerRepository>
     <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
