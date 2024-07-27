@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       VERSION_NUMBER: "8.0"
+      PR_NUMBER: ${{ github.event.number }}
 
     services:
       postgres:
