@@ -42,19 +42,6 @@ namespace Letmein.Web
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
 
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
-			
-			//services.AddSingleton<CleanupWorker>();
-			/*services.AddHostedService<CleanupWorker>(provider =>
-			{
-				using (var scope = provider.CreateAsyncScope())
-				{
-					var logger = scope.ServiceProvider.GetService<ILogger<CleanupWorker>>();
-					var config = scope.ServiceProvider.GetService<ILetmeinConfiguration>();
-					var repo = scope.ServiceProvider.GetService<ITextRepository>();
-					return new CleanupWorker(logger, config, repo);
-				}
-			});*/
-
 			services.AddSingleton<IHostedService, CleanupWorker>();
 		}
 
