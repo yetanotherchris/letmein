@@ -21,6 +21,7 @@ namespace Letmein.Web
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+					webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
 					webBuilder.ConfigureAppConfiguration(config =>
 					{
 						config.SetBasePath(Directory.GetCurrentDirectory());

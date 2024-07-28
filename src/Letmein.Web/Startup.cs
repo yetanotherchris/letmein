@@ -31,6 +31,7 @@ namespace Letmein.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddLogging();
+			services.AddHttpLogging(_ => {});
 			services.AddRouting();
 			services.AddControllersWithViews();
 			services.AddRazorPages();
@@ -52,6 +53,7 @@ namespace Letmein.Web
 
 			app.UseStaticFiles();
 			app.UseRouting();
+			app.UseHttpLogging();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
