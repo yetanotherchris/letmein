@@ -42,7 +42,15 @@ namespace Letmein.Web
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
 
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
-			services.AddSingleton<IHostedService, CleanupWorker>();
+
+			services.AddHostedService<PastesCleanupWorker>(provider => 
+			{
+				var logger = provider.GetService<ILogger<PastesCleanupWorker>>();
+				var config = provider.GetService<ILetmeinConfiguration>();
+				var textRepository = provider.GetService<ITextRepository>();
+
+				return new PastesCleanupWorker(logger, config, textRepository);
+			});
 		}
 
 		private static void ConfigureRepository(IServiceCollection services, ILetmeinConfiguration letmeinConfiguration, IConfigurationRoot configuration)
