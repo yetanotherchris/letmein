@@ -8,6 +8,14 @@ namespace Letmein.Core.Providers
 {
     public class LocalFilesystemProvider : IStorageProvider
     {
+        public LocalFilesystemProvider()
+        {
+            if (!Directory.Exists("storage"))
+            {
+                Directory.CreateDirectory("storage");
+            }
+        }
+
         private string GetFullPath(string filename)
         {
             return Path.Combine("storage", filename);

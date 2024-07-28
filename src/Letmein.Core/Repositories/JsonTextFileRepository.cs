@@ -27,12 +27,13 @@ namespace Letmein.Core.Repositories.FileSystem
 		{
 			_itemExpirys = new List<ExpiryItem>();
             IEnumerable<string> files = await _storageProvider.ListFilesAsync(1000, false);
-			_logger.LogInformation("Found {files} files in storage", string.Join(',', files));
+			_logger.LogInformation("Found {files} files in storage", files.Count());
 
 			foreach (string fullPath in files)
 			{
 				var fileInfo = new FileInfo(fullPath);
-				EncryptedItem item = await Load(fileInfo.Name);
+				string friendlyId = fileInfo.Name.Replace(".json", "");
+				EncryptedItem item = await Load(friendlyId);
 
 				if (item != null)
 				{
@@ -47,8 +48,10 @@ namespace Letmein.Core.Repositories.FileSystem
 			}
 		}
 
-		public async Task<EncryptedItem> Load(string filename)
+		public async Task<EncryptedItem> Load(string friendlyId)
 		{
+			string filename = $"{friendlyId}.json";
+			
 			if (!await _storageProvider.FileExistsAsync(filename))
 				return null;
 
@@ -95,8 +98,7 @@ namespace Letmein.Core.Repositories.FileSystem
 			var expiredItems = new List<EncryptedItem>();
 			foreach (ExpiryItem expiryItem in expiredIds)
 			{
-				string filename = $"{expiryItem.EncryptedItemId}.json";
-				EncryptedItem encryptedItem = await Load(filename);
+				EncryptedItem encryptedItem = await Load(expiryItem.EncryptedItemId);
 
 				if (encryptedItem != null)
 					expiredItems.Add(encryptedItem);

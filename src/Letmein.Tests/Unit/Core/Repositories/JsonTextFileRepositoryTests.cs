@@ -53,7 +53,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			var jsonRepository = new JsonTextFileRepository(logger, storageProvider);
 
 			// Act
-			await jsonRepository.Load("friendly-id.json");
+			await jsonRepository.Load("friendly-id");
 
 			// Assert
 			Received.InOrder(async () =>
