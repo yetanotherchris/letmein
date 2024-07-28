@@ -11,7 +11,7 @@ A background service runs in the same process as the web server (in a separate t
 
 ### Quick start
 
-Letmein supports two different ways to store your pastes: file and database. File is cloud based, database is Postgres.
+Letmein supports two different ways to store your pastes: file and database. File is local or cloud based and database is Postgres.
 
 #### Using S3
 
