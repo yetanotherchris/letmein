@@ -75,7 +75,16 @@ jobs:
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
-    - name: Publish Docker container
+    - name: Publish Docker container if PR
+      if: github.event_name == 'pull_request'
+      run: |
+        dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
+        cd src/Letmein.Web
+        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER" .
+        docker push "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER-pr-$PR_NUMBER"
+
+    - name: Publish Docker container with 'latest' tag
+      if: github.event_name != 'pull_request'
       run: |
         dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
         cd src/Letmein.Web
