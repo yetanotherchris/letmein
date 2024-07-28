@@ -1,9 +1,6 @@
 # Letmein
 
-[![Travis](https://img.shields.io/travis/yetanotherchris/letmein.svg)](https://travis-ci.org/yetanotherchris/letmein)
 [![Docker Pulls](https://img.shields.io/docker/pulls/anotherchris/letmein.svg)](https://hub.docker.com/r/anotherchris/letmein/)
-
-![](https://github.com/yetanotherchris/letmein/raw/master/src/Letmein.Web/wwwroot/images/favicon.png)
 
 ### What is it?
 
@@ -88,10 +85,10 @@ There is a FAQ available in the application itself. You can read this on [Letmei
 
 The letmein image is fairly customisable. The various customisations can be done via environmental variables passed to the Docker container, which are uppercase by convention (except the cloud storage environmental variables above):
 
-- `REPOSITORY_TYPE` - Where pastes are stored. Possible values:  "Postgres", "S3", "GoogleCloud", "AzureBlobs". Default is Postgres.
+- `REPOSITORY_TYPE` - Where pastes are stored. Possible values: "FileSystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs". Default is Postgres.
 - `POSTGRES_CONNECTIONSTRING` - The connection string to the Postgres database.
-- `EXPIRY_TIMES` - A comma-seperated list of minutes that pastes expire after. For example "90, 600" would be 1 hour 30 minutes, and 10 hours. The default for this setting is 720 minutes (12 hours)
-- `CLEANUP_SLEEPTIME` - Number of seconds to sleep inbetween checking for expired pastes. The default for this setting is 300 seconds.
+- `EXPIRY_TIMES` - A comma-separated list of minutes that pastes expire after. For example "90, 600" would be 1 hour 30 minutes, and 10 hours. The default for this setting is 720 minutes (12 hours)
+- `CLEANUP_SLEEPTIME` - Number of seconds to sleep in between checking for expired pastes. The default for this setting is 300 seconds.
 - `ID_TYPE` - Short url ID type. Possible values: `default (random-with-pronounceable)`, `pronounceable`, `short-pronounceable`, `short-mixedcase`, `shortcode`. See below for notes on clash rates.
 
 #### UI Customisations
@@ -101,7 +98,7 @@ The letmein image is fairly customisable. The various customisations can be done
 - `HEADER_SUBTEXT` - The text underneath the header.
 - `FOOTER_TEXT` - Text in the footer. The version number in the footer isn't configurable.
 
-You can also configure the applicaiton quite easily by forking the repository, and changing the views (`*.cshtml` files), and then running `docker build .` in the `src\Letmein.Web` folder.
+You can also configure the application quite easily by forking the repository, and changing the views (`*.cshtml` files), and then running `docker build .` in the `src\Letmein.Web` folder.
 
 ##### ID_TYPE clash rates
 

@@ -1,7 +1,11 @@
 ﻿using System;
 using System.IO;
+using Letmein.Core.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Letmein.Web
@@ -10,33 +14,27 @@ namespace Letmein.Web
 	{
 		public static void Main(string[] args)
 		{
-			Log.Logger = new LoggerConfiguration()
-								.Enrich.FromLogContext()
-								.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [{SourceContext:l}] {Message}{NewLine}{Exception}")
-								.CreateLogger();
-
 			try
 			{
 				// Configure web
-				var host = new WebHostBuilder()
-					.UseKestrel()
-					.UseContentRoot(Directory.GetCurrentDirectory())
-					.UseStartup<Startup>()
-					.UseSerilog()
-					.ConfigureAppConfiguration(configBuilder =>
+				var host = Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+					webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
+					webBuilder.ConfigureAppConfiguration(config =>
 					{
-						configBuilder
-							.SetBasePath(Directory.GetCurrentDirectory())
-							.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-							.AddEnvironmentVariables();
-					})
-					.Build();
+						config.SetBasePath(Directory.GetCurrentDirectory());
+						config.AddJsonFile("appsettings.json", true);
+						config.AddEnvironmentVariables();
+					});
+                }).Build();
 				
-				// Start the cleanup service
-				var cleanup = new Cleanup(host.Services);
-				cleanup.StartBackgroundCleanup();
-
 				// Start the web
+				var configuration = host.Services.GetService<ILetmeinConfiguration>();
+				var logger = host.Services.GetService<ILogger<Program>>();
+				logger.LogInformation("Using Repository type: '{repositoryType}'" , configuration.RepositoryType);
+
 				host.Run();
 			}
 			catch (Exception ex)

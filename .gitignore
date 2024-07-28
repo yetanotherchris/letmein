@@ -249,3 +249,5 @@ ModelManifest.xml
 
 .vscode/*
 .idea/*
+
+**/storage/*.json

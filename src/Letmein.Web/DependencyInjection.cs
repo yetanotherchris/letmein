@@ -20,10 +20,14 @@ using System.Reflection;
 using System.Security.Cryptography;
 using Letmein.Core.Configuration;
 using LetmeinConfiguration = Letmein.Core.Configuration.Configuration;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
+using Letmein.Core.Providers;
+using Microsoft.Extensions.Hosting;
 
 namespace Letmein.Web
 {
-	public class DependencyInjection
+    public class DependencyInjection
 	{
 		public static void ConfigureServices(IServiceCollection services, IConfigurationRoot configurationRoot)
 		{
@@ -37,8 +41,16 @@ namespace Letmein.Web
 			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
 			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
 
-			services.AddScoped<ITextRepository, PostgresTextRepository>();
 			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
+
+			services.AddHostedService<PastesCleanupWorker>(provider => 
+			{
+				var logger = provider.GetService<ILogger<PastesCleanupWorker>>();
+				var config = provider.GetService<ILetmeinConfiguration>();
+				var textRepository = provider.GetService<ITextRepository>();
+
+				return new PastesCleanupWorker(logger, config, textRepository);
+			});
 		}
 
 		private static void ConfigureRepository(IServiceCollection services, ILetmeinConfiguration letmeinConfiguration, IConfigurationRoot configuration)
@@ -46,6 +58,7 @@ namespace Letmein.Web
 			switch (letmeinConfiguration.RepositoryType)
 			{
 				case RepositoryType.FileSystem:
+					ConfigureForFileSystem(services, configuration);
 					break;
 
 				case RepositoryType.S3:
@@ -73,16 +86,10 @@ namespace Letmein.Web
 		{
 			services.AddSingleton<ITextRepository>(service =>
 			{
-				const string sectionName = "GoogleCloud";
+				var provider = new LocalFilesystemProvider();
+				var logger = service.GetService<ILogger<JsonTextFileRepository>>();
 
-				var googleCloudConfig = new GoogleCloudConfiguration();
-				configurationRoot.Bind(sectionName, googleCloudConfig);
-				GuardAllConfigProperties(sectionName, googleCloudConfig);
-
-				var googleCloudProvider = new GoogleCloudStorageProvider(googleCloudConfig);
-				var logger = service.GetService<ILogger>();
-
-				return new JsonTextFileRepository(logger, googleCloudProvider);
+				return new JsonTextFileRepository(logger, provider);
 			});
 		}
 
@@ -97,7 +104,7 @@ namespace Letmein.Web
 				GuardAllConfigProperties(sectionName, s3Configuration);
 
 				var s3Provider = new S3StorageProvider(s3Configuration);
-				var logger = service.GetService<ILogger>();
+				var logger = service.GetService<ILogger<JsonTextFileRepository>>();
 
 				return new JsonTextFileRepository(logger, s3Provider);
 			});
@@ -114,7 +121,7 @@ namespace Letmein.Web
 				GuardAllConfigProperties(sectionName, googleCloudConfig);
 
 				var googleCloudProvider = new GoogleCloudStorageProvider(googleCloudConfig);
-				var logger = service.GetService<ILogger>();
+				var logger = service.GetService<ILogger<JsonTextFileRepository>>();
 
 				return new JsonTextFileRepository(logger, googleCloudProvider);
 			});
@@ -131,7 +138,7 @@ namespace Letmein.Web
 				GuardAllConfigProperties(sectionName, azureConfig);
 
 				var azureProvider = new AzureBlobStorageProvider(azureConfig);
-				var logger = service.GetService<ILogger>();
+				var logger = service.GetService<ILogger<JsonTextFileRepository>>();
 
 				return new JsonTextFileRepository(logger, azureProvider);
 			});

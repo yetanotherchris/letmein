@@ -1,12 +1,14 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 MAINTAINER Chris Small
 
 RUN mkdir /app
-COPY ./bin/Release/netcoreapp5.0/publish /app
+COPY ./bin/Release/netcoreapp8.0/linux-x64/publish /app
 WORKDIR /app
 
-RUN mkdir /app/pastes
-RUN chmod 777 /app/pastes
+RUN mkdir /app/storage
+RUN chmod 777 /app/storage
+#RUN apt-get update
+#RUN apt-get install curl -y
 
 ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]
 
@@ -14,14 +16,12 @@ ENTRYPOINT ["dotnet", "/app/Letmein.Web.dll"]
 ENV ASPNETCORE_ENVIRONMENT="Production"
 
 # ASP.NET Core: Kestrel should listen on all IPs
-ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+#ENV ASPNETCORE_URLS="http://0.0.0.0:5000,https://0.0.0.0:5001"
+#ENV ASPNETCORE_HTTP_PORTS=5000
 
 # The storage type for pastes.
-# Possible values:  "Postgres", "S3", "GoogleCloud", "AzureBlobs"
-ENV REPOSITORY_TYPE="Postgres"
-
-# Store them in the pastes folder
-ENV PASTES_STORE_PATH="pastes"
+# Possible values:  "FileSystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs"
+ENV REPOSITORY_TYPE="FileSystem"
 
 # Postgres database connection string
 ENV POSTGRES_CONNECTIONSTRING=""

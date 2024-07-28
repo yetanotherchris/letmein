@@ -9,7 +9,7 @@ namespace Letmein.Core
         public string AlgorithmName { get; set; }
 		public string CipherJson { get; set; }
 
-	    public DateTime CreatedOn { get; set; }
-		public DateTime ExpiresOn { get; set; }
+	    public DateTimeOffset CreatedOn { get; set; }
+		public DateTimeOffset ExpiresOn { get; set; }
 	}
 }

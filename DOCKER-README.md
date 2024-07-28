@@ -1,8 +1,5 @@
 ## Letmein
 
-**New in version 2**
-Letmein now supports S3, Azure Blobs, Google Cloud Buckets to store your pastes in, as well Postgres.
-
 ### What is it?
 
 Letmein is an encrypted notes service, similar to cryptobin.co. No encryption keys are stored in the database, and the encryption is performed in the browser. Notes last 12 hours by default, but this is configurable (see below) with the option to have multiple expiry times.
@@ -11,14 +8,22 @@ A background service runs in the same process as the web server (in a separate t
 
 ### Quick start
 
-Letmein supports two different ways to store your pastes: file and database. File is cloud based, database is Postgres.
+Letmein supports two different ways to store your pastes: file and database. File is local or cloud based and database is Postgres.
+
+The fastest way to run Letmein is with the defaults. This will store the pastes inside the container in the `/app/storage` directory. You can configure this is a volume if you need persistence.
+
+```
+docker run -d -p 8080:8080 anotherchris/letmein
+```
+
+There are a lot of customisation options available via environmental variables, see the [Github readme](https://github.com/yetanotherchris/letmein) for details.
 
 #### Using S3
 
-*Note: you can also use Azure and Google Cloud, see the readme for more details. Local filesystem/mounted volumes is coming later.*
+*Note: you can also use Azure and Google Cloud, see the Github readme for more details.*
 
 ```
-docker run -d -p 80:5000  \
+docker run -d -p 8080:8080  \
  -e EXPIRY_TIMES=5,60,360,720 \
  -e REPOSITORY_TYPE=S3 \
  -e S3__AccessKey={YOUR-KEY} \
@@ -36,7 +41,7 @@ Start a Postgres container (it needs 9.5 or higher):
 
 Run the Letmein Docker container:
 
-    docker run -d -p 8080:5000 --link postgres:postgres -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" anotherchris/letmein
+    docker run -d -p 8080:8080 --link postgres:postgres -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" anotherchris/letmein
 
 Now go to [http://localhost:8080](http://localhost:8080) and store some text.
 
@@ -47,7 +52,7 @@ version: '3'
 services:
     letmein:
         ports:
-            - '5000:5000'
+            - '8080:8080'
         environment:
             - EXPIRY_TIMES=5,60,360,720
             - REPOSITORY_TYPE=S3
@@ -99,7 +104,7 @@ server {
 
     #Redirects all traffic
     location / {
-        proxy_pass  http://letmein:5000;
+        proxy_pass  http://letmein:8080;
         limit_req   zone=one burst=10 nodelay;
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CloudFileStore;
-using Letmein.Core.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -11,25 +11,29 @@ namespace Letmein.Core.Repositories.FileSystem
 {
 	public class JsonTextFileRepository : ITextRepository
 	{
-		private readonly ILogger _logger;
+		private readonly ILogger<JsonTextFileRepository> _logger;
 		private readonly IStorageProvider _storageProvider;
 		private List<ExpiryItem> _itemExpirys;
 
-		public JsonTextFileRepository(ILogger logger, IStorageProvider storageProvider)
+		public JsonTextFileRepository(ILogger<JsonTextFileRepository> logger, IStorageProvider storageProvider)
 		{
 			_logger = logger;
 			_storageProvider = storageProvider;
 
-			FindAllExpiryItems().GetAwaiter().GetResult();
+			FindAllItems().GetAwaiter().GetResult();
 		}
 
-		public async Task FindAllExpiryItems()
+		public async Task FindAllItems()
 		{
 			_itemExpirys = new List<ExpiryItem>();
+            IEnumerable<string> files = await _storageProvider.ListFilesAsync(1000, false);
+			_logger.LogInformation("Found {files} files in storage", files.Count());
 
-			foreach (string filename in await _storageProvider.ListFilesAsync(1000, false))
+			foreach (string fullPath in files)
 			{
-				EncryptedItem item = await Load(filename.Replace(".json", ""));
+				var fileInfo = new FileInfo(fullPath);
+				string friendlyId = fileInfo.Name.Replace(".json", "");
+				EncryptedItem item = await Load(friendlyId);
 
 				if (item != null)
 				{
@@ -47,7 +51,7 @@ namespace Letmein.Core.Repositories.FileSystem
 		public async Task<EncryptedItem> Load(string friendlyId)
 		{
 			string filename = $"{friendlyId}.json";
-
+			
 			if (!await _storageProvider.FileExistsAsync(filename))
 				return null;
 
@@ -125,7 +129,7 @@ namespace Letmein.Core.Repositories.FileSystem
 
 		private class ExpiryItem
 		{
-			public DateTime ExpiryDate { get; set; }
+			public DateTimeOffset ExpiryDate { get; set; }
 			public string EncryptedItemId { get; set; }
 
 			public override bool Equals(object obj)

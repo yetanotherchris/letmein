@@ -10,19 +10,56 @@ on:
     branches: [ "master" ]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     env:
-      CONTAINER_REGISTRY: hub.docker.com
+      VERSION_NUMBER: "8.0"
+      PR_NUMBER: ${{ github.event.number }}
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: letmein
+          POSTGRES_USER: letmein
+          POSTGRES_PASSWORD: letmein123
+        ports:
+          - 5432:5432
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Update csproj version number
+      run: | 
+        sed "s|<Version>99.88.77</Version>|<Version>$VERSION_NUMBER.$GITHUB_RUN_NUMBER</Version>|" src/Letmein.Web/Letmein.Web.csproj > src/Letmein.Web/Letmein.Web.csproj.temp
+        mv src/Letmein.Web/Letmein.Web.csproj.temp src/Letmein.Web/Letmein.Web.csproj
+        cat src/Letmein.Web/Letmein.Web.csproj
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+
+    - name: Node install and run
+      run: |
+        pushd src/Letmein.Web/wwwroot
+        npm config set registry http://registry.npmjs.org/
+        npm install
+        ./node_modules/.bin/gulp --docker_tag $VERSION_NUMBER.$GITHUB_RUN_NUMBER
+        popd
+
+    - name: Clean wwwroot
+      run: |
+        rm -rf ./src/Letmein.Web/wwwroot/js/libraries
+        rm ./src/Letmein.Web/wwwroot/js/letmein.js
+        rm ./src/Letmein.Web/wwwroot/_references.js
+        rm ./src/Letmein.Web/wwwroot/package.json
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-        
+
     - name: Restore dependencies
       run: dotnet restore
       
@@ -32,18 +69,28 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
       
-    - name: Docker log in
+    - name: Docker login
       uses: docker/login-action@v3
       with:
-        registry: ${{ env.CONTAINER_REGISTRY }}
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
-    - name: Publish container
-      id: publish-container
-      shell: pwsh
-      env:
-        ContainerRegistry: ${{ env.CONTAINER_REGISTRY }}
-        ContainerRepository: ${{ github.repository }}
+    - name: Dotnet Publish
+      run: dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
+
+    - name: Docker tag and push (PR)
+      if: github.event_name == 'pull_request'
       run: |
-        dotnet publish ./src/Letmein.Web/Letmein.Web.csproj --arch x64 --os linux -p:PublishProfile=DefaultContainer
+        export DOCKER_TAG="$VERSION_NUMBER.$GITHUB_RUN_NUMBER-pr-$PR_NUMBER"
+        cd src/Letmein.Web
+        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
+        docker push "anotherchris/letmein:$DOCKER_TAG"
+
+    - name: Docker tag and push (master/'latest')
+      if: github.event_name != 'pull_request'
+      run: |
+        export DOCKER_TAG="$VERSION_NUMBER.$GITHUB_RUN_NUMBER"
+        cd src/Letmein.Web
+        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
+        docker push "anotherchris/letmein:$DOCKER_TAG"
+        docker push "anotherchris/letmein:latest"

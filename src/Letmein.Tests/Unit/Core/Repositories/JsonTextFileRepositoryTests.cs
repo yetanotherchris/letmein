@@ -24,7 +24,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			var expectedItem = new EncryptedItem() { FriendlyId = expectedId };
 			string expectedJson = JsonConvert.SerializeObject(expectedItem);
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 
 			var jsonRepository = new JsonTextFileRepository(logger, storageProvider);
@@ -46,7 +46,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			// Arrange
 			string expectedFilename = "friendly-id.json";
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 			storageProvider.FileExistsAsync(expectedFilename).Returns(Task.FromResult(true));
 
@@ -81,7 +81,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 				$"{item2.FriendlyId}.json"
 			};
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 
 			storageProvider.ListFilesAsync(1000, false).Returns(Task.FromResult(fileList.AsEnumerable()));
@@ -91,7 +91,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			storageProvider.LoadTextFileAsync(item2Filename).Returns(Task.FromResult(item2Json));
 
 			var jsonRepository = new JsonTextFileRepository(logger, storageProvider);
-			await jsonRepository.FindAllExpiryItems();
+			await jsonRepository.FindAllItems();
 
 			// Act
 			var expiredItems = await jsonRepository.GetExpiredItems(DateTime.Now);
@@ -106,7 +106,7 @@ namespace Letmein.Tests.Unit.Core.Repositories
 			// Arrange
 			string expectedFilename = "friendly-id.json";
 
-			var logger = Substitute.For<ILogger>();
+			var logger = Substitute.For<ILogger<JsonTextFileRepository>>();
 			var storageProvider = Substitute.For<IStorageProvider>();
 			storageProvider.FileExistsAsync(expectedFilename).Returns(Task.FromResult(true));
 

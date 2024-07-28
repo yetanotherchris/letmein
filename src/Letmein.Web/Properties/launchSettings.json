@@ -8,7 +8,23 @@
     }
   },
   "profiles": {
-    "Kestrel": {
+    "Filesystem": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "REPOSITORY_TYPE": "FileSystem",
+        "EXPIRY_TIMES": "1, 60, 720, 10080",
+        "CLEANUP_SLEEPTIME": "60",
+        "ID_TYPE": "shortcode",
+        "PAGE_TITLE": "letmein.io",
+        "HEADER_TEXT": "Using Filesystem",
+        "HEADER_SUBTEXT": "Writing to disk",
+        "FOOTER_TEXT": "footer here",
+      }
+    },
+    "Postgres": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000",

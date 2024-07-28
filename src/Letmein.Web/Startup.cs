@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Letmein.Web
 {
@@ -10,14 +11,27 @@ namespace Letmein.Web
 	{
 		public IConfigurationRoot Configuration { get; }
 
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = (IConfigurationRoot) configuration;
-		}
+		public Startup(IWebHostEnvironment environment, IConfiguration configuration)
+        {
+            Configuration = (IConfigurationRoot) configuration;
+
+            var loggerConfig = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration);
+
+			loggerConfig
+				.Enrich.FromLogContext()
+				.WriteTo.Console(Serilog.Events.LogEventLevel.Information, "[{Timestamp}] [{SourceContext:l}] {Message}{NewLine}{Exception}")
+				.MinimumLevel.Information();
+
+            loggerConfig.Enrich.FromLogContext();
+
+            Log.Logger = loggerConfig.CreateLogger();
+        }
 		
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddLogging();
+			services.AddHttpLogging(_ => {});
 			services.AddRouting();
 			services.AddControllersWithViews();
 			services.AddRazorPages();
@@ -39,6 +53,7 @@ namespace Letmein.Web
 
 			app.UseStaticFiles();
 			app.UseRouting();
+			app.UseHttpLogging();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
