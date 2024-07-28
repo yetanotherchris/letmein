@@ -79,7 +79,7 @@ jobs:
       run: dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
 
     - name: Docker tag and push (PR)
-      if: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request' && github.actor == github.repository_owner
       run: |
         export DOCKER_TAG="$VERSION_NUMBER.$GITHUB_RUN_NUMBER-pr-$PR_NUMBER"
         cd src/Letmein.Web
