@@ -75,19 +75,22 @@ jobs:
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
-    - name: Publish Docker container if PR
+    - name: Dotnet Publish
+      run: dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
+
+    - name: Docker tag and push (PR)
       if: github.event_name == 'pull_request'
       run: |
-        dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
+        export DOCKER_TAG="$VERSION_NUMBER.$GITHUB_RUN_NUMBER-pr-$PR_NUMBER"
         cd src/Letmein.Web
-        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER" .
-        docker push "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER-pr-$PR_NUMBER"
+        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
+        docker push "anotherchris/letmein:$DOCKER_TAG"
 
-    - name: Publish Docker container with 'latest' tag
+    - name: Docker tag and push (master/'latest')
       if: github.event_name != 'pull_request'
       run: |
-        dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
+        export DOCKER_TAG="$VERSION_NUMBER.$GITHUB_RUN_NUMBER"
         cd src/Letmein.Web
-        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER" .
-        docker push "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER"
+        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$DOCKER_TAG" .
+        docker push "anotherchris/letmein:$DOCKER_TAG"
         docker push "anotherchris/letmein:latest"
