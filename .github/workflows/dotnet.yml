@@ -54,6 +54,13 @@ jobs:
         rm ./src/Letmein.Web/wwwroot/js/letmein.js
         rm ./src/Letmein.Web/wwwroot/_references.js
         rm ./src/Letmein.Web/wwwroot/package.json
+
+    - name: Clean wwwroot
+      run: |
+        rm -rf ./src/Letmein.Web/wwwroot/js/libraries
+        rm ./src/Letmein.Web/wwwroot/js/letmein.js
+        rm ./src/Letmein.Web/wwwroot/_references.js
+        rm ./src/Letmein.Web/wwwroot/package.json
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -75,14 +82,10 @@ jobs:
         username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
-    # See: https://github.com/dotnet/sdk-container-builds/blob/main/docs/RegistryAuthentication.md
     - name: Publish Docker container
-      id: publish-container
-      shell: pwsh
-      env:
-        ContainerRegistry: docker.io
-        ContainerRepository: letmein
-        # Needed for Docker Hub
-        ContainerImageName: anotherchris/letmein
       run: |
-        dotnet publish ./src/Letmein.Web/Letmein.Web.csproj --arch x64 --os linux -p:PublishProfile=DefaultContainer
+        dotnet publish src/Letmein.Web -c Release --arch x64 --os linux
+        cd src/Letmein.Web
+        docker build -t "anotherchris/letmein:latest" -t "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER" .
+        docker push "anotherchris/letmein:$VERSION_NUMBER.$GITHUB_RUN_NUMBER"
+        docker push "anotherchris/letmein:latest"

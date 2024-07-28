@@ -6,39 +6,6 @@
     <Version>99.88.77</Version>
   </PropertyGroup>
 
-  <!-- The Version above is replaced by Github Actions workflow -->
-  <PropertyGroup Condition=" '$(CI)' == 'true' ">
-    <ContainerPrSuffix Condition=" '$(GITHUB_HEAD_REF)' != '' ">-pr-$(PR_NUMBER)</ContainerPrSuffix>
-    <ContainerImageTags>$(Version)$(ContainerPrSuffix)</ContainerImageTags>
-    <ContainerImageTags Condition=" '$(GITHUB_HEAD_REF)' == '' ">$(ContainerImageTags);latest</ContainerImageTags>
-    <ContainerRepository>$(GITHUB_REPOSITORY)</ContainerRepository>
-    <ContainerTitle>$(GITHUB_REPOSITORY)</ContainerTitle>
-    <ContainerVendor>$(GITHUB_REPOSITORY_OWNER)</ContainerVendor>
-    <ContainerVersion>$(GITHUB_SHA)</ContainerVersion>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(CI)' == 'true' ">
-    <ContainerLabel Include="com.docker.extension.changelog" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY)/commit/$(GITHUB_SHA)" />
-    <ContainerLabel Include="com.docker.extension.publisher-url" Value="$(GITHUB_SERVER_URL)/$(GITHUB_REPOSITORY_OWNER)" />
-
-    <ContainerEnvironmentalVariable Include="ASPNETCORE_ENVIRONMENT" Value="Production" />
-    <ContainerEnvironmentalVariable Include="ASPNETCORE_URLS" Value="http://0.0.0.0:5000" />
-    <!-- Possible values:  "Filesystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs" -->
-    <ContainerEnvironmentalVariable Include="REPOSITORY_TYPE" Value="Postgres" />
-    <ContainerEnvironmentalVariable Include="PASTES_STORE_PATH" Value="pastes" />
-    <ContainerEnvironmentalVariable Include="POSTGRES_CONNECTIONSTRING" Value="" />
-    <!-- A comma-seperated list of minutes that pastes expire after. -->
-    <ContainerEnvironmentalVariable Include="EXPIRY_TIMES" Value="720" />
-    <!-- Number of seconds to sleep inbetween checking for expired pastes -->
-    <ContainerEnvironmentalVariable Include="CLEANUP_SLEEPTIME" Value="300" />
-    <!-- Short url ID type. -->
-    <!-- Possible values: default (random-with-pronounceable), pronounceable, short-pronounceable, short-mixedcase, shortcode -->
-    <ContainerEnvironmentalVariable Include="ID_TYPE" Value="default" />
-    <ContainerEnvironmentalVariable Include="PAGE_TITLE" Value="letmein.io" />
-    <ContainerEnvironmentalVariable Include="HEADER_TEXT" Value="letmein.io" />
-    <ContainerEnvironmentalVariable Include="HEADER_SUBTEXT" Value="note encryption service" />
-    <ContainerEnvironmentalVariable Include="FOOTER_TEXT" Value="&lt;a href&quot; Value=&quot;https://github.com/yetanotherchris/letmein&quot;&gt;Github source&lt;/a&gt;&#160;|&#160;&lt;a href&quot; Value=&quot;/FAQ&quot;&gt;FAQ&lt;/a&gt;" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Guard.Net" Version="3.0.0" />
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="2.0.0" />
