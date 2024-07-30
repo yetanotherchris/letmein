@@ -9,8 +9,8 @@ using ILetmeinConfiguration = Letmein.Core.Configuration.ILetmeinConfiguration;
 
 namespace Letmein.Tests.Unit.Core.Configuration
 {
-	public class DefaultConfigurationTests
-	{
+	public class LetmeinConfigurationBuilderTests
+    {
 		public IConfigurationRoot GetConfigurationRoot(Dictionary<string, string> configDictionary)
 		{
 			var builder = new ConfigurationBuilder()
@@ -35,7 +35,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configRoot = GetConfigurationRoot(configDictionary);
 
 			// Act
-			ILetmeinConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
+			ILetmeinConfiguration config = LetmeinConfigurationBuilder.Build(configRoot);
 
 			// Assert
 			config.PostgresConnectionString.ShouldBe("connection string");
@@ -58,7 +58,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
-			ILetmeinConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
+			ILetmeinConfiguration config = LetmeinConfigurationBuilder.Build(configRoot);
 
 			// Assert
 			config.CleanupSleepTime.ShouldBe(30);
@@ -73,7 +73,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
-			ILetmeinConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
+			ILetmeinConfiguration config = LetmeinConfigurationBuilder.Build(configRoot);
 
 			// Assert
 			var expiryTimes = config.ExpiryTimes.ToList();
@@ -96,7 +96,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 
 			// Act
 			var configRoot = GetConfigurationRoot(configDictionary);
-			ILetmeinConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
+			ILetmeinConfiguration config = LetmeinConfigurationBuilder.Build(configRoot);
 
 			// Assert
 			var expiryTimes = config.ExpiryTimes.ToList();
@@ -120,7 +120,7 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			var configRoot = GetConfigurationRoot(configDictionary);
 
 			// Act
-			ILetmeinConfiguration config = new Letmein.Core.Configuration.Configuration(configRoot);
+			ILetmeinConfiguration config = LetmeinConfigurationBuilder.Build(configRoot);
 
 			// Act
 			config.IdGenerationType.ShouldBe(expectedGenerationType);
