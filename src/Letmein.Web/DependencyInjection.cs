@@ -19,41 +19,48 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using Letmein.Core.Configuration;
-using LetmeinConfiguration = Letmein.Core.Configuration.Configuration;
-using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 using Letmein.Core.Providers;
-using Microsoft.Extensions.Hosting;
 
 namespace Letmein.Web
 {
     public class DependencyInjection
 	{
-		public static void ConfigureServices(IServiceCollection services, IConfigurationRoot configurationRoot)
-		{
-			services.AddSingleton<IConfigurationRoot>(provider => configurationRoot);
+		public static void ConfigureServices(IServiceCollection services, IConfigurationRoot configRoot)
+        {
+            LetmeinConfiguration letmeinConfig = Configuration(services, configRoot);
 
-			var letmeinConfig = new LetmeinConfiguration(configurationRoot);
-			services.AddSingleton<ILetmeinConfiguration>(provider => letmeinConfig);
-			ConfigureRepository(services, letmeinConfig, configurationRoot);
+            services.AddScoped<SymmetricAlgorithm>(service => Aes.Create());
+            services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
+            services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
 
-			services.AddScoped<SymmetricAlgorithm>(service => Aes.Create());
-			services.AddScoped<IUniqueIdGenerator, UniqueIdGenerator>();
-			services.AddScoped<ISymmetricEncryptionProvider, SymmetricEncryptionProvider>();
+            ConfigureRepository(services, letmeinConfig, configRoot);
+            services.AddScoped<ITextEncryptionService, TextEncryptionService>();
 
-			services.AddScoped<ITextEncryptionService, TextEncryptionService>();
+            services.AddHostedService<PastesCleanupWorker>(provider =>
+            {
+                var logger = provider.GetService<ILogger<PastesCleanupWorker>>();
+                var config = provider.GetService<ILetmeinConfiguration>();
+                var textRepository = provider.GetService<ITextRepository>();
 
-			services.AddHostedService<PastesCleanupWorker>(provider => 
-			{
-				var logger = provider.GetService<ILogger<PastesCleanupWorker>>();
-				var config = provider.GetService<ILetmeinConfiguration>();
-				var textRepository = provider.GetService<ITextRepository>();
+                return new PastesCleanupWorker(logger, config, textRepository);
+            });
+        }
 
-				return new PastesCleanupWorker(logger, config, textRepository);
-			});
-		}
+        private static LetmeinConfiguration Configuration(IServiceCollection services, IConfigurationRoot configRoot)
+        {
+            // ILetmeinConfiguration and ConfigurationRoot is manually injected into the DI.
+            // This is because there's lots of custom parsing of env var names and values,
+            // that make the env vars more succinct but make IOptions usage impossible.
+            // For example:
+            // - PAGE_TITLE would end up being ViewConfig__PageTitle
+            // - EXPIRY_TIMES would end up being 2+ env vars: ExpiryTimes__0=1,ExpiryTimes__1=360
+            var letmeinConfig = LetmeinConfigurationBuilder.Build(configRoot);
+            services.AddSingleton<IConfigurationRoot>(provider => configRoot);
+            services.AddSingleton<ILetmeinConfiguration>(provider => letmeinConfig);
+            return letmeinConfig;
+        }
 
-		private static void ConfigureRepository(IServiceCollection services, ILetmeinConfiguration letmeinConfiguration, IConfigurationRoot configuration)
+        private static void ConfigureRepository(IServiceCollection services, ILetmeinConfiguration letmeinConfiguration, IConfigurationRoot configuration)
 		{
 			switch (letmeinConfiguration.RepositoryType)
 			{
