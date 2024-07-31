@@ -19,7 +19,7 @@ Running the Docker image will start the Kestrel web server with letmein running.
 
 ### Quick start
 
-Letmein now supports 3 ways to store your pastes: local storage, cloud file store and database.
+Letmein now supports 3 ways to store your pastes: local storage, cloud file store and database. It listens on port 8080 by default.
 
 #### Step 1. Configure a storage provider
 
@@ -79,7 +79,7 @@ Start a Postgres container (it needs 9.5 or higher):
 
 Run the Letmein Docker container (below assumes you're using Postgres):
 
-    docker run -d -p 8080:5000 --link postgres:postgres -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" anotherchris/letmein
+    docker run -d -p 8080:8080 --link postgres:postgres -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" anotherchris/letmein
 
 Now go to [http://localhost:8080](http://localhost:8080) and store some text.
 
