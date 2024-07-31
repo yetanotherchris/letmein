@@ -26,6 +26,7 @@ Letmein now supports 3 ways to store your pastes: local storage, cloud file stor
 ##### Local storage
 
 Pastes can be stored inside the `storage` directory inside the container, the full path is `/app/storage`. If you want to persist the pastes, simply map this as a volume.  
+
 You don't need to customise any environmental variables for this, it will launch using FileSystem by default, as the storage provider.
 
 ##### S3
