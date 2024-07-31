@@ -6,6 +6,9 @@ name: .NET
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.gitignore'
   pull_request:
     branches: [ "master" ]
 
