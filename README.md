@@ -91,7 +91,7 @@ There is a FAQ available in the application itself. You can read this on [Letmei
 
 The letmein image is fairly customisable. The various customisations can be done via environmental variables passed to the Docker container, which are uppercase by convention (except the cloud storage environmental variables above):
 
-- `REPOSITORY_TYPE` - Where pastes are stored. Possible values: "FileSystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs". Default is Postgres.
+- `REPOSITORY_TYPE` - Where pastes are stored. Possible values: "FileSystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs". Default is FileSystem.
 - `POSTGRES_CONNECTIONSTRING` - The connection string to the Postgres database.
 - `EXPIRY_TIMES` - A comma-separated list of minutes that pastes expire after. For example "90, 600" would be 1 hour 30 minutes, and 10 hours. The default for this setting is 720 minutes (12 hours)
 - `CLEANUP_SLEEPTIME` - Number of seconds to sleep in between checking for expired pastes. The default for this setting is 300 seconds.
