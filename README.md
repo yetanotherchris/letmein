@@ -19,7 +19,7 @@ Running the Docker image will start the Kestrel web server with letmein running.
 
 ### Quick start
 
-Letmein now supports two different ways to store your pastes: file and database. File is cloud based, database is Postgres.
+Letmein now supports 3 ways to store your pastes: local storage, cloud file store and database.
 
 #### Step 1. Configure a storage provider
 
