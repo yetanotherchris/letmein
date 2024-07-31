@@ -6,13 +6,13 @@
 
 Letmein is an encrypted notes service, similar to cryptobin.co. No encryption keys are stored in the database, and the encryption is performed in the browser. Notes last 12 hours by default, but this is configurable (see below) with the option to have multiple expiry times. A background service runs in the same process as the web server (in a separate thread), cleaning up expired notes every 5 minutes. This 5 minutes/300 second wait time is also configurable.
 
-The service is intended to be run using Docker stack, with Kestrel (Microsoft's cross-platform web server) and is currently tested on Linux but developed on Windows with Docker for Windows. 
+The service is intended to be run using a Docker stack, with Kestrel (Microsoft's cross-platform web server) and is currently tested on Linux but developed on Windows using Podman. 
 
 Running the Docker image will start the Kestrel web server with letmein running.
 
 ### Tech stack
 
-- .NET core 2.1
+- .NET 8
 - [Sjcl](https://github.com/bitwiseshiftleft/sjcl) Javascript library for encryption.
 - Postgres (using [Marten](https://github.com/JasperFx/marten))
 - Cloud storage (S3, Azure, Google) (using [CloudFileStore](https://github.com/yetanotherchris/CloudFileStore))
@@ -22,6 +22,11 @@ Running the Docker image will start the Kestrel web server with letmein running.
 Letmein now supports two different ways to store your pastes: file and database. File is cloud based, database is Postgres.
 
 #### Step 1. Configure a storage provider
+
+##### Local storage
+
+Pastes can be stored inside the `storage` directory inside the container, the full path is `/app/storage`. If you want to persist the pastes, simply map this as a volume.  
+You don't need to customise any environmental variables for this, it will launch using FileSystem by default, as the storage provider.
 
 ##### S3
 Add the following to your environmental variables
