@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# Documentation
+*.md
+LICENSE
+
+# Build outputs (Docker will build fresh)
+**/bin/
+**/obj/
+**/dist/
+
+# Node modules (Docker will install fresh)
+**/node_modules/
+
+# IDE and editor files
+.vs/
+.vscode/
+*.user
+*.suo
+*.cache
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Kubernetes
+k8/
+
+# Test results
+**/TestResults/
+*.trx
+
+# Temporary files
+*.tmp
+*.log
+*.swp
+*~

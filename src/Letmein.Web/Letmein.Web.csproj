@@ -1,16 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
-    <Version>99.88.77</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Guard.Net" Version="3.0.0" />
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="StructureMap" Version="4.7.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
   </ItemGroup>

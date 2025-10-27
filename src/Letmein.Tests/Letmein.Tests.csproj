@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,9 +11,9 @@
 
   <ItemGroup>
     <PackageReference Include="Marten" Version="7.26.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
