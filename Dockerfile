@@ -11,7 +11,7 @@ COPY src/Letmein.Web/wwwroot/ ./
 RUN npm run build
 
 # Build stage - .NET application
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy csproj files and restore dependencies (better layer caching)
@@ -27,14 +27,13 @@ COPY src/Letmein.Web/ ./src/Letmein.Web/
 COPY --from=frontend-build /src/dist/ ./src/Letmein.Web/wwwroot/dist/
 
 # Build and publish
-WORKDIR /src/src/Letmein.Web
-RUN dotnet publish -c Release -o /app/publish \
-    --no-restore \
-    --runtime linux-musl-x64 \
-    --self-contained false
+RUN dotnet publish src/Letmein.Web/Letmein.Web.csproj \
+    -c Release \
+    -o /app/publish \
+    --no-restore
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 LABEL maintainer="Chris Small"
 LABEL org.opencontainers.image.title="Letmein"
 LABEL org.opencontainers.image.description="Encrypted notes service with temporary storage"
@@ -42,17 +41,11 @@ LABEL org.opencontainers.image.source="https://github.com/yetanotherchris/letmei
 
 WORKDIR /app
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup && \
-    mkdir -p /app/storage && \
-    chown -R appuser:appgroup /app
-
 # Copy published application
-COPY --from=build --chown=appuser:appgroup /app/publish .
+COPY --from=build /app/publish .
 
-# Switch to non-root user
-USER appuser
+# Create storage directory
+RUN mkdir -p /app/storage
 
 # Expose port (Kestrel listens on 8080 by default in .NET 9)
 EXPOSE 8080
@@ -69,9 +62,5 @@ ENV ASPNETCORE_ENVIRONMENT=Production \
     HEADER_TEXT=letmein.io \
     HEADER_SUBTEXT="note encryption service" \
     FOOTER_TEXT="<a href=\"https://github.com/yetanotherchris/letmein\">Github source</a>&nbsp;|&nbsp;<a href=\"/FAQ\">FAQ</a>"
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
 
 ENTRYPOINT ["dotnet", "Letmein.Web.dll"]
