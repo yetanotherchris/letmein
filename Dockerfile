@@ -1,19 +1,17 @@
 # Build stage - Frontend assets
 FROM node:20-alpine AS frontend-build
-ARG VERSION=99.88.77
 WORKDIR /src
 
 # Copy package files for better layer caching
 COPY src/Letmein.Web/wwwroot/package*.json ./
-RUN npm ci --registry http://registry.npmjs.org/
+RUN npm ci
 
 # Copy remaining frontend files and build
 COPY src/Letmein.Web/wwwroot/ ./
-RUN ./node_modules/.bin/gulp --docker_tag ${VERSION}
+RUN npm run build
 
 # Build stage - .NET application
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
-ARG VERSION=99.88.77
 WORKDIR /src
 
 # Copy csproj files and restore dependencies (better layer caching)
@@ -26,7 +24,7 @@ COPY src/Letmein.Core/ ./src/Letmein.Core/
 COPY src/Letmein.Web/ ./src/Letmein.Web/
 
 # Copy built frontend assets from previous stage
-COPY --from=frontend-build /src/ ./src/Letmein.Web/wwwroot/
+COPY --from=frontend-build /src/dist/ ./src/Letmein.Web/wwwroot/dist/
 
 # Build and publish
 WORKDIR /src/src/Letmein.Web

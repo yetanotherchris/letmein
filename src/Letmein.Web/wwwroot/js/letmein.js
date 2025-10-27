@@ -168,3 +168,8 @@ class LoadView {
 		});
 	}
 }
+
+// Expose classes globally for inline scripts in views
+window.IndexView = IndexView;
+window.StoreView = StoreView;
+window.LoadView = LoadView;
