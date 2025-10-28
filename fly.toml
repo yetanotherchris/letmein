@@ -18,3 +18,6 @@ processes = [ "app" ]
 cpu_kind = "shared"
 cpus = 1
 memory = "256mb"
+
+[env]
+EXPIRY_TIMES = "1,60,720, 1440"
