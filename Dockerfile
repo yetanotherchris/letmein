@@ -15,6 +15,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # Copy csproj files and restore dependencies (better layer caching)
+COPY Directory.Packages.props ./
 COPY src/Letmein.Core/Letmein.Core.csproj src/Letmein.Core/
 COPY src/Letmein.Api/Letmein.Api.csproj src/Letmein.Api/
 RUN dotnet restore src/Letmein.Api/Letmein.Api.csproj
