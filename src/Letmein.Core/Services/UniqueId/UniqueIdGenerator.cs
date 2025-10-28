@@ -18,35 +18,65 @@ namespace Letmein.Core.Services.UniqueId
 
 		public string Generate(IdGenerationType idGenerationType)
 		{
-			string password = "";
+            /* Clash rates:
+				random-with-pronounceable - 4 random characters (a-z, A-Z, 0-9), and a pronounceable password (a non-dictionary word).
+					P = (1/64) * (1/64) * (1/64) * (1/64) * (1/500) (about 1 in 1 billion)
+
+				pronounceable - 8 character pronounceable password (a non-dictionary word).
+					P = (1/500) (about 1 in 500)
+
+				short-pronounceable - 5 character pronounceable password (a non-dictionary word).
+					P = (1/300) (about 1 in 300)
+
+				short-mixedcase - 4 random characters (a-z, A-Z, 0-9).
+					P = (1/64) * (1/64) * (1/64) * (1/64) (about 1 in 16 million)
+
+				shortcode - 2 numbers, 2 characters and 2 numbers. First two numbers are the 2 from the current time's millseconds, characters are 2 uppercase, 2 digits from the current time's seconds.
+					P = (1/1000) * (1/26) * (1/26) * (1/60) (about 1 in 40 million)
+
+				bips39-two-words
+					P = (1/2048) * (1/2048) (about 1 in 4 million)
+
+				bips39-two-words-and-number:
+					P = (1/2048) * (1/2048) * (1/9999) (about 1 in 40 billion)
+			 */
+            string id = "";
 
 			switch (idGenerationType)
 			{
-				case IdGenerationType.RandomWithPronounceable:
-					password = GetRandomCharacters(4) + "_" + GetPronounceable();
+                case IdGenerationType.RandomWithPronounceable:
+					id = GetRandomCharacters(4) + "_" + GetPronounceable();
 					break;
 
 				case IdGenerationType.Pronounceable:
-					password = GetPronounceable();
+					id = GetPronounceable();
 					break;
 
 				case IdGenerationType.ShortPronounceable:
-					password = GetShortPronounceable();
+					id = GetShortPronounceable();
 					break;
 
 				case IdGenerationType.ShortMixedCase:
-					password = GetRandomCharacters(4);
+					id = GetRandomCharacters(4);
 					break;
 
 				case IdGenerationType.ShortCode:
-					password = GetShortCode();
+					id = GetShortCode();
 					break;
 
-				default:
+                case IdGenerationType.Bip39TwoWords:
+                    id = Bip39Words.GetRandomWord() + "-" + Bip39Words.GetRandomWord();
+                    break;
+
+                case IdGenerationType.Bip39TwoWordsAndNumber:
+                    id = Bip39Words.GetRandomWord() + "-" + Bip39Words.GetRandomWord() + "-" + Bip39Words.GetFourDigitRandomNumber();
+                    break;
+
+                default:
 					throw new ArgumentOutOfRangeException(nameof(idGenerationType), idGenerationType, null);
 			}
 
-			return password;
+			return id;
 		}
 
 		private string GetShortPronounceable()

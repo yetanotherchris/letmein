@@ -44,13 +44,25 @@ namespace Letmein.Core.Configuration
                 {
                     result = IdGenerationType.ShortCode;
                 }
+                else if (idTypeValue == "short-pronounceable")
+                {
+                    result = IdGenerationType.ShortPronounceable;
+                }
                 else if (idTypeValue == "pronounceable")
                 {
                     result = IdGenerationType.Pronounceable;
                 }
-                else if (idTypeValue == "short-pronounceable")
+                else if (idTypeValue == "random-with-pronounceable")
                 {
-                    result = IdGenerationType.ShortPronounceable;
+                    result = IdGenerationType.RandomWithPronounceable;
+                }
+                else if (idTypeValue == "bips39-two-words")
+                {
+                    result = IdGenerationType.Bip39TwoWords;
+                }
+                else if (idTypeValue == "bips39-two-words-and-number")
+                {
+                    result = IdGenerationType.Bip39TwoWordsAndNumber;
                 }
                 else
                 {

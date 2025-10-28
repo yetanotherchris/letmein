@@ -27,10 +27,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			configDictionary.Add("postgres_connectionSTRING", "connection string");
 			configDictionary.Add("CLEANUP_SLEEPTIME", "60");
 			configDictionary.Add("EXPIRY_TIMES", "1, 120");
-			configDictionary.Add("PAGE_title", "page title");
-			configDictionary.Add("HEADER_TEXT", "header text");
-			configDictionary.Add("HEADER_SUBTEXT", "subtext");
-			configDictionary.Add("FOOTER_TEXT", "footer");
 
 			var configRoot = GetConfigurationRoot(configDictionary);
 
@@ -99,13 +95,15 @@ namespace Letmein.Tests.Unit.Core.Configuration
 		}
 
 		[Theory]
-		[InlineData("default", IdGenerationType.RandomWithPronounceable)]
+		[InlineData("default", IdGenerationType.Bip39TwoWords)]
 		[InlineData("random-with-pronounceable", IdGenerationType.RandomWithPronounceable)]
 		[InlineData("pronounceabLE", IdGenerationType.Pronounceable)]
 		[InlineData("short-PROnounceable", IdGenerationType.ShortPronounceable)]
 		[InlineData("short-mixedcase", IdGenerationType.ShortMixedCase)]
 		[InlineData("shortcode", IdGenerationType.ShortCode)]
-		public void should_parse_idgenerationtype(string idType, IdGenerationType expectedGenerationType)
+        [InlineData("bips39-two-words", IdGenerationType.Bip39TwoWords)]
+        [InlineData("bips39-two-words-and-number", IdGenerationType.Bip39TwoWordsAndNumber)]
+        public void should_parse_idgenerationtype(string idType, IdGenerationType expectedGenerationType)
 		{
 			// Arrange
 			var configDictionary = new Dictionary<string, string>();

@@ -44,11 +44,7 @@ namespace Letmein.Api
         private static LetmeinConfiguration Configuration(IServiceCollection services, IConfigurationRoot configRoot)
         {
             // ILetmeinConfiguration and ConfigurationRoot is manually injected into the DI.
-            // This is because there's lots of custom parsing of env var names and values,
-            // that make the env vars more succinct but make IOptions usage impossible.
-            // For example:
-            // - PAGE_TITLE would end up being ViewConfig__PageTitle
-            // - EXPIRY_TIMES would end up being 2+ env vars: ExpiryTimes__0=1,ExpiryTimes__1=360
+            // This is because there's lots of custom parsing of env var names and values.
             var letmeinConfig = LetmeinConfigurationBuilder.Build(configRoot);
             services.AddSingleton<IConfigurationRoot>(provider => configRoot);
             services.AddSingleton<ILetmeinConfiguration>(provider => letmeinConfig);

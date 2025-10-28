@@ -10,11 +10,7 @@
         "REPOSITORY_TYPE": "FileSystem",
         "EXPIRY_TIMES": "1, 60, 720, 10080",
         "CLEANUP_SLEEPTIME": "60",
-        "ID_TYPE": "shortcode",
-        "PAGE_TITLE": "letmein.io",
-        "HEADER_TEXT": "Using Filesystem",
-        "HEADER_SUBTEXT": "Writing to disk",
-        "FOOTER_TEXT": "footer here",
+        "ID_TYPE": "default"
       }
     },
     "Postgres": {
@@ -28,10 +24,6 @@
         "EXPIRY_TIMES": "1, 60, 720, 10080",
         "CLEANUP_SLEEPTIME": "60",
         "ID_TYPE": "shortcode",
-        "PAGE_TITLE": "letmein.io",
-        "HEADER_TEXT": "title here",
-        "HEADER_SUBTEXT": "subtext here",
-        "FOOTER_TEXT": "footer here",
         "Azure__ContainerName": "(Change your repository to AzureBlobs first)",
         "Azure__ConnectionString": "(...and set your connection string here)"
       }
