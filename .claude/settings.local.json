@@ -14,7 +14,10 @@
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
       "*",
-      "Bash(dotnet list:*)"
+      "Bash(dotnet list:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
