@@ -24,6 +24,9 @@ RUN dotnet restore src/Letmein.Api/Letmein.Api.csproj
 COPY src/Letmein.Core/ ./src/Letmein.Core/
 COPY src/Letmein.Api/ ./src/Letmein.Api/
 
+# Copy built frontend to API's wwwroot
+COPY --from=frontend-build /src/dist ./src/Letmein.Api/wwwroot
+
 # Build and publish
 RUN dotnet publish src/Letmein.Api/Letmein.Api.csproj \
     -c Release \
@@ -45,16 +48,15 @@ COPY --from=build /app/publish .
 # Create storage directory
 RUN mkdir -p /app/storage
 
-# Expose port (Kestrel listens on 8080 by default in .NET 9)
-EXPOSE 8080
-
 # Environment variables
 ENV ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_HTTP_PORTS=8080 \
+    ASPNETCORE_URLS=http://+:8080 \
     REPOSITORY_TYPE=FileSystem \
     POSTGRES_CONNECTIONSTRING="" \
     EXPIRY_TIMES=720 \
     CLEANUP_SLEEPTIME=300 \
     ID_TYPE=default
+
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "Letmein.Api.dll"]

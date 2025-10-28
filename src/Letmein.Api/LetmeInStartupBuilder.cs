@@ -43,15 +43,12 @@ namespace Letmein.Api
             // Add CORS
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowReactApp", policy =>
+                options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.SetIsOriginAllowed(origin =>
-                          {
-                              var uri = new Uri(origin);
-                              return uri.Host == "localhost" || uri.Host == "127.0.0.1";
-                          })
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    policy.WithOrigins(
+                        configRoot["Cors:AllowedOrigins"]?.Split(',') ?? new[] { "http://localhost:5173", "http://localhost:3000" })
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
                 });
             });
 
@@ -83,11 +80,17 @@ namespace Letmein.Api
                 });
             }
 
-            app.UseCors("AllowReactApp");
+            app.UseCors("AllowFrontend");
+
+            // Serve static files from wwwroot
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");
             });
         }
     }
