@@ -2,16 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Guard.Net" />
+    <PackageReference Include="Quartz" />
+    <PackageReference Include="Quartz.Extensions.Hosting" />
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" />
     <PackageReference Include="StructureMap" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
   <ItemGroup>
