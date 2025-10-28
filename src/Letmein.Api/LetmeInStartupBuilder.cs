@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +45,11 @@ namespace Letmein.Api
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173", "http://localhost:5000")
+                    policy.SetIsOriginAllowed(origin =>
+                          {
+                              var uri = new Uri(origin);
+                              return uri.Host == "localhost" || uri.Host == "127.0.0.1";
+                          })
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
