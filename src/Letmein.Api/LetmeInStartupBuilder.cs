@@ -39,6 +39,17 @@ namespace Letmein.Api
             services.AddRouting();
             services.AddControllers();
 
+            // Add CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173", "http://localhost:5000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             // Add API documentation
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
@@ -67,6 +78,7 @@ namespace Letmein.Api
                 });
             }
 
+            app.UseCors("AllowReactApp");
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
