@@ -3,11 +3,11 @@ FROM node:20-alpine AS frontend-build
 WORKDIR /src
 
 # Copy package files for better layer caching
-COPY src/Letmein.Web/wwwroot/package*.json ./
+COPY src/Letmein.ReactWeb/package*.json ./
 RUN npm ci
 
 # Copy remaining frontend files and build
-COPY src/Letmein.Web/wwwroot/ ./
+COPY src/Letmein.ReactWeb/ ./
 RUN npm run build
 
 # Build stage - .NET application
@@ -16,18 +16,15 @@ WORKDIR /src
 
 # Copy csproj files and restore dependencies (better layer caching)
 COPY src/Letmein.Core/Letmein.Core.csproj src/Letmein.Core/
-COPY src/Letmein.Web/Letmein.Web.csproj src/Letmein.Web/
-RUN dotnet restore src/Letmein.Web/Letmein.Web.csproj
+COPY src/Letmein.Api/Letmein.Api.csproj src/Letmein.Api/
+RUN dotnet restore src/Letmein.Api/Letmein.Api.csproj
 
-# Copy source files (excluding wwwroot for now)
+# Copy source files
 COPY src/Letmein.Core/ ./src/Letmein.Core/
-COPY src/Letmein.Web/ ./src/Letmein.Web/
-
-# Copy built frontend assets from previous stage
-COPY --from=frontend-build /src/dist/ ./src/Letmein.Web/wwwroot/dist/
+COPY src/Letmein.Api/ ./src/Letmein.Api/
 
 # Build and publish
-RUN dotnet publish src/Letmein.Web/Letmein.Web.csproj \
+RUN dotnet publish src/Letmein.Api/Letmein.Api.csproj \
     -c Release \
     -o /app/publish \
     --no-restore
@@ -57,10 +54,6 @@ ENV ASPNETCORE_ENVIRONMENT=Production \
     POSTGRES_CONNECTIONSTRING="" \
     EXPIRY_TIMES=720 \
     CLEANUP_SLEEPTIME=300 \
-    ID_TYPE=default \
-    PAGE_TITLE=letmein.io \
-    HEADER_TEXT=letmein.io \
-    HEADER_SUBTEXT="note encryption service" \
-    FOOTER_TEXT="<a href=\"https://github.com/yetanotherchris/letmein\">Github source</a>&nbsp;|&nbsp;<a href=\"/FAQ\">FAQ</a>"
+    ID_TYPE=default
 
-ENTRYPOINT ["dotnet", "Letmein.Web.dll"]
+ENTRYPOINT ["dotnet", "Letmein.Api.dll"]

@@ -255,3 +255,4 @@ ModelManifest.xml
 # Vite build output
 **/wwwroot/dist/
 src/Letmein.ReactWeb/.claude/settings.local.json
+.claude/settings.local.json

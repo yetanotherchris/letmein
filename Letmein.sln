@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Letmein.Core", "src\Letmein
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Letmein.Tests", "src\Letmein.Tests\Letmein.Tests.csproj", "{04D7639F-9AEF-458D-ABD9-5D9FD92027EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Letmein.Web", "src\Letmein.Web\Letmein.Web.csproj", "{5C0157CB-5155-4F94-B449-E6D9ED68261E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Letmein.Api", "src\Letmein.Api\Letmein.Api.csproj", "{5C0157CB-5155-4F94-B449-E6D9ED68261E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
