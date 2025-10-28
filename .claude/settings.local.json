@@ -6,7 +6,14 @@
       "Bash(dotnet build:*)",
       "Bash(dotnet add:*)",
       "Bash(dotnet test:*)",
-      "Bash(dotnet restore:*)"
+      "Bash(dotnet restore:*)",
+      "Bash(npm create:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "*"
     ],
     "deny": [],
     "ask": []
