@@ -193,9 +193,9 @@ namespace Letmein.Api
 			// Configure Quartz
 			services.AddQuartz(q =>
 			{
-				var jobKey = new JobKey("PastesCleanupJob");
+				var jobKey = new JobKey("NotesCleanupJob");
 
-				q.AddJob<PastesCleanupJob>(opts => opts.WithIdentity(jobKey));
+				q.AddJob<NotesCleanupJob>(opts => opts.WithIdentity(jobKey));
 
 				// Try to parse as TimeSpan first
 				if (TimeSpan.TryParse(schedule, out TimeSpan interval))
@@ -203,7 +203,7 @@ namespace Letmein.Api
 					// Use SimpleSchedule with the TimeSpan interval
 					q.AddTrigger(opts => opts
 						.ForJob(jobKey)
-						.WithIdentity("PastesCleanupJob-trigger")
+						.WithIdentity("NotesCleanupJob-trigger")
 						.WithSimpleSchedule(x => x
 							.WithInterval(interval)
 							.RepeatForever())
@@ -215,7 +215,7 @@ namespace Letmein.Api
 					// Assume it's a cron expression and let Quartz validate it
 					q.AddTrigger(opts => opts
 						.ForJob(jobKey)
-						.WithIdentity("PastesCleanupJob-trigger")
+						.WithIdentity("NotesCleanupJob-trigger")
 						.WithCronSchedule(schedule)
 						.WithDescription($"Schedule: {schedule}")
 					);

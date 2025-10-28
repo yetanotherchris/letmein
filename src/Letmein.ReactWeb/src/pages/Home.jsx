@@ -55,7 +55,7 @@ export default function Home() {
       const cipherJson = sjcl.encrypt(password, text);
 
       // Store the encrypted data
-      const response = await api.storePaste(cipherJson, parseInt(expiryTime));
+      const response = await api.storeNote(cipherJson, parseInt(expiryTime));
 
       setResult({
         friendlyId: response.friendlyId,

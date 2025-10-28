@@ -19,12 +19,12 @@ export default function Decrypt() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadPaste();
+    loadNote();
   }, [id]);
 
-  const loadPaste = async () => {
+  const loadNote = async () => {
     try {
-      const data = await api.loadPaste(id);
+      const data = await api.loadNote(id);
       setCipherJson(data.cipherJson);
       setExpiryDate(data.expiryDate);
       setLoading(false);
@@ -62,7 +62,7 @@ export default function Decrypt() {
     }
 
     try {
-      await api.deletePaste(id);
+      await api.deleteNote(id);
       showToast('Note deleted successfully', 'success');
       setTimeout(() => {
         navigate('/');

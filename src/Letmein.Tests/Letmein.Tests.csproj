@@ -10,15 +10,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Marten" Version="7.26.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.0" />
-    <PackageReference Include="Moq" Version="4.20.70" />
-    <PackageReference Include="NSubstitute" Version="5.1.0" />
-    <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="xunit" Version="2.9.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="Marten" />
+    <PackageReference Include="MartinCostello.Logging.XUnit" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

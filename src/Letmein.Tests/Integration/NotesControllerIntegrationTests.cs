@@ -10,13 +10,13 @@ using Xunit.Abstractions;
 
 namespace Letmein.Tests.Integration
 {
-    public class PastesControllerIntegrationTests : IClassFixture<ApiWebApplicationFactory>
+    public class NotesControllerIntegrationTests : IClassFixture<ApiWebApplicationFactory>
     {
         private readonly ApiWebApplicationFactory _factory;
         private readonly HttpClient _client;
         private readonly ITestOutputHelper _output;
 
-        public PastesControllerIntegrationTests(ApiWebApplicationFactory factory, ITestOutputHelper output)
+        public NotesControllerIntegrationTests(ApiWebApplicationFactory factory, ITestOutputHelper output)
         {
             _factory = factory;
             _output = output;
@@ -27,7 +27,7 @@ namespace Letmein.Tests.Integration
         public async Task GetExpiryTimes_ReturnsOkWithFormattedExpiryTimes()
         {
             // Act
-            var response = await _client.GetAsync("/api/pastes/expiry-times");
+            var response = await _client.GetAsync("/api/notes/expiry-times");
             var content = await response.Content.ReadAsStringAsync();
             _output.WriteLine($"Response: {content}");
 
@@ -64,7 +64,7 @@ namespace Letmein.Tests.Integration
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             // Act
-            var response = await _client.PostAsync("/api/pastes", httpContent);
+            var response = await _client.PostAsync("/api/notes", httpContent);
             var content = await response.Content.ReadAsStringAsync();
             _output.WriteLine($"Response: {content}");
 
@@ -91,7 +91,7 @@ namespace Letmein.Tests.Integration
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             // Act
-            var response = await _client.PostAsync("/api/pastes", httpContent);
+            var response = await _client.PostAsync("/api/notes", httpContent);
             var content = await response.Content.ReadAsStringAsync();
             _output.WriteLine($"Response: {content}");
 
@@ -116,7 +116,7 @@ namespace Letmein.Tests.Integration
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
 
             // Act
-            var response = await _client.PostAsync("/api/pastes", httpContent);
+            var response = await _client.PostAsync("/api/notes", httpContent);
             var content = await response.Content.ReadAsStringAsync();
             _output.WriteLine($"Response: {content}");
 
@@ -130,7 +130,7 @@ namespace Letmein.Tests.Integration
         [Fact]
         public async Task GetLoad_WithValidId_ReturnsOkWithEncryptedData()
         {
-            // Arrange - First create a paste
+            // Arrange - First create a note
             var storeRequest = new
             {
                 cipherJson = "{\"iv\":\"test-iv\",\"ct\":\"encrypted-content\"}",
@@ -139,15 +139,15 @@ namespace Letmein.Tests.Integration
 
             var json = JsonSerializer.Serialize(storeRequest);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var storeResponse = await _client.PostAsync("/api/pastes", httpContent);
+            var storeResponse = await _client.PostAsync("/api/notes", httpContent);
             var storeContent = await storeResponse.Content.ReadAsStringAsync();
             var storeResult = JsonSerializer.Deserialize<JsonElement>(storeContent);
             var friendlyId = storeResult.GetProperty("friendlyId").GetString();
 
-            _output.WriteLine($"Created paste with ID: {friendlyId}");
+            _output.WriteLine($"Created note with ID: {friendlyId}");
 
-            // Act - Load the paste
-            var loadResponse = await _client.GetAsync($"/api/pastes/{friendlyId}");
+            // Act - Load the note
+            var loadResponse = await _client.GetAsync($"/api/notes/{friendlyId}");
             var loadContent = await loadResponse.Content.ReadAsStringAsync();
             _output.WriteLine($"Load response: {loadContent}");
 
@@ -164,7 +164,7 @@ namespace Letmein.Tests.Integration
         public async Task GetLoad_WithInvalidId_ReturnsNotFound()
         {
             // Act
-            var response = await _client.GetAsync("/api/pastes/nonexistent-id");
+            var response = await _client.GetAsync("/api/notes/nonexistent-id");
             var content = await response.Content.ReadAsStringAsync();
             _output.WriteLine($"Response: {content}");
 
@@ -172,25 +172,25 @@ namespace Letmein.Tests.Integration
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
 
             var result = JsonSerializer.Deserialize<JsonElement>(content);
-            result.GetProperty("error").GetString().ShouldBe("The url is invalid or the paste has expired.");
+            result.GetProperty("error").GetString().ShouldBe("The url is invalid or the note has expired.");
         }
 
         [Fact]
         public async Task GetLoad_WithEmptyId_ReturnsMethodNotAllowed()
         {
             // Act
-            var response = await _client.GetAsync("/api/pastes/");
+            var response = await _client.GetAsync("/api/notes/");
 
             // Assert
-            // This returns MethodNotAllowed because the route matches /api/pastes but with wrong HTTP method
-            // GET /api/pastes/ would need to match a POST endpoint
+            // This returns MethodNotAllowed because the route matches /api/notes but with wrong HTTP method
+            // GET /api/notes/ would need to match a POST endpoint
             response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
         }
 
         [Fact]
-        public async Task DeletePaste_WithValidId_ReturnsOkWithSuccessMessage()
+        public async Task DeleteNote_WithValidId_ReturnsOkWithSuccessMessage()
         {
-            // Arrange - First create a paste
+            // Arrange - First create a note
             var storeRequest = new
             {
                 cipherJson = "{\"iv\":\"test\",\"ct\":\"encrypted-data\"}",
@@ -199,15 +199,15 @@ namespace Letmein.Tests.Integration
 
             var json = JsonSerializer.Serialize(storeRequest);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var storeResponse = await _client.PostAsync("/api/pastes", httpContent);
+            var storeResponse = await _client.PostAsync("/api/notes", httpContent);
             var storeContent = await storeResponse.Content.ReadAsStringAsync();
             var storeResult = JsonSerializer.Deserialize<JsonElement>(storeContent);
             var friendlyId = storeResult.GetProperty("friendlyId").GetString();
 
-            _output.WriteLine($"Created paste with ID: {friendlyId}");
+            _output.WriteLine($"Created note with ID: {friendlyId}");
 
-            // Act - Delete the paste
-            var deleteResponse = await _client.DeleteAsync($"/api/pastes/{friendlyId}");
+            // Act - Delete the note
+            var deleteResponse = await _client.DeleteAsync($"/api/notes/{friendlyId}");
             var deleteContent = await deleteResponse.Content.ReadAsStringAsync();
             _output.WriteLine($"Delete response: {deleteContent}");
 
@@ -217,16 +217,16 @@ namespace Letmein.Tests.Integration
             var deleteResult = JsonSerializer.Deserialize<JsonElement>(deleteContent);
             deleteResult.GetProperty("message").GetString().ShouldBe("Item deleted successfully");
 
-            // Verify the paste is actually deleted
-            var loadResponse = await _client.GetAsync($"/api/pastes/{friendlyId}");
+            // Verify the note is actually deleted
+            var loadResponse = await _client.GetAsync($"/api/notes/{friendlyId}");
             loadResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public async Task DeletePaste_WithInvalidId_ReturnsOkIdempotently()
+        public async Task DeleteNote_WithInvalidId_ReturnsOkIdempotently()
         {
             // Act
-            var response = await _client.DeleteAsync("/api/pastes/nonexistent-id-12345");
+            var response = await _client.DeleteAsync("/api/notes/nonexistent-id-12345");
             var content = await response.Content.ReadAsStringAsync();
             _output.WriteLine($"Response: {content}");
 
@@ -253,36 +253,36 @@ namespace Letmein.Tests.Integration
             // Act & Assert - Store
             var json = JsonSerializer.Serialize(storeRequest);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-            var storeResponse = await _client.PostAsync("/api/pastes", httpContent);
+            var storeResponse = await _client.PostAsync("/api/notes", httpContent);
             storeResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var storeContent = await storeResponse.Content.ReadAsStringAsync();
             var storeResult = JsonSerializer.Deserialize<JsonElement>(storeContent);
             var friendlyId = storeResult.GetProperty("friendlyId").GetString();
 
-            _output.WriteLine($"Stored paste with ID: {friendlyId}");
+            _output.WriteLine($"Stored note with ID: {friendlyId}");
 
             // Act & Assert - Load
-            var loadResponse = await _client.GetAsync($"/api/pastes/{friendlyId}");
+            var loadResponse = await _client.GetAsync($"/api/notes/{friendlyId}");
             loadResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var loadContent = await loadResponse.Content.ReadAsStringAsync();
             var loadResult = JsonSerializer.Deserialize<JsonElement>(loadContent);
             loadResult.GetProperty("cipherJson").GetString().ShouldBe(cipherData);
 
-            _output.WriteLine("Successfully loaded paste");
+            _output.WriteLine("Successfully loaded note");
 
             // Act & Assert - Delete
-            var deleteResponse = await _client.DeleteAsync($"/api/pastes/{friendlyId}");
+            var deleteResponse = await _client.DeleteAsync($"/api/notes/{friendlyId}");
             deleteResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            _output.WriteLine("Successfully deleted paste");
+            _output.WriteLine("Successfully deleted note");
 
             // Verify deletion
-            var verifyResponse = await _client.GetAsync($"/api/pastes/{friendlyId}");
+            var verifyResponse = await _client.GetAsync($"/api/notes/{friendlyId}");
             verifyResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
 
-            _output.WriteLine("Verified paste was deleted");
+            _output.WriteLine("Verified note was deleted");
         }
     }
 }

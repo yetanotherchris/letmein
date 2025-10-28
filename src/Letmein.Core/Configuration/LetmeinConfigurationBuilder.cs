@@ -24,11 +24,6 @@ namespace Letmein.Core.Configuration
             config.ExpiryTimes = ParseExpiryTimes(configRoot["EXPIRY_TIMES"]);
             config.IdGenerationType = ParseIdGenerationType(configRoot);
 
-            config.ViewConfig = new ViewConfig();
-            config.ViewConfig.PageTitle = configRoot["PAGE_TITLE"];
-            config.ViewConfig.HeaderText = configRoot["HEADER_TEXT"];
-            config.ViewConfig.HeaderSubtext = configRoot["HEADER_SUBTEXT"];
-            config.ViewConfig.FooterText = configRoot["FOOTER_TEXT"];
 
             return config;
         }

@@ -11,12 +11,12 @@ namespace Letmein.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PastesController : ControllerBase
+    public class NotesController : ControllerBase
     {
         private readonly ITextEncryptionService _service;
         private readonly ILetmeinConfiguration _configuration;
 
-        public PastesController(ITextEncryptionService service, ILetmeinConfiguration configuration)
+        public NotesController(ITextEncryptionService service, ILetmeinConfiguration configuration)
         {
             _service = service;
             _configuration = configuration;
@@ -83,12 +83,12 @@ namespace Letmein.Api.Controllers
             EncryptedItem encryptedItem = await _service.LoadEncryptedJson(friendlyId);
             if (encryptedItem == null)
             {
-                return NotFound(new { error = "The url is invalid or the paste has expired." });
+                return NotFound(new { error = "The url is invalid or the note has expired." });
             }
 
             if (encryptedItem.ExpiresOn <= DateTime.UtcNow)
             {
-                return Gone(new { error = "The paste has expired." });
+                return Gone(new { error = "The note has expired." });
             }
 
             return Ok(new
@@ -100,7 +100,7 @@ namespace Letmein.Api.Controllers
         }
 
         /// <summary>
-        /// Delete a paste by ID
+        /// Delete a note by ID
         /// </summary>
         [HttpDelete("{friendlyId}")]
         public async Task<IActionResult> Delete(string friendlyId)

@@ -9,12 +9,12 @@ using Quartz;
 namespace Letmein.Api.Jobs
 {
     [DisallowConcurrentExecution]
-    public class PastesCleanupJob : IJob
+    public class NotesCleanupJob : IJob
     {
-        private readonly ILogger<PastesCleanupJob> _logger;
+        private readonly ILogger<NotesCleanupJob> _logger;
         private readonly ITextRepository _textRepository;
 
-        public PastesCleanupJob(ILogger<PastesCleanupJob> logger, ITextRepository textRepository)
+        public NotesCleanupJob(ILogger<NotesCleanupJob> logger, ITextRepository textRepository)
         {
             _logger = logger;
             _textRepository = textRepository;
@@ -22,7 +22,7 @@ namespace Letmein.Api.Jobs
 
         public async Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation("Starting pastes cleanup job...");
+            _logger.LogInformation("Starting notes cleanup job...");
 
             try
             {
@@ -38,11 +38,11 @@ namespace Letmein.Api.Jobs
                         item.FriendlyId, item.CreatedOn);
                 }
 
-                _logger.LogInformation("Pastes cleanup job completed successfully");
+                _logger.LogInformation("Notes cleanup job completed successfully");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred during pastes cleanup job");
+                _logger.LogError(ex, "Error occurred during notes cleanup job");
                 throw;
             }
         }

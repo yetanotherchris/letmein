@@ -7,23 +7,23 @@ using Letmein.Core.Services;
 using Letmein.Tests.Unit.MocksAndStubs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
+using NSubstitute;
 using Shouldly;
 using Xunit;
 
 namespace Letmein.Tests.Unit.Api
 {
-	public class PastesControllerTests
+	public class NotesControllerTests
 	{
-		private PastesController _controller;
-		private Mock<ITextEncryptionService> _encryptionService;
+		private NotesController _controller;
+		private ITextEncryptionService _encryptionService;
 		private ConfigurationStub _configuration;
 
-		public PastesControllerTests()
+		public NotesControllerTests()
 		{
 			_configuration = new ConfigurationStub();
-			_encryptionService = new Mock<ITextEncryptionService>();
-			_controller = new PastesController(_encryptionService.Object, _configuration);
+			_encryptionService = Substitute.For<ITextEncryptionService>();
+			_controller = new NotesController(_encryptionService, _configuration);
 		}
 
 		[Theory]
@@ -57,8 +57,7 @@ namespace Letmein.Tests.Unit.Api
 			_configuration.AddExpiryTime(expiresInMinutes);
 
 			string json = "{json}";
-			_encryptionService.Setup(x => x.StoredEncryptedJson(json, "", expiresInMinutes))
-							  .ReturnsAsync("the-friendlyid");
+			_encryptionService.StoredEncryptedJson(json, "", expiresInMinutes).Returns("the-friendlyid");
 
 			var request = new StoreRequest
 			{
@@ -88,8 +87,8 @@ namespace Letmein.Tests.Unit.Api
 		{
 			// Arrange
 			_configuration.AddExpiryTime(minutes);
-			_encryptionService.Setup(x => x.StoredEncryptedJson(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-							  .ReturnsAsync("some-id");
+			_encryptionService.StoredEncryptedJson(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>())
+							  .Returns("some-id");
 
 			var request = new StoreRequest
 			{
@@ -161,7 +160,7 @@ namespace Letmein.Tests.Unit.Api
 				ExpiresOn = DateTime.UtcNow.AddDays(1)
 			};
 
-			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).ReturnsAsync(expectedItem);
+			_encryptionService.LoadEncryptedJson("the-friendlyid").Returns(expectedItem);
 
 			// Act
 			IActionResult actionResult = await _controller.Load("the-friendlyid");
@@ -193,8 +192,7 @@ namespace Letmein.Tests.Unit.Api
 		public async Task Load_should_return_notfound_when_service_returns_null()
 		{
 			// Arrange
-			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid"))
-							  .ReturnsAsync((EncryptedItem)null);
+			_encryptionService.LoadEncryptedJson("the-friendlyid").Returns((EncryptedItem)null);
 
 			// Act
 			IActionResult actionResult = await _controller.Load("the-friendlyid");
@@ -215,7 +213,7 @@ namespace Letmein.Tests.Unit.Api
 				ExpiresOn = DateTime.UtcNow.AddYears(-1)
 			};
 
-			_encryptionService.Setup(x => x.LoadEncryptedJson("the-friendlyid")).ReturnsAsync(expiredItem);
+			_encryptionService.LoadEncryptedJson("the-friendlyid").Returns(expiredItem);
 
 			// Act
 			IActionResult actionResult = await _controller.Load("the-friendlyid");
@@ -230,7 +228,7 @@ namespace Letmein.Tests.Unit.Api
 		public async Task Delete_should_return_ok_when_successful()
 		{
 			// Arrange
-			_encryptionService.Setup(x => x.Delete("the-friendlyid")).ReturnsAsync(true);
+			_encryptionService.Delete("the-friendlyid").Returns(true);
 
 			// Act
 			IActionResult actionResult = await _controller.Delete("the-friendlyid");
@@ -238,14 +236,14 @@ namespace Letmein.Tests.Unit.Api
 			// Assert
 			actionResult.ShouldNotBeNull();
 			actionResult.ShouldBeOfType<OkObjectResult>();
-			_encryptionService.Verify(x => x.Delete("the-friendlyid"));
+			await _encryptionService.Received(1).Delete("the-friendlyid");
 		}
 
 		[Fact]
 		public async Task Delete_should_return_notfound_when_service_fails()
 		{
 			// Arrange
-			_encryptionService.Setup(x => x.Delete("the-friendlyid")).ReturnsAsync(false);
+			_encryptionService.Delete("the-friendlyid").Returns(false);
 
 			// Act
 			IActionResult actionResult = await _controller.Delete("the-friendlyid");
