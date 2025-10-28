@@ -1,6 +1,6 @@
 # Letmein
 
-[![GHCR Latest](https://ghcr-badge.egpl.dev/yetanotherchris/letmein/latest_tag?trim=major&label=latest)](https://github.com/yetanotherchris/letmein/pkgs/container/letmein)
+[![GHCR Latest](https://img.shields.io/badge/GHCR-latest-blue?logo=github&label=letmein)](https://github.com/yetanotherchris/letmein/pkgs/container/letmein)
 
 ### What is it?
 
