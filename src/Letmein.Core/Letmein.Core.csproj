@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Services\UniqueId\english-words.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Services\UniqueId\english-words.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CloudFileStore" />
     <PackageReference Include="Marten" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
