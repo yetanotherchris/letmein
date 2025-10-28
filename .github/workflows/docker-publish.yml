@@ -46,10 +46,10 @@ jobs:
 
       - name: Build frontend assets for tests
         run: |
-          cd src/Letmein.Web/wwwroot
+          cd src/Letmein.ReactWeb
           npm ci
           npm run build
-          cd ../../..
+          cd ../..
 
       - name: Test
         run: dotnet test --no-build --verbosity normal

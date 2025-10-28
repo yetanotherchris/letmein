@@ -6,7 +6,7 @@ using Letmein.Core.Services;
 using Letmein.Core.Services.UniqueId;
 using Letmein.Tests.Unit.MocksAndStubs;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using Serilog;
 using Shouldly;
 using Xunit;
@@ -15,7 +15,7 @@ namespace Letmein.Tests.Unit.Core.Services
 {
 	public class TextEncryptionServiceTests
 	{
-		private Mock<IUniqueIdGenerator> _uniqueIdGeneratorMock;
+		private IUniqueIdGenerator _uniqueIdGeneratorMock;
 		private TextRepositoryMock _repository;
 		private TextEncryptionService _encryptionService;
 		private ConfigurationStub _configuration;
@@ -25,9 +25,9 @@ namespace Letmein.Tests.Unit.Core.Services
 			ILoggerFactory loggingFactory = new LoggerFactory().AddSerilog();
 
 			_configuration = new ConfigurationStub();
-			_uniqueIdGeneratorMock = new Mock<IUniqueIdGenerator>();
+			_uniqueIdGeneratorMock = Substitute.For<IUniqueIdGenerator>();
 			_repository = new TextRepositoryMock();
-			_encryptionService = new TextEncryptionService(_uniqueIdGeneratorMock.Object, _repository, loggingFactory, _configuration);
+			_encryptionService = new TextEncryptionService(_uniqueIdGeneratorMock, _repository, loggingFactory, _configuration);
 		}
 
 		[Fact]
@@ -60,7 +60,7 @@ namespace Letmein.Tests.Unit.Core.Services
 			string friendlyId = "";
 			string expectedId = "short-id";
 			_configuration.IdGenerationType = IdGenerationType.ShortCode;
-			_uniqueIdGeneratorMock.Setup(x => x.Generate(IdGenerationType.ShortCode)).Returns(expectedId);
+			_uniqueIdGeneratorMock.Generate(IdGenerationType.ShortCode).Returns(expectedId);
 
 			// Act
 			string newId = await _encryptionService.StoredEncryptedJson(json, friendlyId, 90);

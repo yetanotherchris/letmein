@@ -1,0 +1,38 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Core Dependencies -->
+    <PackageVersion Include="CloudFileStore" Version="8.0.17" />
+    <PackageVersion Include="Marten" Version="8.13.3" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+
+    <!-- Web/API Dependencies -->
+    <PackageVersion Include="Guard.Net" Version="3.0.0" />
+    <PackageVersion Include="StructureMap.Microsoft.DependencyInjection" Version="2.0.0" />
+    <PackageVersion Include="StructureMap" Version="4.7.1" />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+
+    <!-- API-specific Dependencies -->
+    <PackageVersion Include="Quartz" Version="3.15.1" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.15.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+
+    <!-- Test Dependencies -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
+    <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.6.0" />
+    <PackageVersion Include="NSubstitute" Version="5.1.0" />
+    <PackageVersion Include="Shouldly" Version="4.2.1" />
+    <PackageVersion Include="xunit" Version="2.9.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+</Project>

@@ -8,7 +8,6 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 	{
 		public string PostgresConnectionString { get; set; }
 		public int CleanupSleepTime { get; set; }
-		public ViewConfig ViewConfig { get; set; }
 		private List<int> _expiryTimes;
 		public IdGenerationType IdGenerationType { get; set; }
 
@@ -23,7 +22,6 @@ namespace Letmein.Tests.Unit.MocksAndStubs
 
 		public ConfigurationStub()
 		{
-			ViewConfig = new ViewConfig();
 			_expiryTimes = new List<int>();
 		}
 

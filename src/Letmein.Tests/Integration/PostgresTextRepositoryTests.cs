@@ -13,7 +13,7 @@ namespace Letmein.Tests.Integration
 	// podman run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres
 	// docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres
 	
-	public class PostgresTextRepositoryTests
+	public class PostgresTextRepositoryTests : IAsyncLifetime
 	{
 		private PostgresTextRepository _repository;
 
@@ -30,7 +30,16 @@ namespace Letmein.Tests.Integration
 			});
 
 			_repository = new PostgresTextRepository(store);
-			_repository.ClearDatabase();
+		}
+
+		public async Task InitializeAsync()
+		{
+			await _repository.ClearDatabase();
+		}
+
+		public Task DisposeAsync()
+		{
+			return Task.CompletedTask;
 		}
 
 		[Fact]

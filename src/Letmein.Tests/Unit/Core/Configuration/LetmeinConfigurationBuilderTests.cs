@@ -41,12 +41,6 @@ namespace Letmein.Tests.Unit.Core.Configuration
 			config.PostgresConnectionString.ShouldBe("connection string");
 			config.CleanupSleepTime.ShouldBe(60);
 			config.ExpiryTimes.Count().ShouldBe(2);
-
-			config.ViewConfig.ShouldNotBeNull();
-			config.ViewConfig.PageTitle.ShouldBe("page title");
-			config.ViewConfig.HeaderText.ShouldBe("header text");
-			config.ViewConfig.HeaderSubtext.ShouldBe("subtext");
-			config.ViewConfig.FooterText.ShouldBe("footer");
 		}
 
 		[Fact]

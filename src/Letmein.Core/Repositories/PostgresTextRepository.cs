@@ -21,12 +21,12 @@ namespace Letmein.Core.Repositories.Postgres
 			_store = store;
 		}
 
-		internal void ClearDatabase()
+		internal async Task ClearDatabase()
 		{
 			using (IDocumentSession session = _store.LightweightSession())
 			{
 				session.DeleteWhere<EncryptedItem>(x => true);
-				session.SaveChanges();
+				await session.SaveChangesAsync();
 			}
 		}
 

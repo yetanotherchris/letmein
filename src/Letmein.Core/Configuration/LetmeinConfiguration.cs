@@ -10,6 +10,5 @@ namespace Letmein.Core.Configuration
         public int CleanupSleepTime { get; set; }
         public IdGenerationType IdGenerationType { get; set; }
         public IEnumerable<int> ExpiryTimes { get; set; }
-        public ViewConfig ViewConfig { get; set; }
 	}
 }
