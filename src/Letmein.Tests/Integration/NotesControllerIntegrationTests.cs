@@ -184,7 +184,7 @@ namespace Letmein.Tests.Integration
             // Assert
             // This returns MethodNotAllowed because the route matches /api/notes but with wrong HTTP method
             // GET /api/notes/ would need to match a POST endpoint
-            response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
+            response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         }
 
         [Fact]

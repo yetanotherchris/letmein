@@ -72,7 +72,7 @@ namespace Letmein.Api.Controllers
         /// <summary>
         /// Load encrypted content by ID
         /// </summary>
-        [HttpGet("{friendlyId}")]
+        [HttpGet("{friendlyId?}")]
         public async Task<IActionResult> Load(string friendlyId)
         {
             if (string.IsNullOrEmpty(friendlyId))
