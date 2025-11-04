@@ -5,7 +5,7 @@
 
   <ItemGroup>
     <!-- Core Dependencies -->
-    <PackageVersion Include="CloudFileStore" Version="8.0.17" />
+    <PackageVersion Include="CloudFileStore" Version="9.0.25" />
     <PackageVersion Include="Marten" Version="8.13.3" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
