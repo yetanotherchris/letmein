@@ -56,7 +56,7 @@ namespace Letmein.Api
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
                 {
                     Title = "Letmein API",
                     Version = "v1",
