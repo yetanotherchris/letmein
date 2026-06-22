@@ -101,7 +101,7 @@ namespace Letmein.Tests.Integration
 
 			// Act
 			await _repository.Delete(encryptedItem2.FriendlyId);
-			var items = _repository.All();
+			var items = await _repository.All();
 
 			// Assert
 			items.Count().ShouldBe(2);

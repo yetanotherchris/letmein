@@ -30,11 +30,11 @@ namespace Letmein.Core.Repositories.Postgres
 			}
 		}
 
-		internal IEnumerable<EncryptedItem> All()
+		internal async Task<IEnumerable<EncryptedItem>> All()
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
-				return session.Query<EncryptedItem>().ToList();
+				return await session.Query<EncryptedItem>().ToListAsync<EncryptedItem>();
 			}
 		}
 
