@@ -11,7 +11,7 @@ COPY src/Letmein.ReactWeb/ ./
 RUN npm run build
 
 # Build stage - .NET application
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy csproj files and restore dependencies (better layer caching)
@@ -34,7 +34,7 @@ RUN dotnet publish src/Letmein.Api/Letmein.Api.csproj \
     --no-restore
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 LABEL maintainer="Chris Small"
 LABEL org.opencontainers.image.title="Letmein"
 LABEL org.opencontainers.image.description="Encrypted notes service with temporary storage"

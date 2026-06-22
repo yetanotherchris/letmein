@@ -1,9 +1,13 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 using Serilog;
 
 namespace Letmein.Api
@@ -53,14 +57,17 @@ namespace Letmein.Api
             });
 
             // Add API documentation
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(c =>
+            services.AddOpenApi(options =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                options.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
-                    Title = "Letmein API",
-                    Version = "v1",
-                    Description = "A RESTful API for secure encrypted text sharing"
+                    document.Info = new()
+                    {
+                        Title = "Letmein API",
+                        Version = "v1",
+                        Description = "A RESTful API for secure encrypted text sharing"
+                    };
+                    return Task.CompletedTask;
                 });
             });
 
@@ -73,11 +80,10 @@ namespace Letmein.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseHttpLogging();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Letmein API v1");
-                });
+
+                var endpoints = (Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)app;
+                endpoints.MapOpenApi();
+                endpoints.MapScalarApiReference();
             }
 
             app.UseCors("AllowFrontend");
