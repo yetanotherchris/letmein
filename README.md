@@ -4,11 +4,11 @@
 
 ### What is it?
 
-Letmein is an encrypted notes service, similar to cryptobin.co. No encryption keys are stored in the database, and the encryption is performed in the browser. Notes last 12 hours by default, but this is configurable (see below) with the option to have multiple expiry times. A background service cleans up expired notes every 5 minutes. This 5 minutes/300 second wait time is also configurable.
+Letmein is an encrypted notes service, similar to cryptobin.co. No encryption keys are stored in the database, and the encryption is performed in the browser. Notes last up to 12 hours by default, but this is configurable (see below) with the option to have multiple expiry times. A background service (using Quartz.NET) cleans up expired notes on a configurable schedule.
 
 ### Tech stack
 
-- .NET 9
+- .NET 10
 - React using Vite and Tailwind
 - [Sjcl](https://github.com/bitwiseshiftleft/sjcl) Javascript library for encryption.
 - Postgres (using [Marten](https://github.com/JasperFx/marten))
@@ -70,13 +70,17 @@ If you don't want to buy Postgres hosting (such as AWS RDS), you can run Postgre
 
 Start a Postgres container (it needs 9.5 or higher):
 
-    docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres 
+    docker run -d --name postgres -p 5432:5432 -e POSTGRES_USER=letmein -e POSTGRES_PASSWORD=letmein123 postgres
+
+Create a Docker network so containers can communicate:
+
+    docker network create letmein
 
 #### Step 2. Run the Letmein Docker container
 
 Run the Letmein Docker container (below assumes you're using Postgres):
 
-    docker run -d -p 8080:8080 --link postgres:postgres -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" ghcr.io/yetanotherchris/letmein:latest
+    docker run -d -p 8080:8080 --network letmein -e POSTGRES_CONNECTIONSTRING="host=postgres;database=letmein;password=letmein123;username=letmein" ghcr.io/yetanotherchris/letmein:latest
 
 Now go to [http://localhost:8080](http://localhost:8080) and store some text.
 
@@ -86,8 +90,8 @@ The letmein image is fairly customisable. The various customisations can be done
 
 - `REPOSITORY_TYPE` - Where pastes are stored. Possible values: "FileSystem", "Postgres", "S3", "GoogleCloud", "AzureBlobs". Default is FileSystem.
 - `POSTGRES_CONNECTIONSTRING` - The connection string to the Postgres database.
-- `EXPIRY_TIMES` - A comma-separated list of minutes that pastes expire after. For example "90, 600" would be 1 hour 30 minutes, and 10 hours. The default for this setting is 720 minutes (12 hours)
-- `CLEANUP_SLEEPTIME` - Number of seconds to sleep in between checking for expired pastes. The default for this setting is 300 seconds.
+- `EXPIRY_TIMES` - A comma-separated list of minutes that pastes expire after. For example "90, 600" would be 1 hour 30 minutes, and 10 hours. The default is 720 minutes (12 hours)
+- `CLEANUP_SCHEDULE` - Controls how often expired pastes are cleaned up. Accepts a TimeSpan (e.g. `"00:30:00"` for 30 minutes) or a cron expression (e.g. `"*/5 * * * *"` for every 5 minutes). The default is 30 minutes.
 - `ID_TYPE` - Short url ID type. Possible values: 
   - `default (bips39-two-words)`
   - `bips39-two-words`
