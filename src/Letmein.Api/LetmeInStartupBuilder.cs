@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,16 +77,6 @@ namespace Letmein.Api
 
         private static void ConfigureWebApplication(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseHttpLogging();
-
-                var endpoints = (Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)app;
-                endpoints.MapOpenApi();
-                endpoints.MapScalarApiReference();
-            }
-
             app.UseCors("AllowFrontend");
 
             // Serve static files from wwwroot
@@ -95,6 +86,17 @@ namespace Letmein.Api
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapOpenApi();
+                    endpoints.MapScalarApiReference();
+                    endpoints.MapGet("/", (HttpContext context) =>
+                    {
+                        context.Response.Redirect("/scalar/v1");
+                        return Task.CompletedTask;
+                    });
+                }
+
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
