@@ -1,39 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export default function Countdown({ targetDate, onExpire }) {
-  const [timeLeft, setTimeLeft] = useState(null);
-  const [hasExpired, setHasExpired] = useState(false);
+  const calculateTimeLeft = useCallback(() => {
+    const now = new Date().getTime();
+    const target = new Date(targetDate).getTime();
+    const difference = target - now;
+
+    if (difference <= 0) {
+      return null;
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  }, [targetDate]);
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
+  const hasExpiredRef = useRef(false);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const target = new Date(targetDate).getTime();
-      const difference = target - now;
-
-      if (difference <= 0) {
-        if (onExpire && !hasExpired) {
-          setHasExpired(true);
-          onExpire();
-        }
-        return null;
-      }
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      return { days, hours, minutes, seconds };
-    };
-
-    setTimeLeft(calculateTimeLeft());
-
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const remaining = calculateTimeLeft();
+      if (!remaining && !hasExpiredRef.current) {
+        hasExpiredRef.current = true;
+        onExpire?.();
+      }
+      setTimeLeft(remaining);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [targetDate, onExpire, hasExpired]);
+  }, [calculateTimeLeft, onExpire]);
 
   if (!timeLeft) {
     return <div className="text-red-500 font-semibold">Expired</div>;
