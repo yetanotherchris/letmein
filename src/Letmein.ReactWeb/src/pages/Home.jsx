@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import sjcl from 'sjcl';
+import * as age from 'age-encryption';
 import { api } from '../utils/api';
 import Toast from '../components/Toast';
 
@@ -55,11 +55,12 @@ export default function Home() {
     setLoading(true);
 
     try {
-      // Encrypt the text client-side
-      const cipherJson = sjcl.encrypt(password, text);
+      const e = new age.Encrypter();
+      e.setPassphrase(password);
+      const ciphertext = await e.encrypt(text);
+      const armored = age.armor.encode(ciphertext);
 
-      // Store the encrypted data
-      const response = await api.storeNote(cipherJson, parseInt(expiryTime));
+      const response = await api.storeNote(armored, parseInt(expiryTime));
 
       setResult({
         friendlyId: response.friendlyId,

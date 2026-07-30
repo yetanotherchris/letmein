@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import sjcl from 'sjcl';
+import * as age from 'age-encryption';
 import { api } from '../utils/api';
 import Toast from '../components/Toast';
 import Countdown from '../components/Countdown';
@@ -43,7 +43,7 @@ export default function Decrypt() {
     setToast({ message, type });
   }, []);
 
-  const handleDecrypt = (e) => {
+  const handleDecrypt = async (e) => {
     e.preventDefault();
 
     if (!password) {
@@ -52,7 +52,10 @@ export default function Decrypt() {
     }
 
     try {
-      const decrypted = sjcl.decrypt(password, cipherJson);
+      const decoded = age.armor.decode(cipherJson);
+      const d = new age.Decrypter();
+      d.addPassphrase(password);
+      const decrypted = await d.decrypt(decoded, "text");
       setDecryptedText(decrypted);
       setIsDecrypted(true);
       showToast('Successfully decrypted!', 'success');

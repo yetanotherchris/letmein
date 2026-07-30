@@ -38,7 +38,7 @@ namespace Letmein.Core.Services
 				{
 					Id = Guid.NewGuid(),
 					FriendlyId = friendlyId,
-					AlgorithmName = "STANFORDV1",
+					AlgorithmName = "AGE",
 					CreatedOn = createdate,
 					ExpiresOn = createdate.AddMinutes(expiresInMinutes),
 					CipherJson = json,
