@@ -20,19 +20,26 @@ export default function Countdown({ targetDate, onExpire }) {
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
   const hasExpiredRef = useRef(false);
+  const onExpireRef = useRef(onExpire);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const remaining = calculateTimeLeft();
-      if (!remaining && !hasExpiredRef.current) {
-        hasExpiredRef.current = true;
-        onExpire?.();
-      }
-      setTimeLeft(remaining);
-    }, 1000);
+    onExpireRef.current = onExpire;
+  });
 
+  const tick = useCallback(() => {
+    const remaining = calculateTimeLeft();
+    if (!remaining && !hasExpiredRef.current) {
+      hasExpiredRef.current = true;
+      onExpireRef.current?.();
+    }
+    setTimeLeft(remaining);
+  }, [calculateTimeLeft]);
+
+  useEffect(() => {
+    hasExpiredRef.current = false;
+    const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
-  }, [calculateTimeLeft, onExpire]);
+  }, [tick]);
 
   if (!timeLeft) {
     return <div className="text-red-500 font-semibold">Expired</div>;

@@ -3,11 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -95,12 +93,8 @@ namespace Letmein.Api
                 if (env.IsDevelopment())
                 {
                     endpoints.MapOpenApi();
-                    endpoints.MapScalarApiReference();
-                    endpoints.MapGet("/", (HttpContext context) =>
-                    {
-                        context.Response.Redirect("/scalar/v1");
-                        return Task.CompletedTask;
-                    });
+                    endpoints.MapScalarApiReference("/scalar");
+                    endpoints.MapGet("/", () => Results.Redirect("/scalar"));
                 }
 
                 endpoints.MapControllers();

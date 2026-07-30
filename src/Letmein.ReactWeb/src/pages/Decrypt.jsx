@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import sjcl from 'sjcl';
 import { api } from '../utils/api';
@@ -39,9 +39,9 @@ export default function Decrypt() {
     return () => { cancelled = true; };
   }, [id]);
 
-  const showToast = (message, type = 'success') => {
+  const showToast = useCallback((message, type = 'success') => {
     setToast({ message, type });
-  };
+  }, []);
 
   const handleDecrypt = (e) => {
     e.preventDefault();
@@ -77,12 +77,12 @@ export default function Decrypt() {
     }
   };
 
-  const handleExpire = () => {
+  const handleExpire = useCallback(() => {
     showToast('This note has expired', 'error');
     setTimeout(() => {
       navigate('/');
     }, 2000);
-  };
+  }, [navigate, showToast]);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
