@@ -4,7 +4,7 @@ A modern, secure text encryption and sharing application built with React, Vite,
 
 ## Features
 
-- Client-side encryption using SJCL (Stanford Javascript Crypto Library)
+- Client-side encryption using age-encryption
 - Modern, responsive UI with Tailwind CSS
 - Temporary encrypted message storage with expiry
 - Countdown timer for message expiration
@@ -66,7 +66,7 @@ npm run build
 - **Vite** - Build tool and dev server
 - **Tailwind CSS** - Utility-first CSS framework
 - **React Router** - Client-side routing
-- **SJCL** - Client-side encryption library
+- **age-encryption** - Client-side encryption library
 
 ## API Integration
 
