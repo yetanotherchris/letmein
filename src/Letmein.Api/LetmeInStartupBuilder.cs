@@ -77,6 +77,12 @@ namespace Letmein.Api
 
         private static void ConfigureWebApplication(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseHttpLogging();
+            }
+
             app.UseCors("AllowFrontend");
 
             // Serve static files from wwwroot
