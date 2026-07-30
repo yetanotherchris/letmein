@@ -102,4 +102,8 @@ The letmein image is fairly customisable. The various customisations can be done
   - `short-mixedcase`
   - `shortcode`. 
 
-As letmein doesn't check if a note id already exists, it's worth knowing the clash rate is about 1 in 4 million for bips39-two-words. It's 1 in 40 billion for bips39-two-words-and-number. See the UniqueIdGenerator.cs class for notes on clash rates. 
+As letmein doesn't check if a note id already exists, it's worth knowing the clash rate is about 1 in 4 million for bips39-two-words. It's 1 in 40 billion for bips39-two-words-and-number. See the UniqueIdGenerator.cs class for notes on clash rates.
+
+### API documentation
+
+When running in development mode, the API serves an OpenAPI specification with a Scalar UI at [/scalar](http://localhost:5000/scalar). The OpenAPI JSON endpoint is at `/openapi/v1.json`. 

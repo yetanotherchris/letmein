@@ -1,39 +1,45 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export default function Countdown({ targetDate, onExpire }) {
-  const [timeLeft, setTimeLeft] = useState(null);
-  const [hasExpired, setHasExpired] = useState(false);
+  const calculateTimeLeft = useCallback(() => {
+    const now = new Date().getTime();
+    const target = new Date(targetDate).getTime();
+    const difference = target - now;
+
+    if (difference <= 0) {
+      return null;
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  }, [targetDate]);
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
+  const hasExpiredRef = useRef(false);
+  const onExpireRef = useRef(onExpire);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const target = new Date(targetDate).getTime();
-      const difference = target - now;
+    onExpireRef.current = onExpire;
+  });
 
-      if (difference <= 0) {
-        if (onExpire && !hasExpired) {
-          setHasExpired(true);
-          onExpire();
-        }
-        return null;
-      }
+  const tick = useCallback(() => {
+    const remaining = calculateTimeLeft();
+    if (!remaining && !hasExpiredRef.current) {
+      hasExpiredRef.current = true;
+      onExpireRef.current?.();
+    }
+    setTimeLeft(remaining);
+  }, [calculateTimeLeft]);
 
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-      return { days, hours, minutes, seconds };
-    };
-
-    setTimeLeft(calculateTimeLeft());
-
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
+  useEffect(() => {
+    hasExpiredRef.current = false;
+    const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
-  }, [targetDate, onExpire, hasExpired]);
+  }, [tick]);
 
   if (!timeLeft) {
     return <div className="text-red-500 font-semibold">Expired</div>;

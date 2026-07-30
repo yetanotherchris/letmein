@@ -14,22 +14,26 @@ export default function Home() {
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    loadExpiryTimes();
-  }, []);
-
-  const loadExpiryTimes = async () => {
-    try {
-      const times = await api.getExpiryTimes();
-      setExpiryTimes(times);
-      // Set default to first option
-      const firstKey = Object.keys(times)[0];
-      if (firstKey) {
-        setExpiryTime(firstKey);
+    let cancelled = false;
+    async function load() {
+      try {
+        const times = await api.getExpiryTimes();
+        if (!cancelled) {
+          setExpiryTimes(times);
+          const firstKey = Object.keys(times)[0];
+          if (firstKey) {
+            setExpiryTime(firstKey);
+          }
+        }
+      } catch {
+        if (!cancelled) {
+          setToast({ message: 'Failed to load expiry times', type: 'error' });
+        }
       }
-    } catch (error) {
-      showToast('Failed to load expiry times', 'error');
     }
-  };
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -79,7 +83,7 @@ export default function Home() {
     try {
       await navigator.clipboard.writeText(url);
       showToast('Copied to clipboard!', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to copy to clipboard', 'error');
     }
   };

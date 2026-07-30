@@ -2,11 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -80,10 +78,6 @@ namespace Letmein.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseHttpLogging();
-
-                var endpoints = (Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)app;
-                endpoints.MapOpenApi();
-                endpoints.MapScalarApiReference();
             }
 
             app.UseCors("AllowFrontend");
@@ -95,6 +89,12 @@ namespace Letmein.Api
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
+                if (env.IsDevelopment())
+                {
+                    endpoints.MapOpenApi();
+                    endpoints.MapScalarApiReference("/scalar");
+                }
+
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });

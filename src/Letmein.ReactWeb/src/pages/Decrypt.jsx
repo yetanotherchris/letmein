@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import sjcl from 'sjcl';
 import { api } from '../utils/api';
@@ -19,24 +19,29 @@ export default function Decrypt() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadNote();
+    let cancelled = false;
+    async function load() {
+      try {
+        const data = await api.loadNote(id);
+        if (!cancelled) {
+          setCipherJson(data.cipherJson);
+          setExpiryDate(data.expiryDate);
+          setLoading(false);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message);
+          setLoading(false);
+        }
+      }
+    }
+    load();
+    return () => { cancelled = true; };
   }, [id]);
 
-  const loadNote = async () => {
-    try {
-      const data = await api.loadNote(id);
-      setCipherJson(data.cipherJson);
-      setExpiryDate(data.expiryDate);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  const showToast = (message, type = 'success') => {
+  const showToast = useCallback((message, type = 'success') => {
     setToast({ message, type });
-  };
+  }, []);
 
   const handleDecrypt = (e) => {
     e.preventDefault();
@@ -51,7 +56,7 @@ export default function Decrypt() {
       setDecryptedText(decrypted);
       setIsDecrypted(true);
       showToast('Successfully decrypted!', 'success');
-    } catch (error) {
+    } catch {
       showToast('Unable to decrypt. Wrong password?', 'error');
     }
   };
@@ -67,17 +72,17 @@ export default function Decrypt() {
       setTimeout(() => {
         navigate('/');
       }, 1500);
-    } catch (error) {
+    } catch {
       showToast('Failed to delete note', 'error');
     }
   };
 
-  const handleExpire = () => {
+  const handleExpire = useCallback(() => {
     showToast('This note has expired', 'error');
     setTimeout(() => {
       navigate('/');
     }, 2000);
-  };
+  }, [navigate, showToast]);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
