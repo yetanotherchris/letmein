@@ -24,6 +24,7 @@
     <PackageVersion Include="Quartz" Version="3.19.1" />
     <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.19.1" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.11.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.16.16" />
 
     <!-- Test Dependencies -->
