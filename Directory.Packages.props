@@ -8,7 +8,7 @@
     <!-- Core Dependencies -->
     <PackageVersion Include="AWSSDK.Core" Version="4.0.9.7" />
     <PackageVersion Include="CloudFileStore" Version="10.0.27" />
-    <PackageVersion Include="Marten" Version="9.21.0" />
+    <PackageVersion Include="Marten" Version="9.56.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
 
@@ -21,21 +21,21 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
 
     <!-- API-specific Dependencies -->
-    <PackageVersion Include="Quartz" Version="3.19.1" />
-    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.19.1" />
+    <PackageVersion Include="Quartz" Version="4.6.2" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="4.6.2" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
     <PackageVersion Include="Microsoft.OpenApi" Version="2.11.0" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.16" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.18.7" />
 
     <!-- Test Dependencies -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.3.11" />
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.10" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.7.1" />
-    <PackageVersion Include="NSubstitute" Version="6.0.0" />
+    <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.1" />
   </ItemGroup>
 </Project>

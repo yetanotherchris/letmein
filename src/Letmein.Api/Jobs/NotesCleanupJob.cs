@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Letmein.Core;
 using Letmein.Core.Repositories;
@@ -20,7 +21,7 @@ namespace Letmein.Api.Jobs
             _textRepository = textRepository;
         }
 
-        public async Task Execute(IJobExecutionContext context)
+        public async ValueTask Execute(IJobExecutionContext context, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Starting notes cleanup job...");
 
