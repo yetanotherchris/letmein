@@ -8,7 +8,7 @@ Letmein is an encrypted notes service, similar to cryptobin.co. No encryption ke
 
 ### Tech stack
 
-- .NET 10
+- .NET 11
 - React using Vite and Tailwind
 - [age-encryption](https://github.com/FiloSottile/typage) Javascript library for encryption.
 - Postgres (using [Marten](https://github.com/JasperFx/marten))
